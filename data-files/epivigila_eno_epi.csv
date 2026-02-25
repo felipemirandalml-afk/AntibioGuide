@@ -1,0 +1,56 @@
+match_terms,legal_name,periodicity,type,adult_only,notes,source
+botulismo,Botulismo,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+antrax;carbunco,Carbunco bacteridiano (ántrax),Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+chagas aguda,Chagas aguda, Enfermedad de,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+chikungunya,Chikungunya, Enfermedad por virus,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+colera,Cólera,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+dengue,Dengue,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+difteria,Difteria,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+fiebre amarilla,Fiebre amarilla,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+hantavirus,Hantavirus, Enfermedad por,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+haemophilus influenzae;h influenzae invasora,"Haemophilus influenzae, Enfermedad invasora por",Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+irag;infeccion respiratoria grave inusitada,"Infecciones Respiratorias Agudas Graves Inusitadas",Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+leptospirosis,Leptospirosis,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+malaria,Malaria,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+meningitis bacteriana,Meningitis bacterianas,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+neisseria meningitidis;meningococo;enfermedad meningococica,"Neisseria meningitidis, Enfermedad invasora por",Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+ebola;marburg;lassa;fiebre hemorragica viral,"Fiebres hemorrágicas virales (Ébola, Marburg, Lassa, otros)",Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+peste;plaga,Peste (plaga),Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+paralisis flacida aguda;poliomielitis,Parálisis Flácidas Agudas (Poliomielitis),Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+rabia,Rabia,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+rubeola,Rubéola,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+sarampion,Sarampión,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+sindrome rubeola congenito,Síndrome Rubéola Congénito,Inmediata,ENO,false,"Notificación inmediata ante sospecha clínica.",Decreto 7
+triquinosis,Triquinosis,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+virus nilo occidental,"Virus del Nilo Occidental, Infección por",Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+zika,Zika, enfermedad por virus,Inmediata,ENO,true,"Notificación inmediata ante sospecha clínica.",Decreto 7
+brucelosis,Brucelosis,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+chagas cronica,Chagas crónica, Enfermedad de,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+cisticercosis,Cisticercosis,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+creutzfeldt jakob,"Creutzfeldt-Jakob, Enfermedad de",24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+coqueluche;tos ferina,Coqueluche (tos ferina),24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+fiebre tifoidea;paratifoidea,"Fiebre Tifoidea y Paratifoidea",24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+fiebre q,Fiebre Q,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+hepatitis a;hepatitis b;hepatitis c;hepatitis e,"Hepatitis Virales (por virus A, B, C y E)",24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+hidatidosis;equinococosis,"Hidatidosis (equinococosis)",24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+gonorrea;infeccion gonococica,Infección gonocócica,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+leishmaniasis,Leishmaniasis,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+lepra;hansen,"Lepra (Enfermedad de Hansen)",24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+listeriosis,Listeriosis,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+parotiditis;paperas,"Parotiditis viral (paperas)",24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+psitacosis,Psitacosis,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+rickettsiosis,Rickettsiosis,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+sifilis,Sífilis,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+sindrome hemolitico uremico,Síndrome Hemolítico Urémico,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+streptococcus pneumoniae invasora;neumococo invasor,"Streptococcus pneumoniae. Enfermedad invasora",24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+tetanos,Tétanos,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+tuberculosis;tb;tbc,Tuberculosis,24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+vih;hiv;virus inmunodeficiencia humana,"Virus de la inmunodeficiencia humana, Enfermedad por",24h,ENO,true,"Notificación dentro de 24h desde confirmación.",Decreto 7
+influenza;ira;irag,"Influenza y otras infecciones respiratorias agudas virales",Centinela,Centinela,true,"Notificación semanal solo por centros centinela.",Decreto 7
+vph;hpv;virus papiloma humano,"Virus del Papiloma Humano, Infección por",Centinela,Centinela,true,"Notificación semanal solo por centros centinela.",Decreto 7
+varicela,"Virus Varicela, Infección por",Centinela,Centinela,true,"Notificación semanal solo por centros centinela.",Decreto 7
+brotes;eta;iaas,"Brotes de enfermedades de cualquier etiología transmisible (incluye ETA e IAAS)",Evento inmediato,Evento,true,"Notificación inmediata a Autoridad Sanitaria Regional.",Decreto 7
+brote desconocido,"Enfermedad o brote de causa desconocida de presunto origen infeccioso",Evento inmediato,Evento,true,"Notificación inmediata a Autoridad Sanitaria Regional.",Decreto 7
+fallecimiento infeccioso desconocido,"Fallecimientos por presunta causa infecciosa transmisible no identificada",Evento inmediato,Evento,true,"Notificación inmediata a Autoridad Sanitaria Regional.",Decreto 7
+contaminacion farmacos;contaminacion articulos salud,"Casos con sospecha de contaminación intrínseca de fármacos o artículos para la atención en salud",Evento inmediato,Evento,true,"Notificación inmediata a Autoridad Sanitaria Regional.",Decreto 7
+viruela;poliomielitis erradicada,"Sospecha de enfermedades erradicadas o en vías de erradicación (Viruela, Poliomielitis)",Evento inmediato,Evento,true,"Notificación inmediata a Autoridad Sanitaria Regional.",Decreto 7
