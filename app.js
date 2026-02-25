@@ -77,6 +77,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function evaluateEpivigila() {
+    if (!epiBanner) return;
+
+    if ((searchInput?.value || "").trim() === "") {
+      epiBanner.innerHTML = "";
+      return;
+    }
+
     if (!window.EPIVIGILA || typeof window.EPIVIGILA.evaluate !== "function") return;
 
     window.EPIVIGILA.evaluate({
@@ -182,6 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
     existingTabs[tabId].addEventListener("click", () => {
       setTab(tabId);
       handleSearch(); // refresh
+      evaluateEpivigila();
     });
   });
 
@@ -241,6 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Search Logic ---
   searchInput?.addEventListener("input", handleSearch);
+  searchInput?.addEventListener("input", evaluateEpivigila);
 
   function handleSearch() {
     const queryRaw = searchInput?.value ?? "";
