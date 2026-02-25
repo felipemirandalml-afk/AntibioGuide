@@ -2,6 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // DOM Elements
   const searchInput = document.getElementById("search-input");
   const contentDisplay = document.getElementById("content-display");
+  const epiBanner = document.getElementById("epivigila-banner");
   const medModal = document.getElementById("med-modal");
   const closeModalBtn = document.getElementById("close-modal");
   const modalContent = document.getElementById("modal-content");
@@ -75,6 +76,16 @@ document.addEventListener("DOMContentLoaded", () => {
       .trim();
   }
 
+  function evaluateEpivigila() {
+    if (!window.EPIVIGILA || typeof window.EPIVIGILA.evaluate !== "function") return;
+
+    window.EPIVIGILA.evaluate({
+      normalize,
+      contentElement: contentDisplay,
+      bannerElement: epiBanner
+    });
+  }
+
   function escapeRegExp(str = "") {
     return String(str).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
@@ -135,6 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const welcomeHTML = welcomeScreen ? welcomeScreen.outerHTML : "";
   function showWelcome() {
     contentDisplay.innerHTML = welcomeHTML || "";
+    evaluateEpivigila();
   }
 
   // --- Tabs ---
@@ -175,6 +187,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Ensure initial active styling
   setTab(activeTabId);
+
+  if (window.EPIVIGILA && typeof window.EPIVIGILA.init === "function") {
+    window.EPIVIGILA.init({
+      csvPath: "data-files/epivigila_eno_epi.csv",
+      normalize
+    });
+  }
 
   // --- Modal: open/close + UX improvements ---
   let lastFocusedEl = null;
@@ -314,6 +333,8 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       contentDisplay.appendChild(grid);
     }
+
+    evaluateEpivigila();
   }
 
   // --- Card Creators (IMPORTANT: escape all data) ---
@@ -396,6 +417,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <i class="fas fa-triangle-exclamation text-4xl mb-2"></i>
         <p>La sección de antibiograma no está disponible (clinicalData.interpretation no existe).</p>
       </div>`;
+      evaluateEpivigila();
       return;
     }
 
@@ -469,10 +491,12 @@ document.addEventListener("DOMContentLoaded", () => {
         <i class="fas fa-search-minus text-4xl mb-2"></i>
         <p>No se encontraron términos de interpretación para "${escapeHTML(queryRaw)}".</p>
       </div>`;
+      evaluateEpivigila();
       return;
     }
 
     contentDisplay.appendChild(container);
+    evaluateEpivigila();
   }
 
   // --- Detail Views (Modal Content) ---
