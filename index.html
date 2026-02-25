@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AntibioGuide - Soporte Clínico Antibióticos</title>
+
+  <!-- Tailwind (CDN) + Dark mode config (must be before tailwind script) -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  window.tailwind = window.tailwind || {};
+  window.tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+
+  <style>
+    .active-tab { border-bottom: 3px solid #3b82f6; color: #3b82f6; }
+    .hidden { display: none; }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 dark:bg-slate-950 dark:text-slate-100 font-sans leading-normal tracking-normal">
+  <!-- Header -->
+  <header class="bg-blue-700 text-white shadow-md p-4 sticky top-0 z-50 dark:bg-slate-900">
+    <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
+      <h1 class="text-2xl font-bold flex items-center mb-4 md:mb-0">
+        <i class="fas fa-microscope mr-2"></i> AntibioGuide
+      </h1>
+
+      <nav class="flex flex-wrap justify-center space-x-2 md:space-x-4">
+        <button id="tab-syndrome" class="px-3 py-2 font-medium active-tab">Síndromes</button>
+        <button id="tab-pathogen" class="px-3 py-2 font-medium">Patógenos</button>
+        <button id="tab-meds" class="px-3 py-2 font-medium">Vademécum</button>
+        <button id="tab-antibiogram" class="px-3 py-2 font-medium">Antibiograma</button>
+
+        <button
+          id="theme-toggle"
+          class="px-3 py-2 font-medium rounded-md hover:bg-white/10"
+          type="button"
+          aria-label="Cambiar tema"
+        >
+          <span id="theme-icon">🌙</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto p-4 md:p-8">
+    <!-- Search Section -->
+    <section class="max-w-2xl mx-auto mb-8">
+      <div class="relative">
+        <input
+          type="text"
+          id="search-input"
+          placeholder="Buscar enfermedad, germen, fármaco o interpretación..."
+          class="w-full p-4 pl-12 rounded-lg border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none text-lg dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100 dark:placeholder-slate-400"
+        />
+        <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-400"></i>
+      </div>
+    </section>
+
+    <!-- Content Area -->
+    <div id="content-display">
+      <div id="welcome-screen" class="text-center py-12">
+        <i class="fas fa-stethoscope text-6xl text-blue-200 mb-4"></i>
+        <h2 class="text-2xl font-semibold text-gray-600 dark:text-slate-300">Herramienta de Apoyo Clínico - Adultos</h2>
+        <p class="text-gray-500 dark:text-slate-400 mt-2">
+          Ingrese un síndrome, microorganismo, fármaco o duda de interpretación para comenzar.
+        </p>
+        <p class="text-sm text-gray-400 dark:text-slate-500 mt-12 italic">
+          Uso educativo basado en guías internacionales (IDSA, CDC, 2024-2026). <br />
+          No reemplaza el juicio clínico.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal for Antibiotic Detail -->
+  <div id="med-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center hidden z-50 p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-lg max-w-2xl w-full p-6 relative shadow-2xl overflow-y-auto max-h-[90vh]">
+      <button
+        id="close-modal"
+        class="absolute top-4 right-4 text-gray-500 hover:text-gray-800 dark:text-slate-400 dark:hover:text-slate-100"
+      >
+        <i class="fas fa-times text-xl"></i>
+      </button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <footer class="bg-gray-100 border-t border-gray-200 py-6 mt-12 dark:bg-slate-900 dark:border-slate-800">
+    <div class="container mx-auto text-center text-sm text-gray-500 dark:text-slate-400">
+      <p id="footer-meta">&copy; 2026 AntibioGuide - Herramienta de Soporte Decisional.</p>
+      <p class="mt-1">Orientado a médicos. No incluye pediatría, embarazo ni lactancia.</p>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
