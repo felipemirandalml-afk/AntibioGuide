@@ -70,6 +70,131 @@
     bannerElement.innerHTML = "";
   }
 
+  const EPIVIGILA_DB = [
+    {
+      id: "tuberculosis",
+      type: "Notificacion inmediata",
+      note: "Sospecha o confirmacion compatible con ENO de notificacion obligatoria.",
+      reference: "MINSAL Chile - EPIVIGILA ENO",
+      keywords: ["tuberculosis", "tb", "mycobacterium tuberculosis", "bacilo de koch", "koch"]
+    },
+    {
+      id: "meningococo",
+      type: "Notificacion inmediata",
+      note: "Meningitis o enfermedad meningococica requiere aviso inmediato segun ENO.",
+      reference: "MINSAL Chile - EPIVIGILA ENO",
+      keywords: ["meningococo", "meningococcemia", "neisseria meningitidis", "meningitis meningococica"]
+    },
+    {
+      id: "sarampion_rubeola",
+      type: "Notificacion inmediata",
+      note: "Cuadro sospechoso de sarampion o rubeola requiere notificacion y estudio.",
+      reference: "MINSAL Chile - EPIVIGILA ENO",
+      keywords: ["sarampion", "rubeola", "measles", "rubella"]
+    },
+    {
+      id: "dengue",
+      type: "Notificacion obligatoria",
+      note: "Caso sospechoso o confirmado de dengue debe notificarse segun normativa vigente.",
+      reference: "MINSAL Chile - EPIVIGILA ENO",
+      keywords: ["dengue", "arbovirosis", "aedes"]
+    },
+    {
+      id: "influenza_avian",
+      type: "Notificacion inmediata",
+      note: "Influenza aviar o zoonotica requiere notificacion inmediata.",
+      reference: "MINSAL Chile - EPIVIGILA ENO",
+      keywords: ["influenza aviar", "h5n1", "gripe aviar", "influenza zoonotica"]
+    }
+  ];
+
+  function escapeHTML(str) {
+    return String(str || "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
+  }
+
+  function getNormalize(options) {
+    return typeof options?.normalize === "function" ? options.normalize : state.normalize;
+  }
+
+  function getKeywords(entry) {
+    const rawKeywords = Array.isArray(entry?.keywords) ? entry.keywords : [];
+    const rawSynonyms = Array.isArray(entry?.synonyms) ? entry.synonyms : [];
+    return rawKeywords.concat(rawSynonyms);
+  }
+
+  function matchEpivigila(options) {
+    const opts = options || {};
+    const normalize = getNormalize(opts);
+    const query = normalize(opts.query || "");
+    if (!query) return null;
+    if (query.length < 3) return null;
+
+    let bestMatch = null;
+
+    for (let i = 0; i < EPIVIGILA_DB.length; i += 1) {
+      const entry = EPIVIGILA_DB[i];
+      const terms = getKeywords(entry);
+
+      for (let j = 0; j < terms.length; j += 1) {
+        const termRaw = terms[j];
+        const term = normalize(termRaw);
+        if (!term) continue;
+
+        let score = 0;
+        if (query === term) score = 300;
+        else if (query.includes(term)) score = 200;
+        else if (term.includes(query)) score = 100;
+
+        if (!score) continue;
+
+        if (!bestMatch || score > bestMatch.score || (score === bestMatch.score && term.length > bestMatch.term.length)) {
+          bestMatch = {
+            score: score,
+            term: term,
+            result: {
+              id: entry.id || "",
+              type: entry.type || "",
+              note: entry.note || "",
+              reference: entry.reference || "",
+              matchedTerm: termRaw || ""
+            }
+          };
+        }
+      }
+    }
+
+    return bestMatch ? bestMatch.result : null;
+  }
+
+  function renderEpivigilaBanner(options) {
+    const opts = options || {};
+    const bannerElement = opts.bannerElement;
+    const match = opts.match;
+    if (!bannerElement) return;
+    if (!match) {
+      clearBanner(bannerElement);
+      return;
+    }
+
+    const type = escapeHTML(match.type || "Notificacion EPIVIGILA");
+    const note = escapeHTML(match.note || "");
+    const reference = escapeHTML(match.reference || "");
+    const matchedTerm = escapeHTML(match.matchedTerm || "");
+
+    bannerElement.innerHTML =
+      '<div class="mb-6 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">' +
+      '<div><strong>EPIVIGILA:</strong> ' + type + "</div>" +
+      (note ? '<div class="mt-1">' + note + "</div>" : "") +
+      (reference ? '<div class="mt-1 text-xs opacity-90">Referencia: ' + reference + "</div>" : "") +
+      (matchedTerm ? '<div class="mt-1 text-xs opacity-90">Termino detectado: ' + matchedTerm + "</div>" : "") +
+      "</div>";
+  }
+
   function renderBanner(bannerElement, matches) {
     if (!bannerElement) return;
 
@@ -115,9 +240,11 @@
   async function init(options) {
     const opts = options || {};
     const csvPath = opts.csvPath;
-    const normalize = typeof opts.normalize === "function" ? opts.normalize : state.normalize;
+    const normalize = getNormalize(opts);
 
     state.ready = false;
+    // Nivel 2: la base hardcoded (EPIVIGILA_DB) es la fuente primaria.
+    // El CSV se mantiene como carga opcional y fail-silent para compatibilidad.
     state.normalize = normalize;
     state.termsIndex = Object.create(null);
     state.rows = [];
@@ -184,7 +311,10 @@
   }
 
   window.EPIVIGILA = {
+    DB: EPIVIGILA_DB,
     init: init,
-    evaluate: evaluate
+    evaluate: evaluate,
+    matchEpivigila: matchEpivigila,
+    renderEpivigilaBanner: renderEpivigilaBanner
   };
 })();

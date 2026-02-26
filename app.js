@@ -76,20 +76,28 @@ document.addEventListener("DOMContentLoaded", () => {
       .trim();
   }
 
-  function evaluateEpivigila() {
+  function evaluateEpivigila(queryRaw = "") {
     if (!epiBanner) return;
+    if (!window.EPIVIGILA) return;
+    if (typeof window.EPIVIGILA.matchEpivigila !== "function") return;
+    if (typeof window.EPIVIGILA.renderEpivigilaBanner !== "function") return;
 
-    if ((searchInput?.value || "").trim() === "") {
-      epiBanner.innerHTML = "";
+    if ((queryRaw || "").trim() === "") {
+      window.EPIVIGILA.renderEpivigilaBanner({
+        bannerElement: epiBanner,
+        match: null
+      });
       return;
     }
 
-    if (!window.EPIVIGILA || typeof window.EPIVIGILA.evaluate !== "function") return;
+    const match = window.EPIVIGILA.matchEpivigila({
+      query: queryRaw,
+      normalize
+    });
 
-    window.EPIVIGILA.evaluate({
-      normalize,
-      contentElement: contentDisplay,
-      bannerElement: epiBanner
+    window.EPIVIGILA.renderEpivigilaBanner({
+      bannerElement: epiBanner,
+      match
     });
   }
 
@@ -153,7 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const welcomeHTML = welcomeScreen ? welcomeScreen.outerHTML : "";
   function showWelcome() {
     contentDisplay.innerHTML = welcomeHTML || "";
-    evaluateEpivigila();
   }
 
   // --- Tabs ---
@@ -189,7 +196,6 @@ document.addEventListener("DOMContentLoaded", () => {
     existingTabs[tabId].addEventListener("click", () => {
       setTab(tabId);
       handleSearch(); // refresh
-      evaluateEpivigila();
     });
   });
 
@@ -198,7 +204,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (window.EPIVIGILA && typeof window.EPIVIGILA.init === "function") {
     window.EPIVIGILA.init({
-      csvPath: "data-files/epivigila_eno_epi.csv",
       normalize
     });
   }
@@ -249,11 +254,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Search Logic ---
   searchInput?.addEventListener("input", handleSearch);
-  searchInput?.addEventListener("input", evaluateEpivigila);
 
   function handleSearch() {
     const queryRaw = searchInput?.value ?? "";
     const query = normalize(queryRaw);
+    evaluateEpivigila(queryRaw);
 
     // In 'antibiogram' tab, show content even if query is empty
     const allowEmptyInThisTab = activeTabId === "antibiogram";
@@ -343,7 +348,6 @@ document.addEventListener("DOMContentLoaded", () => {
       contentDisplay.appendChild(grid);
     }
 
-    evaluateEpivigila();
   }
 
   // --- Card Creators (IMPORTANT: escape all data) ---
@@ -426,7 +430,6 @@ document.addEventListener("DOMContentLoaded", () => {
         <i class="fas fa-triangle-exclamation text-4xl mb-2"></i>
         <p>La sección de antibiograma no está disponible (clinicalData.interpretation no existe).</p>
       </div>`;
-      evaluateEpivigila();
       return;
     }
 
@@ -500,12 +503,10 @@ document.addEventListener("DOMContentLoaded", () => {
         <i class="fas fa-search-minus text-4xl mb-2"></i>
         <p>No se encontraron términos de interpretación para "${escapeHTML(queryRaw)}".</p>
       </div>`;
-      evaluateEpivigila();
       return;
     }
 
     contentDisplay.appendChild(container);
-    evaluateEpivigila();
   }
 
   // --- Detail Views (Modal Content) ---
