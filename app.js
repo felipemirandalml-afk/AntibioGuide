@@ -306,12 +306,12 @@ document.addEventListener("DOMContentLoaded", () => {
       const scored = (clinicalData?.pathogens || [])
         .map((p) => {
           const nameNorm = normalize(p?.name || "");
-          const abbrNorms = (p?.abbreviations || []).map(normalize);
+          const aliasNorms = (p?.aliases || []).map(normalize);
 
           const nameScore = scoreMultiWord(queryNormalized, nameNorm);
-          const abbrScore = Math.max(...abbrNorms.map((an) => scoreMultiWord(queryNormalized, an)), 0);
+          const aliasScore = Math.max(...aliasNorms.map((an) => scoreMultiWord(queryNormalized, an)), 0);
 
-          const score = Math.max(nameScore, abbrScore > 0 ? abbrScore + 10 : 0);
+          const score = Math.max(nameScore, aliasScore > 0 ? aliasScore + 10 : 0);
 
           return { p, score };
         })
@@ -383,20 +383,45 @@ document.addEventListener("DOMContentLoaded", () => {
       "bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500 hover:shadow-lg transition-shadow";
 
     const name = escapeHTML(p?.name || "");
-    const firstLine = escapeHTML(p?.first_line || "");
-    const resistance = escapeHTML(p?.resistance || "");
+    const summary = escapeHTML(p?.summary || "");
+    const typical = Array.isArray(p?.typical_resistance) ? p.typical_resistance.filter(Boolean) : [];
+    const intrinsic = Array.isArray(p?.intrinsic_resistance) ? p.intrinsic_resistance.filter(Boolean) : [];
+    const stewardship = escapeHTML(p?.stewardship_note || "");
+    const typicalHTML = typical
+      .map((item) => `<li class="text-sm text-gray-700">${escapeHTML(item)}</li>`)
+      .join("");
+    const intrinsicHTML = intrinsic
+      .map((item) => `<li class="text-sm text-gray-700">${escapeHTML(item)}</li>`)
+      .join("");
 
     card.innerHTML = `
       <h3 class="font-bold text-xl text-purple-800 mb-2">${name}</h3>
+      <p class="text-sm text-gray-700 mb-4">${summary}</p>
       <div class="space-y-3 mt-4">
-        <div>
-          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">1ª Línea</span>
-          <p class="text-sm font-semibold text-green-700">${firstLine}</p>
-        </div>
-        <div>
-          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Consideraciones</span>
-          <p class="text-sm text-gray-600 italic">${resistance}</p>
-        </div>
+        ${
+          typicalHTML
+            ? `<div>
+          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Resistencia tipica</span>
+          <ul class="list-disc pl-5 mt-1 space-y-1">${typicalHTML}</ul>
+        </div>`
+            : ""
+        }
+        ${
+          intrinsicHTML
+            ? `<div>
+          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Resistencia intrinseca</span>
+          <ul class="list-disc pl-5 mt-1 space-y-1">${intrinsicHTML}</ul>
+        </div>`
+            : ""
+        }
+        ${
+          stewardship
+            ? `<div class="bg-amber-50 border border-amber-200 rounded p-2">
+          <span class="text-xs font-bold text-amber-800 uppercase tracking-wider">PROA</span>
+          <p class="text-sm text-amber-900">PROA: ${stewardship}</p>
+        </div>`
+            : ""
+        }
       </div>
     `;
     return card;
