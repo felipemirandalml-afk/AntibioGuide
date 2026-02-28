@@ -60,6 +60,22 @@
         />
         <i class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-slate-400"></i>
       </div>
+      <div class="mt-3 flex items-center justify-between gap-3">
+        <div class="text-xs text-gray-500 dark:text-slate-400">
+          <span class="font-medium">Contexto local:</span>
+          <span id="active-profile-label">General (sin datos locales)</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <label for="profile-select" class="sr-only">Seleccionar contexto local</label>
+          <select
+            id="profile-select"
+            class="text-sm rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-slate-900 dark:border-slate-700 dark:text-slate-100"
+          >
+            <!-- opciones se llenan desde app.js -->
+          </select>
+        </div>
+      </div>
     </section>
 
     <!-- Content Area -->
