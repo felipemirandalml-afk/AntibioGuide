@@ -1,0 +1,497 @@
+[
+  {
+    "id": "escherichia_coli",
+    "name": "Escherichia coli",
+    "aliases": [
+      "E. coli",
+      "Coli"
+    ],
+    "gram": "gram_negative",
+    "category": "enterobacterales",
+    "summary": "Bacilo entérico frecuente en ITU y bacteriemia.",
+    "intrinsic_resistance": [
+      "Vancomicina"
+    ],
+    "typical_resistance": [
+      "Ampicilina",
+      "TMP-SMX",
+      "Fluoroquinolonas (variable)"
+    ],
+    "stewardship_note": "Evitar FQ empíricas si R% local >20%."
+  },
+  {
+    "id": "klebsiella_pneumoniae",
+    "name": "Klebsiella pneumoniae",
+    "aliases": [
+      "K. pneumoniae"
+    ],
+    "gram": "gram_negative",
+    "category": "enterobacterales",
+    "summary": "Bacilo entérico asociado a ITU y neumonía hospitalaria.",
+    "intrinsic_resistance": [
+      "Ampicilina"
+    ],
+    "typical_resistance": [
+      "BLEE",
+      "Carbapenemasas (algunas cepas)"
+    ],
+    "stewardship_note": "Sospechar BLEE en infecciones nosocomiales."
+  },
+  {
+    "id": "proteus_mirabilis",
+    "name": "Proteus mirabilis",
+    "aliases": [
+      "Proteus"
+    ],
+    "gram": "gram_negative",
+    "category": "enterobacterales",
+    "summary": "Bacilo entérico asociado a ITU complicada.",
+    "intrinsic_resistance": [
+      "Nitrofurantoína"
+    ],
+    "typical_resistance": [
+      "Ampicilina",
+      "TMP-SMX"
+    ],
+    "stewardship_note": "Evitar nitrofurantoína."
+  },
+  {
+    "id": "enterobacter_cloacae",
+    "name": "Enterobacter cloacae",
+    "aliases": [
+      "Enterobacter"
+    ],
+    "gram": "gram_negative",
+    "category": "enterobacterales",
+    "summary": "Bacilo oportunista hospitalario con AmpC inducible.",
+    "intrinsic_resistance": [
+      "Ampicilina",
+      "Cefalosporinas 1ª-2ª"
+    ],
+    "typical_resistance": [
+      "Inducción AmpC"
+    ],
+    "stewardship_note": "Evitar cefalosporinas 3ª en infecciones graves."
+  },
+  {
+    "id": "serratia_marcescens",
+    "name": "Serratia marcescens",
+    "aliases": [
+      "Serratia"
+    ],
+    "gram": "gram_negative",
+    "category": "enterobacterales",
+    "summary": "Bacilo hospitalario oportunista.",
+    "intrinsic_resistance": [
+      "Ampicilina",
+      "Cefalosporinas 1ª"
+    ],
+    "typical_resistance": [
+      "Multirresistencia variable"
+    ],
+    "stewardship_note": "Considerar perfil local."
+  },
+  {
+    "id": "pseudomonas_aeruginosa",
+    "name": "Pseudomonas aeruginosa",
+    "aliases": [
+      "Pseudomonas"
+    ],
+    "gram": "gram_negative",
+    "category": "non_fermenter",
+    "summary": "Bacilo no fermentador asociado a infecciones graves.",
+    "intrinsic_resistance": [
+      "Muchos beta-lactámicos",
+      "TMP-SMX"
+    ],
+    "typical_resistance": [
+      "Resistencia múltiple frecuente"
+    ],
+    "stewardship_note": "Evitar subdosificación."
+  },
+  {
+    "id": "acinetobacter_baumannii",
+    "name": "Acinetobacter baumannii",
+    "aliases": [
+      "Acinetobacter"
+    ],
+    "gram": "gram_negative",
+    "category": "non_fermenter",
+    "summary": "Bacilo hospitalario multirresistente.",
+    "intrinsic_resistance": [
+      "Muchos antibióticos"
+    ],
+    "typical_resistance": [
+      "Carbapenem resistencia frecuente"
+    ],
+    "stewardship_note": "Alta vigilancia PROA."
+  },
+  {
+    "id": "haemophilus_influenzae",
+    "name": "Haemophilus influenzae",
+    "aliases": [
+      "H. influenzae"
+    ],
+    "gram": "gram_negative",
+    "category": "coccobacilli",
+    "summary": "Coccobacilo respiratorio frecuente en NAC.",
+    "intrinsic_resistance": [
+      "Vancomicina"
+    ],
+    "typical_resistance": [
+      "Beta-lactamasa (algunas cepas)"
+    ],
+    "stewardship_note": "Preferir amoxicilina-clavulánico si productor."
+  },
+  {
+    "id": "neisseria_meningitidis",
+    "name": "Neisseria meningitidis",
+    "aliases": [
+      "Meningococo"
+    ],
+    "gram": "gram_negative",
+    "category": "diplococci",
+    "summary": "Diplococo causante de meningitis.",
+    "intrinsic_resistance": [
+      "Vancomicina"
+    ],
+    "typical_resistance": [
+      "Penicilina (algunas cepas)"
+    ],
+    "stewardship_note": "Ceftriaxona empírica."
+  },
+  {
+    "id": "neisseria_gonorrhoeae",
+    "name": "Neisseria gonorrhoeae",
+    "aliases": [
+      "Gonococo"
+    ],
+    "gram": "gram_negative",
+    "category": "diplococci",
+    "summary": "Diplococo causante de ITS.",
+    "intrinsic_resistance": [
+      "Muchos orales"
+    ],
+    "typical_resistance": [
+      "Resistencia elevada a FQ"
+    ],
+    "stewardship_note": "Ceftriaxona es estándar."
+  },
+  {
+    "id": "streptococcus_pneumoniae",
+    "name": "Streptococcus pneumoniae",
+    "aliases": [
+      "Neumococo"
+    ],
+    "gram": "gram_positive",
+    "category": "diplococci",
+    "summary": "Coco Gram positivo frecuente en NAC y meningitis.",
+    "intrinsic_resistance": [],
+    "typical_resistance": [
+      "Macrólidos",
+      "Penicilina (variable)"
+    ],
+    "stewardship_note": "Evitar macrólido en monoterapia si R% alto."
+  },
+  {
+    "id": "streptococcus_pyogenes",
+    "name": "Streptococcus pyogenes",
+    "aliases": [
+      "GAS"
+    ],
+    "gram": "gram_positive",
+    "category": "cocci",
+    "summary": "Coco causante de faringitis y celulitis.",
+    "intrinsic_resistance": [
+      "Aminoglucósidos"
+    ],
+    "typical_resistance": [
+      "Macrólidos (variable)"
+    ],
+    "stewardship_note": "Sensible universal a penicilina."
+  },
+  {
+    "id": "streptococcus_agalactiae",
+    "name": "Streptococcus agalactiae",
+    "aliases": [
+      "GBS"
+    ],
+    "gram": "gram_positive",
+    "category": "cocci",
+    "summary": "Coco asociado a bacteriemia en adultos vulnerables.",
+    "intrinsic_resistance": [
+      "Aminoglucósidos"
+    ],
+    "typical_resistance": [
+      "Macrólidos (variable)"
+    ],
+    "stewardship_note": "Penicilina es tratamiento de elección."
+  },
+  {
+    "id": "enterococcus_faecalis",
+    "name": "Enterococcus faecalis",
+    "aliases": [
+      "Enterococo"
+    ],
+    "gram": "gram_positive",
+    "category": "cocci",
+    "summary": "Coco entérico asociado a ITU y bacteriemia.",
+    "intrinsic_resistance": [
+      "Cefalosporinas"
+    ],
+    "typical_resistance": [
+      "Vancomicina (algunas cepas)"
+    ],
+    "stewardship_note": "Evaluar susceptibilidad específica."
+  },
+  {
+    "id": "enterococcus_faecium",
+    "name": "Enterococcus faecium",
+    "aliases": [
+      "E. faecium"
+    ],
+    "gram": "gram_positive",
+    "category": "cocci",
+    "summary": "Coco entérico frecuentemente resistente.",
+    "intrinsic_resistance": [
+      "Cefalosporinas"
+    ],
+    "typical_resistance": [
+      "Vancomicina (VRE frecuente)"
+    ],
+    "stewardship_note": "Considerar linezolid o daptomicina."
+  },
+  {
+    "id": "staphylococcus_aureus",
+    "name": "Staphylococcus aureus",
+    "aliases": [
+      "S. aureus",
+      "MRSA",
+      "SAMR"
+    ],
+    "gram": "gram_positive",
+    "category": "cocci",
+    "summary": "Coco frecuente en infecciones cutáneas y bacteriemia.",
+    "intrinsic_resistance": [
+      "Penicilina (beta-lactamasa frecuente)"
+    ],
+    "typical_resistance": [
+      "Meticilina (MRSA)"
+    ],
+    "stewardship_note": "Evaluar riesgo MRSA."
+  },
+  {
+    "id": "staphylococcus_epidermidis",
+    "name": "Staphylococcus epidermidis",
+    "aliases": [
+      "S. epidermidis"
+    ],
+    "gram": "gram_positive",
+    "category": "cocci",
+    "summary": "Coco asociado a dispositivos intravasculares.",
+    "intrinsic_resistance": [
+      "Muchos beta-lactámicos"
+    ],
+    "typical_resistance": [
+      "Meticilina frecuente"
+    ],
+    "stewardship_note": "Relevancia clínica depende del contexto."
+  },
+  {
+    "id": "listeria_monocytogenes",
+    "name": "Listeria monocytogenes",
+    "aliases": [
+      "Listeria"
+    ],
+    "gram": "gram_positive",
+    "category": "bacilli",
+    "summary": "Bacilo causante de meningitis en inmunosuprimidos.",
+    "intrinsic_resistance": [
+      "Cefalosporinas"
+    ],
+    "typical_resistance": [],
+    "stewardship_note": "Usar ampicilina."
+  },
+  {
+    "id": "clostridioides_difficile",
+    "name": "Clostridioides difficile",
+    "aliases": [
+      "C. difficile"
+    ],
+    "gram": "gram_positive",
+    "category": "obligate_anaerobe",
+    "summary": "Anaerobio productor de toxina en diarrea asociada a antibióticos.",
+    "intrinsic_resistance": [
+      "Aminoglucósidos",
+      "Cefalosporinas"
+    ],
+    "typical_resistance": [
+      "Multirresistencia variable"
+    ],
+    "stewardship_note": "Evitar antibióticos innecesarios."
+  },
+  {
+    "id": "bacteroides_fragilis",
+    "name": "Bacteroides fragilis",
+    "aliases": [
+      "Bacteroides"
+    ],
+    "gram": "gram_negative",
+    "category": "obligate_anaerobe",
+    "summary": "Anaerobio frecuente en infecciones intraabdominales.",
+    "intrinsic_resistance": [
+      "Aminoglucósidos"
+    ],
+    "typical_resistance": [
+      "Resistencia creciente a clindamicina"
+    ],
+    "stewardship_note": "Metronidazol eficaz."
+  },
+  {
+    "id": "mycoplasma_pneumoniae",
+    "name": "Mycoplasma pneumoniae",
+    "aliases": [
+      "Mycoplasma"
+    ],
+    "gram": "atypical",
+    "category": "atypical",
+    "summary": "Agente atípico en neumonía.",
+    "intrinsic_resistance": [
+      "Beta-lactámicos"
+    ],
+    "typical_resistance": [
+      "Macrólidos (algunas regiones)"
+    ],
+    "stewardship_note": "Usar macrólido o doxiciclina."
+  },
+  {
+    "id": "chlamydia_pneumoniae",
+    "name": "Chlamydia pneumoniae",
+    "aliases": [
+      "Chlamydia"
+    ],
+    "gram": "atypical",
+    "category": "atypical",
+    "summary": "Agente atípico respiratorio.",
+    "intrinsic_resistance": [
+      "Beta-lactámicos"
+    ],
+    "typical_resistance": [],
+    "stewardship_note": "Doxiciclina alternativa."
+  },
+  {
+    "id": "legionella_pneumophila",
+    "name": "Legionella pneumophila",
+    "aliases": [
+      "Legionella"
+    ],
+    "gram": "atypical",
+    "category": "atypical",
+    "summary": "Bacilo asociado a neumonía grave.",
+    "intrinsic_resistance": [
+      "Beta-lactámicos"
+    ],
+    "typical_resistance": [],
+    "stewardship_note": "Usar macrólido o fluoroquinolona."
+  },
+  {
+    "id": "salmonella_enterica",
+    "name": "Salmonella enterica",
+    "aliases": [
+      "Salmonella"
+    ],
+    "gram": "gram_negative",
+    "category": "enterobacterales",
+    "summary": "Bacilo entérico causante de gastroenteritis.",
+    "intrinsic_resistance": [
+      "Vancomicina"
+    ],
+    "typical_resistance": [
+      "Fluoroquinolonas (algunas regiones)"
+    ],
+    "stewardship_note": "Evaluar contexto epidemiológico."
+  },
+  {
+    "id": "shigella_spp",
+    "name": "Shigella spp",
+    "aliases": [
+      "Shigella"
+    ],
+    "gram": "gram_negative",
+    "category": "enterobacterales",
+    "summary": "Bacilo entérico invasivo.",
+    "intrinsic_resistance": [
+      "Vancomicina"
+    ],
+    "typical_resistance": [
+      "Alta resistencia a ampicilina y TMP-SMX"
+    ],
+    "stewardship_note": "Guiarse por susceptibilidad local."
+  },
+  {
+    "id": "campylobacter_jejuni",
+    "name": "Campylobacter jejuni",
+    "aliases": [
+      "Campylobacter"
+    ],
+    "gram": "gram_negative",
+    "category": "bacilli",
+    "summary": "Bacilo curvo causante de diarrea.",
+    "intrinsic_resistance": [
+      "Vancomicina"
+    ],
+    "typical_resistance": [
+      "Fluoroquinolonas frecuente"
+    ],
+    "stewardship_note": "Macrólido preferido."
+  },
+  {
+    "id": "vibrio_cholerae",
+    "name": "Vibrio cholerae",
+    "aliases": [
+      "Vibrio"
+    ],
+    "gram": "gram_negative",
+    "category": "bacilli",
+    "summary": "Bacilo acuático causante de cólera.",
+    "intrinsic_resistance": [
+      "Vancomicina"
+    ],
+    "typical_resistance": [
+      "Tetraciclinas (variable)"
+    ],
+    "stewardship_note": "Rehidratación es clave."
+  },
+  {
+    "id": "nocardia_spp",
+    "name": "Nocardia spp",
+    "aliases": [
+      "Nocardia"
+    ],
+    "gram": "gram_positive",
+    "category": "bacilli",
+    "summary": "Bacilo filamentoso oportunista.",
+    "intrinsic_resistance": [
+      "Muchos beta-lactámicos"
+    ],
+    "typical_resistance": [],
+    "stewardship_note": "TMP-SMX tratamiento habitual."
+  },
+  {
+    "id": "moraxella_catarrhalis",
+    "name": "Moraxella catarrhalis",
+    "aliases": [
+      "Moraxella"
+    ],
+    "gram": "gram_negative",
+    "category": "diplococci",
+    "summary": "Diplococo respiratorio en EPOC.",
+    "intrinsic_resistance": [
+      "Vancomicina"
+    ],
+    "typical_resistance": [
+      "Beta-lactamasa frecuente"
+    ],
+    "stewardship_note": "Amoxicilina-clavulánico alternativa."
+  }
+]

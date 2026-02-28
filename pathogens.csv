@@ -1,0 +1,30 @@
+﻿id,name,aliases,gram,category,summary,intrinsic_resistance,typical_resistance,stewardship_note
+escherichia_coli,Escherichia coli,"E. coli;Coli",gram_negative,enterobacterales,Bacilo entérico frecuente en ITU y bacteriemia.,Vancomicina,Ampicilina;TMP-SMX;Fluoroquinolonas (variable),Evitar FQ empíricas si R% local >20%.
+klebsiella_pneumoniae,Klebsiella pneumoniae,"K. pneumoniae",gram_negative,enterobacterales,Bacilo entérico asociado a ITU y neumonía hospitalaria.,Ampicilina,BLEE;Carbapenemasas (algunas cepas),Sospechar BLEE en infecciones nosocomiales.
+proteus_mirabilis,Proteus mirabilis,Proteus,gram_negative,enterobacterales,Bacilo entérico asociado a ITU complicada.,Nitrofurantoína,Ampicilina;TMP-SMX,Evitar nitrofurantoína.
+enterobacter_cloacae,Enterobacter cloacae,Enterobacter,gram_negative,enterobacterales,Bacilo oportunista hospitalario con AmpC inducible.,Ampicilina;Cefalosporinas 1ª-2ª,Inducción AmpC,Evitar cefalosporinas 3ª en infecciones graves.
+serratia_marcescens,Serratia marcescens,Serratia,gram_negative,enterobacterales,Bacilo hospitalario oportunista.,Ampicilina;Cefalosporinas 1ª,Multirresistencia variable,Considerar perfil local.
+pseudomonas_aeruginosa,Pseudomonas aeruginosa,Pseudomonas,gram_negative,non_fermenter,Bacilo no fermentador asociado a infecciones graves.,Muchos beta-lactámicos;TMP-SMX,Resistencia múltiple frecuente,Evitar subdosificación.
+acinetobacter_baumannii,Acinetobacter baumannii,Acinetobacter,gram_negative,non_fermenter,Bacilo hospitalario multirresistente.,Muchos antibióticos,Carbapenem resistencia frecuente,Alta vigilancia PROA.
+haemophilus_influenzae,Haemophilus influenzae,H. influenzae,gram_negative,coccobacilli,Coccobacilo respiratorio frecuente en NAC.,Vancomicina,Beta-lactamasa (algunas cepas),Preferir amoxicilina-clavulánico si productor.
+neisseria_meningitidis,Neisseria meningitidis,Meningococo,gram_negative,diplococci,Diplococo causante de meningitis.,Vancomicina,Penicilina (algunas cepas),Ceftriaxona empírica.
+neisseria_gonorrhoeae,Neisseria gonorrhoeae,Gonococo,gram_negative,diplococci,Diplococo causante de ITS.,Muchos orales,Resistencia elevada a FQ,Ceftriaxona es estándar.
+streptococcus_pneumoniae,Streptococcus pneumoniae,Neumococo,gram_positive,diplococci,Coco Gram positivo frecuente en NAC y meningitis.,,Macrólidos;Penicilina (variable),Evitar macrólido en monoterapia si R% alto.
+streptococcus_pyogenes,Streptococcus pyogenes,GAS,gram_positive,cocci,Coco causante de faringitis y celulitis.,Aminoglucósidos,Macrólidos (variable),Sensible universal a penicilina.
+streptococcus_agalactiae,Streptococcus agalactiae,GBS,gram_positive,cocci,Coco asociado a bacteriemia en adultos vulnerables.,Aminoglucósidos,Macrólidos (variable),Penicilina es tratamiento de elección.
+enterococcus_faecalis,Enterococcus faecalis,Enterococo,gram_positive,cocci,Coco entérico asociado a ITU y bacteriemia.,Cefalosporinas,Vancomicina (algunas cepas),Evaluar susceptibilidad específica.
+enterococcus_faecium,Enterococcus faecium,E. faecium,gram_positive,cocci,Coco entérico frecuentemente resistente.,Cefalosporinas,Vancomicina (VRE frecuente),Considerar linezolid o daptomicina.
+staphylococcus_aureus,Staphylococcus aureus,"S. aureus;MRSA;SAMR",gram_positive,cocci,Coco frecuente en infecciones cutáneas y bacteriemia.,Penicilina (beta-lactamasa frecuente),Meticilina (MRSA),Evaluar riesgo MRSA.
+staphylococcus_epidermidis,Staphylococcus epidermidis,S. epidermidis,gram_positive,cocci,Coco asociado a dispositivos intravasculares.,Muchos beta-lactámicos,Meticilina frecuente,Relevancia clínica depende del contexto.
+listeria_monocytogenes,Listeria monocytogenes,Listeria,gram_positive,bacilli,Bacilo causante de meningitis en inmunosuprimidos.,Cefalosporinas,,Usar ampicilina.
+clostridioides_difficile,Clostridioides difficile,C. difficile,gram_positive,obligate_anaerobe,Anaerobio productor de toxina en diarrea asociada a antibióticos.,Aminoglucósidos;Cefalosporinas,Multirresistencia variable,Evitar antibióticos innecesarios.
+bacteroides_fragilis,Bacteroides fragilis,Bacteroides,gram_negative,obligate_anaerobe,Anaerobio frecuente en infecciones intraabdominales.,Aminoglucósidos,Resistencia creciente a clindamicina,Metronidazol eficaz.
+mycoplasma_pneumoniae,Mycoplasma pneumoniae,Mycoplasma,atypical,atypical,Agente atípico en neumonía.,Beta-lactámicos,Macrólidos (algunas regiones),Usar macrólido o doxiciclina.
+chlamydia_pneumoniae,Chlamydia pneumoniae,Chlamydia,atypical,atypical,Agente atípico respiratorio.,Beta-lactámicos,,Doxiciclina alternativa.
+legionella_pneumophila,Legionella pneumophila,Legionella,atypical,atypical,Bacilo asociado a neumonía grave.,Beta-lactámicos,,Usar macrólido o fluoroquinolona.
+salmonella_enterica,Salmonella enterica,Salmonella,gram_negative,enterobacterales,Bacilo entérico causante de gastroenteritis.,Vancomicina,Fluoroquinolonas (algunas regiones),Evaluar contexto epidemiológico.
+shigella_spp,Shigella spp,Shigella,gram_negative,enterobacterales,Bacilo entérico invasivo.,Vancomicina,Alta resistencia a ampicilina y TMP-SMX,Guiarse por susceptibilidad local.
+campylobacter_jejuni,Campylobacter jejuni,Campylobacter,gram_negative,bacilli,Bacilo curvo causante de diarrea.,Vancomicina,Fluoroquinolonas frecuente,Macrólido preferido.
+vibrio_cholerae,Vibrio cholerae,Vibrio,gram_negative,bacilli,Bacilo acuático causante de cólera.,Vancomicina,Tetraciclinas (variable),Rehidratación es clave.
+nocardia_spp,Nocardia spp,Nocardia,gram_positive,bacilli,Bacilo filamentoso oportunista.,Muchos beta-lactámicos,,TMP-SMX tratamiento habitual.
+moraxella_catarrhalis,Moraxella catarrhalis,Moraxella,gram_negative,diplococci,Diplococo respiratorio en EPOC.,Vancomicina,Beta-lactamasa frecuente,Amoxicilina-clavulánico alternativa.
