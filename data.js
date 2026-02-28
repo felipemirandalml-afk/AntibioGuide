@@ -919,6 +919,33 @@ const clinicalData = {
       uses: "NAC hospitalaria, meningitis, urosepsis, intraabdominal.",
       synonyms: ["rocephin"]
     },
+    // --- Cefalosporinas antipseudomónicas ---
+    {
+      id: "cefepime",
+      name: "Cefepime",
+      family: "Cefalosporina de cuarta generación",
+      mechanism: "Inhibición de la síntesis de pared bacteriana por unión a proteínas fijadoras de penicilina (PBP), con mayor estabilidad frente a beta-lactamasas de espectro extendido tipo AmpC que las cefalosporinas de tercera generación.",
+      spectrum: "Amplio espectro gramnegativo incluyendo Pseudomonas aeruginosa, Enterobacterales (incluyendo productoras de AmpC), y grampositivos como Staphylococcus aureus sensible a meticilina (SASM) y Streptococcus spp. No activo frente a MRSA, Enterococcus spp., Listeria ni anaerobios.",
+      dose: "Infección moderada-grave: 2 g IV c/8h. Neutropenia febril / HAP-VAP / sepsis grave: 2 g IV c/8h (considerar infusión extendida de 3-4 horas para optimizar T>MIC). Meningitis por gramnegativos susceptibles: 2 g IV c/8h.",
+      renal: "Requiere ajuste si ClCr < 60 mL/min. Pautas orientativas: ClCr 30-60 mL/min: 2 g c/12h; ClCr 11-29 mL/min: 2 g c/24h; ClCr ≤10 mL/min o hemodiálisis: 1 g c/24h (dosis suplementaria post-diálisis). Monitorizar función renal y signos de neurotoxicidad (encefalopatía, mioclonías), especialmente en insuficiencia renal no reconocida.",
+      contraindications: "Hipersensibilidad a cefepime u otras cefalosporinas. Precaución en alergia severa a penicilinas (reactividad cruzada <2%). Precaución en pacientes con antecedentes de convulsiones o insuficiencia renal no ajustada (riesgo de neurotoxicidad).",
+      adverse: "Neurotoxicidad (encefalopatía, mioclonías, convulsiones) especialmente con sobredosificación o insuficiencia renal no ajustada; diarrea; elevación transitoria de transaminasas; reacciones de hipersensibilidad; colitis por Clostridioides difficile en tratamientos prolongados.",
+      uses: "HAP/VAP, sepsis de origen nosocomial, infecciones del tracto urinario complicadas, neutropenia febril de alto riesgo, infecciones intraabdominales (en combinación con metronidazol). Útil en infecciones por Enterobacterales productoras de AmpC donde cefalosporinas de 3ª generación fallan.",
+      synonyms: ["Cefepima", "Maxipime", "Cepimax", "CFP", "cefepime HCl", "BR-963", "BMY-28142"]
+    },
+    {
+      id: "ceftazidima",
+      name: "Ceftazidima",
+      family: "Cefalosporina de tercera generación (con actividad antipseudomónica)",
+      mechanism: "Inhibición de la síntesis de pared bacteriana por unión a proteínas fijadoras de penicilina (PBP). Destaca por alta afinidad hacia PBP de Pseudomonas aeruginosa. Moderadamente estable frente a beta-lactamasas, pero susceptible a BLEE y AmpC inducible.",
+      spectrum: "Excelente actividad frente a Pseudomonas aeruginosa y Enterobacterales. Actividad limitada frente a grampositivos (Streptococcus spp., sin actividad relevante frente a SASM ni MRSA). No activo frente a anaerobios, Enterococcus spp. ni Acinetobacter spp. Susceptible a hidrólisis por BLEE y AmpC; en esos contextos preferir ceftazidima-avibactam.",
+      dose: "Infecciones graves / HAP-VAP / sepsis: 2 g IV c/8h. Infección por Pseudomonas aeruginosa en paciente crítico: 2 g IV c/8h (considerar infusión extendida de 3-4 horas para maximizar T>MIC). Fibrosis quística (fuera de alcance estándar adulto general): dosis superiores bajo supervisión especializada.",
+      renal: "Requiere ajuste si ClCr < 50 mL/min. Pautas orientativas: ClCr 31-50 mL/min: 1 g c/12h; ClCr 16-30 mL/min: 1 g c/24h; ClCr 6-15 mL/min: 500 mg c/24h; ClCr ≤5 mL/min o hemodiálisis: 500 mg c/48h (con dosis suplementaria post-diálisis). Monitorizar función renal y signos neurológicos en insuficiencia renal.",
+      contraindications: "Hipersensibilidad a ceftazidima u otras cefalosporinas. Precaución en alergia grave a penicilinas. No usar como monoterapia empírica si prevalencia local de BLEE o AmpC inducible es alta sin confirmación de sensibilidad.",
+      adverse: "Reacciones de hipersensibilidad; diarrea; elevación de transaminasas; eosinofilia; colitis por Clostridioides difficile; neurotoxicidad (menos frecuente que cefepime pero posible en insuficiencia renal no ajustada); tromboflebitis en administración IV periférica prolongada.",
+      uses: "HAP/VAP e infecciones nosocomiales por Pseudomonas aeruginosa sensible, sepsis por gramnegativos, infecciones del tracto urinario complicadas de origen nosocomial, infecciones en pacientes neutropénicos (habitualmente en combinación). En infecciones por productoras de BLEE/KPC, preferir ceftazidima-avibactam.",
+      synonyms: ["Ceftazidime", "Fortaz", "Tazicef", "Fortum", "CAZ", "GR-20263", "ceftazidima pentahidrato"]
+    },
     {
       id: "cefazolina",
       name: "Cefazolina",
