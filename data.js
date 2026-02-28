@@ -756,6 +756,68 @@ const clinicalData = {
         "Candida spp. (seleccionados)",
         "Coxiella burnetii / Bartonella / Brucella (cultivos negativos, seleccionados)"
       ]
+    },
+    {
+      id: "nih",
+      name: "Neumonía Intrahospitalaria (NIH)",
+      synonyms: ["Hospital-Acquired Pneumonia", "HAP", "Nosocomial Pneumonia"],
+      description: "Neumonía que ocurre ≥48 horas después del ingreso hospitalario, no estando incubada al momento de la admisión. Incluye neumonía asociada a ventilación mecánica (NAV) cuando aparece ≥48-72 horas tras intubación endotraqueal.",
+      criteria: {
+        outpatient: "No aplicable.",
+        hospital: "Infiltrado pulmonar nuevo o progresivo en imagen torácica + ≥2 de los siguientes: fiebre >38°C o hipotermia <36°C; leucocitosis >10.000/mm³ o leucopenia <4.000/mm³; secreciones purulentas; deterioro del intercambio gaseoso."
+      },
+      regimens: [
+        {
+          name: "NIH bajo riesgo MDR",
+          type: "empiric",
+          scenario: "inpatient_non_icu_low_risk",
+          targets: ["SASM", "Enterobacterales sensibles", "H. influenzae"],
+          drug: "Piperacilina-Tazobactam",
+          drugIds: ["piperacilina_tazobactam"],
+          dose: "4.5 g",
+          route: "IV",
+          interval: "cada 6h (o infusión extendida)",
+          duration: "7 días",
+          comments: "Desescalar según cultivos. Optimizar T>MIC con infusión extendida.",
+          reference: "IDSA/ATS HAP/VAP 2016"
+        },
+        {
+          name: "NIH alto riesgo MDR",
+          type: "empiric",
+          scenario: "inpatient_non_icu_high_risk",
+          targets: ["Pseudomonas aeruginosa", "Enterobacterales BLEE"],
+          drug: "Cefepime",
+          drugIds: ["cefepime"],
+          dose: "2 g",
+          route: "IV",
+          interval: "cada 8h",
+          duration: "7 días",
+          comments: "Considerar agregar cobertura MRSA según prevalencia local.",
+          reference: "IDSA/ATS HAP/VAP 2016"
+        },
+        {
+          name: "Cobertura MRSA",
+          type: "empiric",
+          scenario: "inpatient_non_icu_high_risk",
+          targets: ["MRSA"],
+          drug: "Vancomicina o Linezolid",
+          drugIds: ["vancomicina", "linezolid"],
+          dose: "Vanco 15-20 mg/kg / Linezolid 600 mg",
+          route: "IV",
+          interval: "cada 8-12h (Vanco) / cada 12h (Linezolid)",
+          duration: "7 días",
+          comments: "Preferir linezolid en NAV confirmada por mejor penetración pulmonar.",
+          reference: "IDSA/ATS HAP/VAP 2016"
+        }
+      ],
+      pathogens: [
+        "Staphylococcus aureus",
+        "MRSA",
+        "Pseudomonas aeruginosa",
+        "Klebsiella pneumoniae",
+        "Escherichia coli",
+        "Acinetobacter baumannii"
+      ]
     }
   ],
 
