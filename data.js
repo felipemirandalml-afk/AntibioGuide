@@ -822,49 +822,78 @@ const clinicalData = {
   ],
 
   pathogens: [
-    {
-      name: "Escherichia coli",
-      abbreviations: ["E. coli"],
-      first_line: "Nitrofurantoína, Fosfomicina, Ceftriaxona (grave)",
-      alternatives: "TMP-SMX, Ciprofloxacino, Amoxicilina-Clavulánico",
-      resistance: "Alta resistencia a Ampicilina. Incremento de ESBL (BLEE).",
-    },
-    {
-      name: "Streptococcus pneumoniae",
-      abbreviations: ["Neumococo"],
-      first_line: "Amoxicilina (dosis alta), Ceftriaxona",
-      alternatives: "Levofloxacino, Azitromicina (si baja resistencia local)",
-      resistance: "Resistencia a penicilina variable; resistencia a macrólidos en aumento.",
-    },
-    {
-      name: "Streptococcus pyogenes",
-      abbreviations: ["GAS", "Estreptococo grupo A"],
-      first_line: "Penicilina V, Amoxicilina",
-      alternatives: "Clindamicina, Azitromicina, Cefalexina",
-      resistance: "Sigue siendo universalmente sensible a Penicilina.",
-    },
-    {
-      name: "Staphylococcus aureus (MSSA)",
-      abbreviations: ["S. aureus", "MSSA"],
-      first_line: "Cefazolina, Cefalexina, Cloxacilina",
-      alternatives: "Clindamicina, TMP-SMX",
-      resistance: "Sensible a meticilina.",
-    },
-    {
-      name: "Staphylococcus aureus (MRSA)",
-      abbreviations: ["MRSA", "SAMR"],
-      first_line: "Vancomicina, Linezolid",
-      alternatives: "TMP-SMX, Clindamicina (si D-test negativo), Daptomicina",
-      resistance: "Resistente a beta-lactámicos (excepto ceftarolina).",
-    },
-    {
-      name: "Pseudomonas aeruginosa",
-      abbreviations: ["Pseudomonas"],
-      first_line: "Piperacilina-Tazobactam, Cefepime, Ceftazidima",
-      alternatives: "Meropenem, Ciprofloxacino, Amikacina",
-      resistance: "Intrínsecamente resistente a muchos antibióticos.",
-    }
-  ],
+  {
+    id: "escherichia_coli",
+    name: "Escherichia coli",
+    aliases: ["E. coli", "Colibacilo"],
+    category: "bacteria",
+    tags: ["gram_negative", "enterobacterales"],
+    summary: "Bacilo Gram negativo entérico; causa frecuente de ITU y sepsis de origen urinario.",
+    common_syndromes: ["uti", "pyelonephritis", "bacteremia", "intraabdominal"],
+    intrinsic_resistance: ["No susceptible a macrólidos (no útiles clínicamente)."],
+    typical_resistance: ["Alta resistencia a ampicilina.", "BLEE (ESBL) en aumento (variable según ámbito)."],
+    stewardship_note: "Si riesgo de BLEE o resistencia local alta, evitar cefalosporinas 3ª/FQ empíricas sin criterio.",
+    refs: [{ source: "Pendiente", year: 2025, note: "—" }]
+  },
+  {
+    id: "streptococcus_pneumoniae",
+    name: "Streptococcus pneumoniae",
+    aliases: ["Neumococo", "S. pneumoniae"],
+    category: "bacteria",
+    tags: ["gram_positive", "diplococci", "respiratory"],
+    summary: "Diplococo Gram positivo; patógeno clave en neumonía adquirida en la comunidad y otitis/sinusitis.",
+    common_syndromes: ["cap", "sinusitis", "otitis", "meningitis"],
+    intrinsic_resistance: [],
+    typical_resistance: [
+      "Susceptibilidad a penicilina variable según punto de corte y foco (mayor preocupación en meningitis).",
+      "Resistencia a macrólidos puede ser significativa y depende del contexto local."
+    ],
+    stewardship_note: "Evitar monoterapia con macrólidos en CAP si resistencia local es alta.",
+    refs: [{ source: "Pendiente", year: 2025, note: "—" }]
+  },
+  {
+    id: "streptococcus_pyogenes",
+    name: "Streptococcus pyogenes",
+    aliases: ["GAS", "Estreptococo grupo A", "S. pyogenes"],
+    category: "bacteria",
+    tags: ["gram_positive", "cocci", "streptococcus"],
+    summary: "Coco Gram positivo; causa faringitis, escarlatina y celulitis/erisipela no purulenta.",
+    common_syndromes: ["pharyngitis", "ssti_nonpurulent", "necrotizing_soft_tissue"],
+    intrinsic_resistance: [],
+    typical_resistance: ["Mantiene alta sensibilidad a penicilinas.", "Resistencia a macrólidos puede existir (variable por contexto)."],
+    stewardship_note: "Penicilina sigue siendo fármaco de elección cuando corresponde; evitar espectro innecesario.",
+    refs: [{ source: "Pendiente", year: 2025, note: "—" }]
+  },
+  {
+    id: "staphylococcus_aureus",
+    name: "Staphylococcus aureus",
+    aliases: ["S. aureus", "MSSA", "MRSA", "SAMR"],
+    category: "bacteria",
+    tags: ["gram_positive", "cocci", "staph"],
+    summary: "Coco Gram positivo; coloniza piel/narinas y causa SSTI purulenta, bacteriemia y foco osteoarticular.",
+    common_syndromes: ["ssti_purulent", "bacteremia", "ostearticular", "pneumonia"],
+    intrinsic_resistance: ["Frecuente resistencia a penicilina G por penicilinasa."],
+    typical_resistance: [
+      "MRSA puede ser relevante según epidemiología (comunidad/hospital).",
+      "Resistencia a clindamicina variable; considerar D-test cuando aplique."
+    ],
+    stewardship_note: "Si hay riesgo de MRSA, evitar beta-lactámicos anti-MSSA como única cobertura empírica.",
+    refs: [{ source: "Pendiente", year: 2025, note: "—" }]
+  },
+  {
+    id: "pseudomonas_aeruginosa",
+    name: "Pseudomonas aeruginosa",
+    aliases: ["Pseudomonas", "P. aeruginosa"],
+    category: "bacteria",
+    tags: ["gram_negative", "nonfermenter", "nosocomial"],
+    summary: "Bacilo Gram negativo no fermentador; asociado a infecciones nosocomiales y pacientes con factores de riesgo.",
+    common_syndromes: ["hap_vap", "complicated_uti", "bacteremia", "ssti_complicated"],
+    intrinsic_resistance: ["Intrínsecamente resistente a múltiples antibióticos (barrera de permeabilidad/eflujo)."],
+    typical_resistance: ["Resistencia adquirida frecuente en exposición previa a antibióticos o estadías prolongadas."],
+    stewardship_note: "Evitar cobertura anti-Pseudomonas si no hay factores de riesgo; de-escalar con cultivos.",
+    refs: [{ source: "Pendiente", year: 2025, note: "—" }]
+  }
+],
 
   antibiotics: [
     // --- Beta-lactámicos y afines ---
