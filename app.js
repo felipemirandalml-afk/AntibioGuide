@@ -202,6 +202,64 @@ document.addEventListener("DOMContentLoaded", () => {
   // Ensure initial active styling
   setTab(activeTabId);
 
+  // =============================
+  // CONTEXTO LOCAL (PERFILES)
+  // =============================
+  const profileSelect = document.getElementById("profile-select");
+  const profileLabel = document.getElementById("active-profile-label");
+
+  const PROFILE_STORAGE_KEY = "abg_active_profile_id";
+
+  function getActiveProfileId() {
+    const stored = localStorage.getItem(PROFILE_STORAGE_KEY);
+    if (stored && clinicalData?.resistanceProfiles?.[stored]) return stored;
+    return "general";
+  }
+
+  let activeProfileId = getActiveProfileId();
+
+  function getActiveProfile() {
+    return clinicalData?.resistanceProfiles?.[activeProfileId]
+      || clinicalData?.resistanceProfiles?.general
+      || null;
+  }
+
+  function populateProfileSelect() {
+    if (!profileSelect || !clinicalData?.resistanceProfiles) return;
+
+    profileSelect.innerHTML = "";
+
+    Object.values(clinicalData.resistanceProfiles).forEach(profile => {
+      const option = document.createElement("option");
+      option.value = profile.id;
+      option.textContent = profile.label;
+      profileSelect.appendChild(option);
+    });
+
+    profileSelect.value = activeProfileId;
+
+    if (profileLabel) {
+      const active = getActiveProfile();
+      profileLabel.textContent = active?.label || "General";
+    }
+  }
+
+  if (profileSelect) {
+    populateProfileSelect();
+
+    profileSelect.addEventListener("change", () => {
+      activeProfileId = profileSelect.value;
+      localStorage.setItem(PROFILE_STORAGE_KEY, activeProfileId);
+
+      const active = getActiveProfile();
+      if (profileLabel) {
+        profileLabel.textContent = active?.label || "General";
+      }
+
+      handleSearch(); // re-render current tab
+    });
+  }
+
   if (window.EPIVIGILA && typeof window.EPIVIGILA.init === "function") {
     window.EPIVIGILA.init({
       normalize
@@ -534,6 +592,33 @@ document.addEventListener("DOMContentLoaded", () => {
     contentDisplay.appendChild(container);
   }
 
+  function getRegimenWarnings(syndromeId, regimenDrugIds = []) {
+    const profile = getActiveProfile();
+    if (!profile || !Array.isArray(profile.modifiers)) return [];
+
+    const warnings = [];
+
+    profile.modifiers.forEach(mod => {
+      if (mod.action !== "show_warning") return;
+      if (mod.syndrome_id !== syndromeId) return;
+
+      if (!regimenDrugIds.includes(mod.match?.antibiotic_id)) return;
+
+      const rData =
+        profile.data?.[mod.match?.pathogen_id]?.[mod.match?.antibiotic_id];
+
+      if (!rData || typeof rData.r_pct !== "number") return;
+
+      if (rData.r_pct >= mod.threshold_r_pct) {
+        warnings.push(
+          `${mod.message} (R local: ${rData.r_pct}%, perfil: ${profile.label})`
+        );
+      }
+    });
+
+    return warnings;
+  }
+
   // --- Detail Views (Modal Content) ---
   function showSyndromeDetail(s) {
     const name = escapeHTML(s?.name || "");
@@ -571,6 +656,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const comments = escapeHTML(r?.comments || "");
 
             const ids = Array.isArray(r?.drugIds) ? r.drugIds.filter(Boolean) : [];
+            const regimenWarnings = getRegimenWarnings(s?.id, ids);
             let drugBlock = "";
 
             if (ids.length > 0) {
@@ -608,6 +694,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 ${drugBlock}
                 <p class="text-sm text-gray-600 font-medium">${dose} ${route} ${interval} (${duration})</p>
                 <p class="text-sm text-gray-500 mt-2 italic">${comments}</p>
+                ${
+                  regimenWarnings.length > 0
+                    ? `
+                    <div class="mt-3 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">
+                      <div class="font-semibold">⚠️ Contexto local</div>
+                      <ul class="list-disc pl-5 mt-1">
+                        ${regimenWarnings.map(w => `<li>${escapeHTML(w)}</li>`).join("")}
+                      </ul>
+                    </div>
+                    `
+                    : ""
+                }
               </div>
             `;
           })

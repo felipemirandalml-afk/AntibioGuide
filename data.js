@@ -1404,6 +1404,44 @@ const clinicalData = {
       ]
     }
   ],
+  resistanceProfiles: {
+    general: {
+      id: "general",
+      label: "General (sin datos locales)",
+      scope: { country: "CL" },
+      updated: null,
+      data: {},
+      modifiers: []
+    },
+    cl_rm_2026: {
+      id: "cl_rm_2026",
+      label: "Chile — Región Metropolitana (2026)",
+      scope: { country: "CL", region: "RM" },
+      updated: "2026-01-15",
+      data: {
+        escherichia_coli: { ciprofloxacino: { r_pct: 32 } },
+        streptococcus_pneumoniae: { azitromicina: { r_pct: 28 } }
+      },
+      modifiers: [
+        {
+          id: "itu_fq_warning",
+          action: "show_warning",
+          syndrome_id: "itu",
+          match: { pathogen_id: "escherichia_coli", antibiotic_id: "ciprofloxacino" },
+          threshold_r_pct: 20,
+          message: "Resistencia local elevada a fluoroquinolonas en E. coli: evitar uso empírico si es posible."
+        },
+        {
+          id: "nac_macrolide_warning",
+          action: "show_warning",
+          syndrome_id: "nac",
+          match: { pathogen_id: "streptococcus_pneumoniae", antibiotic_id: "azitromicina" },
+          threshold_r_pct: 25,
+          message: "Resistencia local elevada a macrólidos en neumococo: evitar monoterapia con macrólidos."
+        }
+      ]
+    }
+  },
     meta: {
     appName: "AntibioGuide",
     version: "0.1.0",
@@ -1416,4 +1454,8 @@ const clinicalData = {
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = clinicalData;
+}
+
+if (typeof window !== "undefined") {
+  window.clinicalData = clinicalData;
 }
