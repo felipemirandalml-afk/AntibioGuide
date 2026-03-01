@@ -474,7 +474,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const items = Array.isArray(local.items) ? local.items : [];
       const maxItems = 6;
       const shown = items.slice(0, maxItems);
-      const remaining = items.length - shown.length;
 
       const chips = shown
         .map((item) => {
@@ -497,10 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ? `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1">BLEE ${local.blee_pct}%</span>`
           : "";
 
-      const moreText =
-        remaining > 0
-          ? `<span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-2 py-1 text-slate-600">+${remaining} más</span>`
-          : "";
+      // TODO: Optional future enhancement — expandable full antibiotic list view
 
       const sourceLabel = escapeHTML(profile?.source || profile?.label || "Perfil local");
 
@@ -508,7 +504,7 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs">
           <div class="font-semibold">Susceptibilidad local</div>
           <div class="text-slate-600">${sourceLabel} · Hosp. adultos · Umbral ≥${threshold}%</div>
-          <div class="mt-1 flex flex-wrap gap-2">${chips}${bleeChip}${moreText}</div>
+          <div class="mt-1 flex flex-wrap gap-2">${chips}${bleeChip}</div>
         </div>
       `;
     } catch (_err) {
