@@ -1096,6 +1096,43 @@ const clinicalData = {
       uses: "Sepsis grave, ESBL con riesgo Pseudomonas."
     },
 
+    {
+      id: "imipenem",
+      name: "Imipenem",
+      family: "CarbapenÃ©mico",
+      mechanism: "Inhibe pared celular.",
+      spectrum: "Amplio Gram+/Gram-/anaerobios, incluyendo Pseudomonas.",
+      dose: "500 mg IV c/6h (segÃºn severidad y funciÃ³n renal)",
+      renal: "Requiere ajuste en insuficiencia renal.",
+      contraindications: "Alergia grave a beta-lactÃ¡micos.",
+      adverse: "NÃ¡useas, convulsiones (riesgo en IR o altas dosis).",
+      uses: "Infecciones graves nosocomiales y enterobacterales resistentes."
+    },
+    {
+      id: "amikacina",
+      name: "Amikacina",
+      family: "AminoglucÃ³sido",
+      mechanism: "Inhibe sÃ­ntesis proteica (30S), bactericida.",
+      spectrum: "Gram negativos, incluyendo Pseudomonas y enterobacterales.",
+      dose: "15-20 mg/kg IV c/24h (ajustar segÃºn niveles)",
+      renal: "Ajuste obligatorio en insuficiencia renal.",
+      contraindications: "Hipersensibilidad; precauciÃ³n en miastenia gravis.",
+      adverse: "Nefrotoxicidad y ototoxicidad.",
+      uses: "Sepsis por Gram negativos y terapia combinada en cuadros graves."
+    },
+    {
+      id: "linezolid",
+      name: "Linezolid",
+      family: "Oxazolidinona",
+      mechanism: "Inhibe sÃ­ntesis proteica (50S).",
+      spectrum: "Gram positivos resistentes, incluyendo MRSA y VRE.",
+      dose: "600 mg IV/PO c/12h",
+      renal: "Sin ajuste renal habitual.",
+      contraindications: "Uso concomitante con IMAO/serotonÃ©rgicos (precauciÃ³n).",
+      adverse: "Trombocitopenia, neuropatÃ­a (uso prolongado).",
+      uses: "Infecciones por MRSA/VRE y neumonÃ­a por Gram positivos."
+    },
+
     // --- Anaerobios / otros ---
     {
       id: "metronidazol",
@@ -1440,6 +1477,160 @@ const clinicalData = {
           message: "Resistencia local elevada a macrólidos en neumococo: evitar monoterapia con macrólidos."
         }
       ]
+    },
+    hra_hosp_adulto_2024: {
+      id: "hra_hosp_adulto_2024",
+      label: "Hospital Regional de Antofagasta (HRA) – Hospitalización Adulto (2024)",
+      region: "Antofagasta",
+      hospital: "HRA",
+      year: 2024,
+      source: "PROA HRA – Cartilla susceptibilidad hospitalizados adulto 2024",
+      data: {
+        staphylococcus_aureus: {
+          cloxacilina: { s_pct: 62 },
+          vancomicina: { s_pct: 100 },
+          tmp_smx: { s_pct: 99 },
+          ciprofloxacino: { s_pct: 89 }
+        },
+        // ID nuevo pendiente de decidir para clinicalData.pathogens
+        staphylococcus_sp: {
+          cloxacilina: { s_pct: 36 },
+          vancomicina: { s_pct: 100 },
+          tmp_smx: { s_pct: 60 },
+          ciprofloxacino: { s_pct: 48 }
+        },
+        enterococcus_faecalis: {
+          ampicilina: { s_pct: 99 },
+          vancomicina: { s_pct: 93 }
+        },
+        enterococcus_faecium: {
+          ampicilina: { s_pct: 28 },
+          vancomicina: { s_pct: 29 },
+          linezolid: { s_pct: 100 }
+        },
+        pseudomonas_aeruginosa: {
+          ceftazidima: { s_pct: 72 },
+          cefepime: { s_pct: 71 },
+          piperacilina_tazobactam: { s_pct: 75 },
+          imipenem: { s_pct: 54 },
+          meropenem: { s_pct: 70 },
+          amikacina: { s_pct: 88 },
+          ciprofloxacino: { s_pct: 72 },
+          levofloxacino: { s_pct: 72 },
+          tmp_smx: { ri: true }
+        },
+        // ID nuevo pendiente de decidir para clinicalData.pathogens
+        stenotrophomonas_maltophilia: {
+          ceftazidima: { s_pct: 27 },
+          levofloxacino: { s_pct: 91 },
+          tmp_smx: { s_pct: 91 }
+        },
+        escherichia_coli: {
+          sterile: {
+            ceftriaxona: { s_pct: 73 },
+            piperacilina_tazobactam: { s_pct: 94 },
+            ertapenem: { s_pct: 98 },
+            imipenem: { s_pct: 98 },
+            meropenem: { s_pct: 100 },
+            amikacina: { s_pct: 98 },
+            ciprofloxacino: { s_pct: 58 },
+            tmp_smx: { s_pct: 67 },
+            blee_pct: 25
+          },
+          urine: {
+            ceftriaxona: { s_pct: 70 },
+            amoxicilina_clavulanico: { s_pct: 88 },
+            piperacilina_tazobactam: { s_pct: 97 },
+            ertapenem: { s_pct: 94 },
+            imipenem: { s_pct: 98 },
+            meropenem: { s_pct: 98 },
+            amikacina: { s_pct: 99 },
+            ciprofloxacino: { s_pct: 49 },
+            tmp_smx: { s_pct: 54 },
+            blee_pct: 26
+          },
+          resp: {
+            ceftriaxona: { s_pct: 70 },
+            piperacilina_tazobactam: { s_pct: 96 },
+            ertapenem: { s_pct: 98 },
+            imipenem: { s_pct: 95 },
+            meropenem: { s_pct: 100 },
+            amikacina: { s_pct: 98 },
+            ciprofloxacino: { s_pct: 60 },
+            tmp_smx: { s_pct: 61 },
+            blee_pct: 26
+          }
+        },
+        klebsiella_pneumoniae: {
+          piperacilina_tazobactam: { s_pct: 37 },
+          ceftriaxona: { s_pct: 31 },
+          ertapenem: { s_pct: 56 },
+          imipenem: { s_pct: 69 },
+          meropenem: { s_pct: 67 },
+          amikacina: { s_pct: 66 },
+          ciprofloxacino: { s_pct: 40 },
+          blee_pct: 60
+        },
+        // ID nuevo pendiente de decidir para clinicalData.pathogens
+        klebsiella_oxytoca: {
+          piperacilina_tazobactam: { s_pct: 76 },
+          ceftriaxona: { s_pct: 71 },
+          ertapenem: { s_pct: 82 },
+          imipenem: { s_pct: 82 },
+          meropenem: { s_pct: 86 },
+          amikacina: { s_pct: 89 },
+          ciprofloxacino: { s_pct: 68 },
+          blee_pct: 16
+        },
+        // ID nuevo pendiente de decidir para clinicalData.pathogens
+        enterobacter_cloacae_complex: {
+          piperacilina_tazobactam: { s_pct: 57 },
+          ceftriaxona: { s_pct: 44 },
+          ertapenem: { s_pct: 64 },
+          imipenem: { s_pct: 92 },
+          meropenem: { s_pct: 92 },
+          amikacina: { s_pct: 95 },
+          ciprofloxacino: { s_pct: 60 }
+        },
+        // ID nuevo pendiente de decidir para clinicalData.pathogens
+        citrobacter_freundii: {
+          piperacilina_tazobactam: { s_pct: 76 },
+          ceftriaxona: { s_pct: 60 },
+          ertapenem: { s_pct: 90 },
+          imipenem: { s_pct: 86 },
+          meropenem: { s_pct: 90 },
+          amikacina: { s_pct: 95 },
+          ciprofloxacino: { s_pct: 71 }
+        },
+        serratia_marcescens: {
+          piperacilina_tazobactam: { s_pct: 71 },
+          ceftriaxona: { s_pct: 43 },
+          ertapenem: { s_pct: 100 },
+          imipenem: { s_pct: 71 },
+          meropenem: { s_pct: 100 },
+          amikacina: { s_pct: 88 },
+          ciprofloxacino: { s_pct: 63 }
+        },
+        proteus_mirabilis: {
+          piperacilina_tazobactam: { s_pct: 97 },
+          ceftriaxona: { s_pct: 66 },
+          ertapenem: { s_pct: 91 },
+          meropenem: { s_pct: 94 },
+          amikacina: { s_pct: 75 },
+          ciprofloxacino: { s_pct: 59 }
+        },
+        // ID nuevo pendiente de decidir para clinicalData.pathogens
+        morganella_morganii: {
+          piperacilina_tazobactam: { s_pct: 90 },
+          ceftriaxona: { s_pct: 69 },
+          ertapenem: { s_pct: 86 },
+          imipenem: { s_pct: 7 },
+          meropenem: { s_pct: 93 },
+          amikacina: { s_pct: 96 },
+          ciprofloxacino: { s_pct: 55 }
+        }
+      },
+      modifiers: []
     }
   },
     meta: {
