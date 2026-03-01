@@ -409,6 +409,113 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Card Creators (IMPORTANT: escape all data) ---
+  function getLocalSusceptibilityForPathogen(profile, pathogenId) {
+    try {
+      if (!profile || !pathogenId) return null;
+      const profileData = profile?.data?.[pathogenId];
+      if (!profileData || typeof profileData !== "object") return null;
+
+      let sourceData = profileData;
+      const keys = Object.keys(profileData);
+      const hasSubsources = keys.some((k) => {
+        const v = profileData[k];
+        return v && typeof v === "object" && !Array.isArray(v) && !("s_pct" in v) && !("ri" in v);
+      });
+
+      if (hasSubsources) {
+        const selectedKey = Object.prototype.hasOwnProperty.call(profileData, "sterile")
+          ? "sterile"
+          : keys.find((k) => profileData[k] && typeof profileData[k] === "object");
+        sourceData = selectedKey ? profileData[selectedKey] : null;
+      }
+
+      if (!sourceData || typeof sourceData !== "object") return null;
+
+      function humanizeId(id) {
+        return String(id || "").replace(/_/g, " ").trim();
+      }
+
+      const items = [];
+      let bleePct;
+
+      Object.entries(sourceData).forEach(([abxId, value]) => {
+        if (abxId === "blee_pct" && typeof value === "number") {
+          bleePct = value;
+          return;
+        }
+
+        if (!value || typeof value !== "object") return;
+
+        const abxName = clinicalData?.antibiotics?.find((a) => a?.id === abxId)?.name || humanizeId(abxId);
+
+        if (value.ri === true) {
+          items.push({ label: abxName, ri: true });
+          return;
+        }
+
+        if (typeof value.s_pct === "number") {
+          items.push({ label: abxName, s_pct: value.s_pct });
+        }
+      });
+
+      if (items.length === 0 && bleePct === undefined) return null;
+      return bleePct !== undefined ? { items, blee_pct: bleePct } : { items };
+    } catch (_err) {
+      return null;
+    }
+  }
+
+  function renderLocalSusceptibilityBanner(profile, pathogenId) {
+    try {
+      const local = getLocalSusceptibilityForPathogen(profile, pathogenId);
+      if (!local) return "";
+
+      const threshold = Number(profile?.threshold_s_pct ?? profile?.threshold ?? 75);
+      const items = Array.isArray(local.items) ? local.items : [];
+      const maxItems = 6;
+      const shown = items.slice(0, maxItems);
+      const remaining = items.length - shown.length;
+
+      const chips = shown
+        .map((item) => {
+          if (item.ri) {
+            return `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1">🧬 ${escapeHTML(
+              item.label
+            )} RI</span>`;
+          }
+
+          const s = Number(item.s_pct);
+          const icon = s >= threshold ? "🟢" : s >= 50 ? "🟡" : "🔴";
+          return `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1">${icon} ${escapeHTML(
+            item.label
+          )} ${s}%</span>`;
+        })
+        .join("");
+
+      const bleeChip =
+        typeof local.blee_pct === "number"
+          ? `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1">BLEE ${local.blee_pct}%</span>`
+          : "";
+
+      const moreText =
+        remaining > 0
+          ? `<span class="inline-flex items-center rounded-full border border-slate-200 bg-slate-100 px-2 py-1 text-slate-600">+${remaining} más</span>`
+          : "";
+
+      const sourceLabel = escapeHTML(profile?.source || profile?.label || "Perfil local");
+
+      return `
+        <div class="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs">
+          <div class="font-semibold">Susceptibilidad local</div>
+          <div class="text-slate-600">${sourceLabel} · Hosp. adultos · Umbral ≥${threshold}%</div>
+          <div class="mt-1 flex flex-wrap gap-2">${chips}${bleeChip}${moreText}</div>
+        </div>
+      `;
+    } catch (_err) {
+      return "";
+    }
+  }
+
   function createSyndromeCard(s) {
     const card = document.createElement("div");
     card.className =
@@ -442,6 +549,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const name = escapeHTML(p?.name || "");
     const summary = escapeHTML(p?.summary || "");
+    const profile = getActiveProfile();
+    const localBanner = renderLocalSusceptibilityBanner(profile, p?.id);
     const typical = Array.isArray(p?.typical_resistance) ? p.typical_resistance.filter(Boolean) : [];
     const intrinsic = Array.isArray(p?.intrinsic_resistance) ? p.intrinsic_resistance.filter(Boolean) : [];
     const stewardship = escapeHTML(p?.stewardship_note || "");
@@ -455,6 +564,7 @@ document.addEventListener("DOMContentLoaded", () => {
     card.innerHTML = `
       <h3 class="font-bold text-xl text-purple-800 mb-2">${name}</h3>
       <p class="text-sm text-gray-700 mb-4">${summary}</p>
+      ${localBanner}
       <div class="space-y-3 mt-4">
         ${
           typicalHTML
