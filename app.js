@@ -473,21 +473,37 @@ document.addEventListener("DOMContentLoaded", () => {
       const threshold = Number(profile?.threshold_s_pct ?? profile?.threshold ?? 75);
       const items = Array.isArray(local.items) ? local.items : [];
       const maxItems = 6;
-      const shown = items.slice(0, maxItems);
+      const sortedItems = items
+        .map((item, idx) => {
+          const isRi = item?.ri === true || String(item?.ri || "").toUpperCase() === "RI";
+          const s = Number(item?.s_pct);
+          let group = 4;
+          if (!isRi) {
+            if (s >= threshold) group = 1;
+            else if (s >= 50) group = 2;
+            else group = 3;
+          }
+          return { ...item, idx, group, s, isRi };
+        })
+        .sort((a, b) => {
+          if (a.group !== b.group) return a.group - b.group;
+          if (a.group !== 4 && b.group !== 4 && a.s !== b.s) return b.s - a.s;
+          return a.idx - b.idx;
+        });
+      const shown = sortedItems.slice(0, maxItems);
 
       const chips = shown
         .map((item) => {
-          if (item.ri) {
+          if (item.isRi) {
             return `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1">🧬 ${escapeHTML(
               item.label
             )} RI</span>`;
           }
 
-          const s = Number(item.s_pct);
-          const icon = s >= threshold ? "🟢" : s >= 50 ? "🟡" : "🔴";
+          const icon = item.s >= threshold ? "🟢" : item.s >= 50 ? "🟡" : "🔴";
           return `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1">${icon} ${escapeHTML(
             item.label
-          )} ${s}%</span>`;
+          )} ${item.s}%</span>`;
         })
         .join("");
 
@@ -497,13 +513,18 @@ document.addEventListener("DOMContentLoaded", () => {
           : "";
 
       // TODO: Optional future enhancement — expandable full antibiotic list view
-
-      const sourceLabel = escapeHTML(profile?.source || profile?.label || "Perfil local");
+      let subtitle = `Perfil local · Empírico ≥${threshold}%`;
+      if (profile?.id === "hra_hosp_adulto_2024") {
+        subtitle = `HRA PROA 2024 · Hospitalizados adultos · Empírico ≥${threshold}%`;
+      } else if (profile?.label) {
+        const shortLabel = String(profile.label).split("(")[0].trim() || "Perfil local";
+        subtitle = `${shortLabel} · Empírico ≥${threshold}%`;
+      }
 
       return `
         <div class="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs">
           <div class="font-semibold">Susceptibilidad local</div>
-          <div class="text-slate-600">${sourceLabel} · Hosp. adultos · Umbral ≥${threshold}%</div>
+          <div class="text-slate-600">${escapeHTML(subtitle)}</div>
           <div class="mt-1 flex flex-wrap gap-2">${chips}${bleeChip}</div>
         </div>
       `;
