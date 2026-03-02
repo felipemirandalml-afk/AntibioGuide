@@ -1452,7 +1452,7 @@ const clinicalData = {
     },
     cl_rm_2026: {
       id: "cl_rm_2026",
-      label: "Chile — Región Metropolitana (2026)",
+      label: "Santiago/RM – Perfil regional (2026)",
       scope: { country: "CL", region: "RM" },
       updated: "2026-01-15",
       data: {
@@ -1480,7 +1480,7 @@ const clinicalData = {
     },
     hra_hosp_adulto_2024: {
       id: "hra_hosp_adulto_2024",
-      label: "Hospital Regional de Antofagasta (HRA) – Hospitalización Adulto (2024)",
+      label: "Antofagasta – HRA – Hosp. adultos (2024)",
       region: "Antofagasta",
       hospital: "HRA",
       year: 2024,
