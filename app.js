@@ -767,7 +767,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     modalContent.innerHTML = `
       <h2 class="text-3xl font-bold text-blue-900 mb-2">${name}</h2>
-      <p class="text-gray-600 italic mb-6">${desc}</p>
+      <p class="text-gray-600 dark:text-slate-300 italic mb-6">${desc}</p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
         <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg dark:bg-blue-950/40 dark:border-blue-800/40 dark:text-blue-200">
@@ -826,11 +826,11 @@ document.addEventListener("DOMContentLoaded", () => {
               <div class="border-l-4 border-blue-400 pl-4 py-2">
                 <div class="flex justify-between items-start">
                   <h4 class="font-bold text-blue-700">${rName}</h4>
-                  <span class="text-xs bg-gray-100 text-gray-500 px-2 py-1 rounded">${ref}</span>
+                  <span class="text-xs bg-gray-100 text-gray-500 dark:bg-slate-800 dark:text-slate-400 px-2 py-1 rounded">${ref}</span>
                 </div>
                 ${drugBlock}
-                <p class="text-sm text-gray-600 font-medium">${dose} ${route} ${interval} (${duration})</p>
-                <p class="text-sm text-gray-500 mt-2 italic">${comments}</p>
+                <p class="text-sm text-gray-600 dark:text-slate-300 font-medium">${dose} ${route} ${interval} (${duration})</p>
+                <p class="text-sm text-gray-500 dark:text-slate-300 mt-2 italic">${comments}</p>
                 ${
                   regimenWarnings.length > 0
                     ? `
@@ -855,7 +855,7 @@ document.addEventListener("DOMContentLoaded", () => {
           ${pathogens
             .map(
               (p) =>
-                `<span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full border border-gray-200">${escapeHTML(
+                `<span class="bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-300 text-xs px-2 py-1 rounded-full border border-gray-200 dark:border-slate-700">${escapeHTML(
                   p
                 )}</span>`
             )
@@ -890,8 +890,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <div class="grid grid-cols-1 gap-6 mt-6">
         <section>
           <h4 class="text-sm font-bold text-gray-400 uppercase border-b mb-2">Mecanismo y Espectro</h4>
-          <p class="text-sm text-gray-800 mb-1"><strong>Mecanismo:</strong> ${mechanism}</p>
-          <p class="text-sm text-gray-800"><strong>Espectro:</strong> ${spectrum}</p>
+          <p class="text-sm text-gray-800 dark:text-slate-300 mb-1"><strong>Mecanismo:</strong> ${mechanism}</p>
+          <p class="text-sm text-gray-800 dark:text-slate-300"><strong>Espectro:</strong> ${spectrum}</p>
         </section>
 
         <section class="bg-emerald-50 border border-emerald-200 p-4 rounded-lg dark:bg-emerald-950/40 dark:border-emerald-800/40 dark:text-emerald-200">
@@ -903,17 +903,17 @@ document.addEventListener("DOMContentLoaded", () => {
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <section>
             <h4 class="text-sm font-bold text-red-400 uppercase border-b mb-2">Contraindicaciones</h4>
-            <p class="text-sm text-gray-700">${contraindications}</p>
+            <p class="text-sm text-gray-700 dark:text-slate-300">${contraindications}</p>
           </section>
           <section>
             <h4 class="text-sm font-bold text-orange-400 uppercase border-b mb-2">Reacciones Adversas</h4>
-            <p class="text-sm text-gray-700">${adverse}</p>
+            <p class="text-sm text-gray-700 dark:text-slate-300">${adverse}</p>
           </section>
         </div>
 
         <section>
           <h4 class="text-sm font-bold text-gray-400 uppercase border-b mb-2">Usos principales</h4>
-          <p class="text-sm text-gray-700 font-medium">${uses}</p>
+          <p class="text-sm text-gray-700 dark:text-slate-300 font-medium">${uses}</p>
         </section>
       </div>
     `;
