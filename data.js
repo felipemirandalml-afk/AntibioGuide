@@ -1631,6 +1631,164 @@ const clinicalData = {
         }
       },
       modifiers: []
+    },
+    cl_ii_hra_upc_2024: {
+      id: "cl_ii_hra_upc_2024",
+      label: "Antofagasta – HRA – UPC adulto (2024)",
+      year: 2024,
+      unit: "UPC adulto",
+      threshold_s_pct: 75,
+      source: "PROA HRA – Cartilla susceptibilidad UPC adulto 2024",
+      data: {
+        escherichia_coli: {
+          sterile: {
+            ceftriaxona: { s_pct: 67 },
+            piperacilina_tazobactam: { s_pct: 74 },
+            ertapenem: { s_pct: 93 },
+            imipenem: { s_pct: 88 },
+            meropenem: { s_pct: 93 },
+            amikacina: { s_pct: 88 },
+            ciprofloxacino: { s_pct: 44 },
+            tmp_smx: { s_pct: 30 },
+            blee_pct: 30
+          },
+          urine: {
+            ceftriaxona: { s_pct: 67 },
+            amoxicilina_clavulanico: { s_pct: 83 },
+            piperacilina_tazobactam: { s_pct: 95 },
+            ertapenem: { s_pct: 94 },
+            imipenem: { s_pct: 98 },
+            meropenem: { s_pct: 98 },
+            amikacina: { s_pct: 98 },
+            ciprofloxacino: { s_pct: 50 },
+            tmp_smx: { s_pct: 52 },
+            blee_pct: 28
+          },
+          resp: {
+            ceftriaxona: { s_pct: 50 },
+            piperacilina_tazobactam: { s_pct: 78 },
+            ertapenem: { s_pct: 87 },
+            imipenem: { s_pct: 91 },
+            meropenem: { s_pct: 91 },
+            amikacina: { s_pct: 100 },
+            ciprofloxacino: { s_pct: 43 },
+            tmp_smx: { s_pct: 52 },
+            blee_pct: 48
+          }
+        },
+        pseudomonas_aeruginosa: {
+          ceftazidima: { s_pct: 61 },
+          cefepime: { s_pct: 70 },
+          piperacilina_tazobactam: { s_pct: 66 },
+          imipenem: { s_pct: 40 },
+          meropenem: { s_pct: 65 },
+          amikacina: { s_pct: 91 },
+          ciprofloxacino: { s_pct: 83 },
+          levofloxacino: { s_pct: 78 },
+          tmp_smx: { ri: true }
+        },
+        // TODO: add to pathogens catalog if/when needed
+        stenotrophomonas_maltophilia: {
+          ceftazidima: { s_pct: 15 },
+          levofloxacino: { s_pct: 38 },
+          tmp_smx: { s_pct: 100 }
+        },
+        staphylococcus_aureus: {
+          cloxacilina: { s_pct: 76 },
+          vancomicina: { s_pct: 100 },
+          tmp_smx: { s_pct: 92 },
+          ciprofloxacino: { s_pct: 93 }
+        },
+        // TODO: add to pathogens catalog if/when needed
+        staphylococcus_sp: {
+          cloxacilina: { s_pct: 21 },
+          vancomicina: { s_pct: 100 },
+          tmp_smx: { s_pct: 48 },
+          ciprofloxacino: { s_pct: 34 }
+        },
+        // TODO: add to pathogens catalog if/when needed
+        enterococcus_faecalis: {
+          ampicilina: { s_pct: 98 },
+          vancomicina: { s_pct: 92 }
+        },
+        // TODO: add to pathogens catalog if/when needed
+        enterococcus_faecium: {
+          ampicilina: { s_pct: 18 },
+          vancomicina: { s_pct: 13 },
+          linezolid: { s_pct: 100 }
+        },
+        // TODO: add to pathogens catalog if/when needed
+        klebsiella_pneumoniae: {
+          piperacilina_tazobactam: { s_pct: 54 },
+          ceftriaxona: { s_pct: 38 },
+          ertapenem: { s_pct: 58 },
+          imipenem: { s_pct: 84 },
+          meropenem: { s_pct: 87 },
+          amikacina: { s_pct: 89 },
+          ciprofloxacino: { s_pct: 64 }
+        },
+        // TODO: add to pathogens catalog if/when needed
+        klebsiella_oxytoca: {
+          piperacilina_tazobactam: { s_pct: 70 },
+          ceftriaxona: { s_pct: 60 },
+          ertapenem: { s_pct: 67 },
+          imipenem: { s_pct: 67 },
+          meropenem: { s_pct: 67 },
+          amikacina: { s_pct: 90 },
+          ciprofloxacino: { s_pct: 80 }
+        },
+        // TODO: add to pathogens catalog if/when needed
+        enterobacter_cloacae_complex: {
+          piperacilina_tazobactam: { s_pct: 62 },
+          ceftriaxona: { s_pct: 48 },
+          ertapenem: { s_pct: 77 },
+          imipenem: { s_pct: 50 },
+          meropenem: { s_pct: 82 },
+          amikacina: { s_pct: 81 },
+          ciprofloxacino: { s_pct: 62 }
+        },
+        // TODO: add to pathogens catalog if/when needed
+        citrobacter_freundii: {
+          piperacilina_tazobactam: { s_pct: 96 },
+          ceftriaxona: { s_pct: 77 },
+          ertapenem: { s_pct: 100 },
+          imipenem: null,
+          meropenem: { s_pct: 96 },
+          amikacina: { s_pct: 81 },
+          ciprofloxacino: { s_pct: 78 }
+        },
+        // TODO: add to pathogens catalog if/when needed
+        serratia_marcescens: {
+          piperacilina_tazobactam: { s_pct: 90 },
+          ceftriaxona: { s_pct: 69 },
+          ertapenem: { s_pct: 86 },
+          imipenem: { s_pct: 7 },
+          meropenem: { s_pct: 93 },
+          amikacina: { s_pct: 96 },
+          ciprofloxacino: { s_pct: 55 }
+        },
+        // TODO: add to pathogens catalog if/when needed
+        proteus_mirabilis: {
+          piperacilina_tazobactam: { s_pct: 48 },
+          ceftriaxona: { s_pct: 41 },
+          ertapenem: { s_pct: 57 },
+          imipenem: { s_pct: 77 },
+          meropenem: { s_pct: 74 },
+          amikacina: { s_pct: 78 },
+          ciprofloxacino: { s_pct: 48 }
+        },
+        // TODO: add to pathogens catalog if/when needed
+        morganella_morganii: {
+          piperacilina_tazobactam: { s_pct: 73 },
+          ceftriaxona: { s_pct: 70 },
+          ertapenem: { s_pct: 73 },
+          imipenem: { s_pct: 73 },
+          meropenem: { s_pct: 82 },
+          amikacina: { s_pct: 90 },
+          ciprofloxacino: { s_pct: 73 }
+        }
+      },
+      modifiers: []
     }
   },
     meta: {
