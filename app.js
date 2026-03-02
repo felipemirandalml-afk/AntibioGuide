@@ -13,6 +13,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // =============================
   const themeToggleBtn = document.getElementById("theme-toggle");
   const themeIcon = document.getElementById("theme-icon");
+  const themeSunSvg =
+    '<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="M4.93 4.93l1.41 1.41"></path><path d="M17.66 17.66l1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="M6.34 17.66l-1.41 1.41"></path><path d="M19.07 4.93l-1.41 1.41"></path></svg>';
+  const themeMoonSvg =
+    '<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
 
   function applyTheme(theme) {
     const html = document.documentElement; // <html>
@@ -24,7 +28,13 @@ document.addEventListener("DOMContentLoaded", () => {
     html.classList.toggle("dark", isDark);
     body.classList.toggle("dark", isDark);
 
-    if (themeIcon) themeIcon.textContent = isDark ? "☀️" : "🌙";
+    if (themeIcon) themeIcon.innerHTML = isDark ? themeSunSvg : themeMoonSvg;
+    if (themeToggleBtn) {
+      const label = isDark ? "Activar modo claro" : "Activar modo oscuro";
+      themeToggleBtn.setAttribute("aria-pressed", isDark ? "true" : "false");
+      themeToggleBtn.setAttribute("aria-label", label);
+      themeToggleBtn.setAttribute("title", label);
+    }
   }
 
   function getPreferredTheme() {
@@ -495,13 +505,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const chips = shown
         .map((item) => {
           if (item.isRi) {
-            return `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1">🧬 ${escapeHTML(
+            return `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">🧬 ${escapeHTML(
               item.label
             )} RI</span>`;
           }
 
           const icon = item.s >= threshold ? "🟢" : item.s >= 50 ? "🟡" : "🔴";
-          return `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1">${icon} ${escapeHTML(
+          return `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">${icon} ${escapeHTML(
             item.label
           )} ${item.s}%</span>`;
         })
@@ -509,7 +519,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const bleeChip =
         typeof local.blee_pct === "number"
-          ? `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1">BLEE ${local.blee_pct}%</span>`
+          ? `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">BLEE ${local.blee_pct}%</span>`
           : "";
 
       // TODO: Optional future enhancement — expandable full antibiotic list view
@@ -522,9 +532,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       return `
-        <div class="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs">
+        <div class="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
           <div class="font-semibold">Susceptibilidad local</div>
-          <div class="text-slate-600">${escapeHTML(subtitle)}</div>
+          <div class="text-slate-600 dark:text-slate-300">${escapeHTML(subtitle)}</div>
           <div class="mt-1 flex flex-wrap gap-2">${chips}${bleeChip}</div>
         </div>
       `;
@@ -536,21 +546,21 @@ document.addEventListener("DOMContentLoaded", () => {
   function createSyndromeCard(s) {
     const card = document.createElement("div");
     card.className =
-  "bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow cursor-pointer border border-transparent dark:border-slate-800";
+  "bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200 dark:border-slate-700 dark:shadow-none";
 
     const name = escapeHTML(s?.name || "");
     const desc = escapeHTML(s?.description || "");
     const pathogens = Array.isArray(s?.pathogens) ? s.pathogens.slice(0, 3) : [];
 
     card.innerHTML = `
-      <h3 class="font-bold text-xl text-blue-800 mb-2">${name}</h3>
-      <p class="text-gray-600 text-sm mb-4 line-clamp-2">${desc}</p>
+      <h3 class="font-bold text-xl text-blue-800 dark:text-blue-300 mb-2">${name}</h3>
+      <p class="text-gray-600 dark:text-slate-300 text-sm mb-4 line-clamp-2">${desc}</p>
       <div class="flex flex-wrap gap-2 mb-4">
         ${pathogens
-          .map((p) => `<span class="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded">${escapeHTML(p)}</span>`)
+          .map((p) => `<span class="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded dark:bg-slate-800 dark:text-slate-300">${escapeHTML(p)}</span>`)
           .join("")}
       </div>
-      <button type="button" class="text-blue-600 font-semibold text-sm flex items-center">
+      <button type="button" class="text-blue-600 dark:text-blue-300 font-semibold text-sm flex items-center">
         Ver esquemas recomendados <i class="fas fa-chevron-right ml-1"></i>
       </button>
     `;
@@ -562,7 +572,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function createPathogenCard(p) {
     const card = document.createElement("div");
     card.className =
-      "bg-white p-6 rounded-lg shadow-md border-t-4 border-purple-500 hover:shadow-lg transition-shadow";
+      "bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border-t-4 border-purple-500 hover:shadow-lg transition-shadow border border-gray-200 dark:border-slate-700 dark:shadow-none";
 
     const name = escapeHTML(p?.name || "");
     const summary = escapeHTML(p?.summary || "");
@@ -572,21 +582,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const intrinsic = Array.isArray(p?.intrinsic_resistance) ? p.intrinsic_resistance.filter(Boolean) : [];
     const stewardship = escapeHTML(p?.stewardship_note || "");
     const typicalHTML = typical
-      .map((item) => `<li class="text-sm text-gray-700">${escapeHTML(item)}</li>`)
+      .map((item) => `<li class="text-sm text-gray-700 dark:text-slate-300">${escapeHTML(item)}</li>`)
       .join("");
     const intrinsicHTML = intrinsic
-      .map((item) => `<li class="text-sm text-gray-700">${escapeHTML(item)}</li>`)
+      .map((item) => `<li class="text-sm text-gray-700 dark:text-slate-300">${escapeHTML(item)}</li>`)
       .join("");
 
     card.innerHTML = `
-      <h3 class="font-bold text-xl text-purple-800 mb-2">${name}</h3>
-      <p class="text-sm text-gray-700 mb-4">${summary}</p>
+      <h3 class="font-bold text-xl text-purple-800 dark:text-purple-300 mb-2">${name}</h3>
+      <p class="text-sm text-gray-700 dark:text-slate-300 mb-4">${summary}</p>
       ${localBanner}
       <div class="space-y-3 mt-4">
         ${
           typicalHTML
             ? `<div>
-          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Resistencia tipica</span>
+          <span class="text-xs font-bold text-gray-400 dark:text-slate-400 uppercase tracking-wider">Resistencia tipica</span>
           <ul class="list-disc pl-5 mt-1 space-y-1">${typicalHTML}</ul>
         </div>`
             : ""
@@ -594,16 +604,16 @@ document.addEventListener("DOMContentLoaded", () => {
         ${
           intrinsicHTML
             ? `<div>
-          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Resistencia intrinseca</span>
+          <span class="text-xs font-bold text-gray-400 dark:text-slate-400 uppercase tracking-wider">Resistencia intrinseca</span>
           <ul class="list-disc pl-5 mt-1 space-y-1">${intrinsicHTML}</ul>
         </div>`
             : ""
         }
         ${
           stewardship
-            ? `<div class="bg-amber-50 border border-amber-200 rounded p-2">
-          <span class="text-xs font-bold text-amber-800 uppercase tracking-wider">PROA</span>
-          <p class="text-sm text-amber-900">PROA: ${stewardship}</p>
+            ? `<div class="bg-amber-50 border border-amber-200 rounded p-2 dark:bg-amber-950/30 dark:border-amber-800/40 dark:text-amber-200">
+          <span class="text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">PROA</span>
+          <p class="text-sm text-amber-900 dark:text-amber-200">PROA: ${stewardship}</p>
         </div>`
             : ""
         }
@@ -615,17 +625,17 @@ document.addEventListener("DOMContentLoaded", () => {
   function createMedCard(a) {
     const card = document.createElement("div");
     card.className =
-      "bg-white p-6 rounded-lg shadow-md border-t-4 border-emerald-500 hover:shadow-lg transition-shadow cursor-pointer";
+      "bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border-t-4 border-emerald-500 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200 dark:border-slate-700 dark:shadow-none";
 
     const name = escapeHTML(a?.name || "");
     const family = escapeHTML(a?.family || "");
     const spectrum = escapeHTML(a?.spectrum || "");
 
     card.innerHTML = `
-      <h3 class="font-bold text-xl text-emerald-800 mb-1">${name}</h3>
-      <p class="text-emerald-600 text-xs font-semibold mb-3">${family}</p>
-      <p class="text-gray-600 text-sm mb-4 line-clamp-2">${spectrum}</p>
-      <button type="button" class="text-emerald-700 font-semibold text-sm">Ver ficha completa</button>
+      <h3 class="font-bold text-xl text-emerald-800 dark:text-emerald-300 mb-1">${name}</h3>
+      <p class="text-emerald-600 dark:text-emerald-300 text-xs font-semibold mb-3">${family}</p>
+      <p class="text-gray-600 dark:text-slate-300 text-sm mb-4 line-clamp-2">${spectrum}</p>
+      <button type="button" class="text-emerald-700 dark:text-emerald-300 font-semibold text-sm">Ver ficha completa</button>
     `;
 
     card.addEventListener("click", () => showMedDetail(a));
@@ -648,10 +658,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (queryNormalized === "") {
       const header = document.createElement("div");
-      header.className = "bg-blue-50 p-6 rounded-lg border-l-4 border-blue-600 mb-8";
+      header.className = "bg-blue-50 p-6 rounded-lg border-l-4 border-blue-600 mb-8 dark:bg-slate-900 dark:border-blue-500";
       header.innerHTML = `
-        <h2 class="text-xl font-bold text-blue-900 mb-2"><i class="fas fa-info-circle mr-2"></i> Guía de Interpretación Clínica</h2>
-        <p class="text-blue-800 text-sm">
+        <h2 class="text-xl font-bold text-blue-900 dark:text-blue-300 mb-2"><i class="fas fa-info-circle mr-2"></i> Guía de Interpretación Clínica</h2>
+        <p class="text-blue-800 dark:text-slate-300 text-sm">
           Esta sección ayuda a interpretar resultados de microbiología basándose en estándares
           <strong>EUCAST/CLSI 2024-2026</strong>. Use el buscador para filtrar términos.
         </p>
@@ -673,7 +683,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (filteredItems.length === 0) return;
 
       const sectionEl = document.createElement("div");
-      sectionEl.innerHTML = `<h2 class="text-2xl font-bold text-gray-700 mb-6 border-b-2 border-gray-200 pb-2 flex items-center">
+      sectionEl.innerHTML = `<h2 class="text-2xl font-bold text-gray-700 dark:text-slate-200 mb-6 border-b-2 border-gray-200 dark:border-slate-700 pb-2 flex items-center">
         <i class="fas fa-book-medical mr-3 text-blue-500"></i> ${category}
       </h2>`;
 
@@ -687,13 +697,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const card = document.createElement("div");
         card.className =
-          "bg-white p-5 rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col";
+          "bg-white dark:bg-slate-900 p-5 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow h-full flex flex-col dark:shadow-none";
         card.innerHTML = `
-          <h3 class="font-bold text-blue-700 text-lg mb-2">${title}</h3>
-          <p class="text-gray-700 text-sm mb-4 flex-grow">${description}</p>
+          <h3 class="font-bold text-blue-700 dark:text-blue-300 text-lg mb-2">${title}</h3>
+          <p class="text-gray-700 dark:text-slate-300 text-sm mb-4 flex-grow">${description}</p>
           ${
             clues
-              ? `<div class="bg-blue-50 p-3 rounded text-xs text-blue-800 border-l-2 border-blue-300">
+              ? `<div class="bg-blue-50 p-3 rounded text-xs text-blue-800 border-l-2 border-blue-300 dark:bg-slate-800 dark:text-slate-200 dark:border-blue-500/60">
                 <strong><i class="fas fa-microscope"></i> Clave clínica:</strong> ${clues}
               </div>`
               : ""
@@ -760,13 +770,13 @@ document.addEventListener("DOMContentLoaded", () => {
       <p class="text-gray-600 italic mb-6">${desc}</p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        <div class="bg-blue-50 p-4 rounded-lg">
-          <h4 class="font-bold text-blue-800 text-sm uppercase"><i class="fas fa-home mr-2"></i> Manejo Ambulatorio</h4>
-          <p class="text-sm text-gray-700 mt-1">${outpatient}</p>
+        <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg dark:bg-blue-950/40 dark:border-blue-800/40 dark:text-blue-200">
+          <h4 class="font-bold text-blue-800 dark:text-blue-300 text-sm uppercase"><i class="fas fa-home mr-2"></i> Manejo Ambulatorio</h4>
+          <p class="text-sm text-gray-700 dark:text-blue-200 mt-1">${outpatient}</p>
         </div>
-        <div class="bg-orange-50 p-4 rounded-lg">
-          <h4 class="font-bold text-orange-800 text-sm uppercase"><i class="fas fa-hospital mr-2"></i> Criterios Hospitalización</h4>
-          <p class="text-sm text-gray-700 mt-1">${hospital}</p>
+        <div class="bg-orange-50 border border-orange-200 p-4 rounded-lg dark:bg-amber-950/30 dark:border-amber-800/40 dark:text-amber-200">
+          <h4 class="font-bold text-orange-800 dark:text-amber-300 text-sm uppercase"><i class="fas fa-hospital mr-2"></i> Criterios Hospitalización</h4>
+          <p class="text-sm text-gray-700 dark:text-amber-200 mt-1">${hospital}</p>
         </div>
       </div>
 
@@ -884,10 +894,10 @@ document.addEventListener("DOMContentLoaded", () => {
           <p class="text-sm text-gray-800"><strong>Espectro:</strong> ${spectrum}</p>
         </section>
 
-        <section class="bg-emerald-50 p-4 rounded-lg">
-          <h4 class="text-sm font-bold text-emerald-800 uppercase mb-2">Posología Adultos</h4>
-          <p class="text-lg font-bold text-emerald-900">${dose}</p>
-          <p class="text-sm text-emerald-700 mt-1"><strong>Ajuste renal:</strong> ${renal}</p>
+        <section class="bg-emerald-50 border border-emerald-200 p-4 rounded-lg dark:bg-emerald-950/40 dark:border-emerald-800/40 dark:text-emerald-200">
+          <h4 class="text-sm font-bold text-emerald-800 dark:text-emerald-300 uppercase mb-2">Posología Adultos</h4>
+          <p class="text-lg font-bold text-emerald-900 dark:text-emerald-200">${dose}</p>
+          <p class="text-sm text-emerald-700 dark:text-emerald-300 mt-1"><strong>Ajuste renal:</strong> ${renal}</p>
         </section>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
