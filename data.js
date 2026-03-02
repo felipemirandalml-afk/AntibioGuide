@@ -1793,8 +1793,8 @@ const clinicalData = {
   },
     meta: {
     appName: "AntibioGuide",
-    version: "0.1.0",
-    lastUpdated: "2026-02-25",
+    version: "0.3.0",
+    lastUpdated: "2026-03-02",
     scope: "Adultos. No incluye pediatría, embarazo ni lactancia.",
     disclaimer:
       "Uso educativo basado en guías internacionales. No reemplaza el juicio clínico.",
