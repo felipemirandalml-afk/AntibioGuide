@@ -770,13 +770,13 @@ document.addEventListener("DOMContentLoaded", () => {
       <p class="text-gray-600 italic mb-6">${desc}</p>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-        <div class="bg-blue-50 p-4 rounded-lg">
-          <h4 class="font-bold text-blue-800 text-sm uppercase"><i class="fas fa-home mr-2"></i> Manejo Ambulatorio</h4>
-          <p class="text-sm text-gray-700 mt-1">${outpatient}</p>
+        <div class="bg-blue-50 border border-blue-200 p-4 rounded-lg dark:bg-blue-950/40 dark:border-blue-800/40 dark:text-blue-200">
+          <h4 class="font-bold text-blue-800 dark:text-blue-300 text-sm uppercase"><i class="fas fa-home mr-2"></i> Manejo Ambulatorio</h4>
+          <p class="text-sm text-gray-700 dark:text-blue-200 mt-1">${outpatient}</p>
         </div>
-        <div class="bg-orange-50 p-4 rounded-lg">
-          <h4 class="font-bold text-orange-800 text-sm uppercase"><i class="fas fa-hospital mr-2"></i> Criterios Hospitalización</h4>
-          <p class="text-sm text-gray-700 mt-1">${hospital}</p>
+        <div class="bg-orange-50 border border-orange-200 p-4 rounded-lg dark:bg-amber-950/30 dark:border-amber-800/40 dark:text-amber-200">
+          <h4 class="font-bold text-orange-800 dark:text-amber-300 text-sm uppercase"><i class="fas fa-hospital mr-2"></i> Criterios Hospitalización</h4>
+          <p class="text-sm text-gray-700 dark:text-amber-200 mt-1">${hospital}</p>
         </div>
       </div>
 
@@ -894,10 +894,10 @@ document.addEventListener("DOMContentLoaded", () => {
           <p class="text-sm text-gray-800"><strong>Espectro:</strong> ${spectrum}</p>
         </section>
 
-        <section class="bg-emerald-50 p-4 rounded-lg">
-          <h4 class="text-sm font-bold text-emerald-800 uppercase mb-2">Posología Adultos</h4>
-          <p class="text-lg font-bold text-emerald-900">${dose}</p>
-          <p class="text-sm text-emerald-700 mt-1"><strong>Ajuste renal:</strong> ${renal}</p>
+        <section class="bg-emerald-50 border border-emerald-200 p-4 rounded-lg dark:bg-emerald-950/40 dark:border-emerald-800/40 dark:text-emerald-200">
+          <h4 class="text-sm font-bold text-emerald-800 dark:text-emerald-300 uppercase mb-2">Posología Adultos</h4>
+          <p class="text-lg font-bold text-emerald-900 dark:text-emerald-200">${dose}</p>
+          <p class="text-sm text-emerald-700 dark:text-emerald-300 mt-1"><strong>Ajuste renal:</strong> ${renal}</p>
         </section>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
