@@ -77,73 +77,252 @@ const clinicalData = {
       ],
       pathogens: ["S. pneumoniae", "H. influenzae", "Mycoplasma pneumoniae", "Chlamydia pneumoniae"],
     },
-
     {
-      id: "itu",
-      name: "Infección del Tracto Urinario (ITU) - Cistitis",
-      synonyms: ["ITU", "Cistitis", "Infección urinaria", "uti", "cystitis"],
-      description: "Infección de la vejiga en adultos.",
+      id: "itu_cistitis",
+      name: "ITU – Cistitis No Complicada",
+      synonyms: ["ITU", "Cistitis", "Infección urinaria baja", "UTI"],
+      description: "Infección urinaria baja en adulto no embarazado, sin factores de complicación.",
       criteria: {
-        outpatient: "Cistitis no complicada en pacientes sanos.",
-        hospital: "Signos de sepsis, pielonefritis con vómitos o inestabilidad.",
+        outpatient: "Paciente estable con síntomas urinarios bajos (disuria, urgencia, polaquiuria) sin fiebre ni compromiso sistémico.",
+        hospital: "No indicado salvo deterioro clínico o sospecha de pielonefritis."
       },
       regimens: [
         {
-          name: "Primera Línea (Cistitis)",
+          name: "Primera Línea",
           type: "empiric",
           scenario: "outpatient_uncomplicated",
           targets: ["E. coli"],
-          drug: "Nitrofurantoína (Macrocristales)",
+          drug: "Nitrofurantoína (macrocristales o monohidrato)",
           drugIds: ["nitrofurantoina"],
           dose: "100 mg",
           route: "PO",
           interval: "cada 12 horas",
           duration: "5 días",
-          comments: "Evitar si ClCr < 30 mL/min.",
-          reference: "IDSA 2011 / Update 2024",
+          comments: "Evitar si ClCr <30 mL/min. No usar si sospecha de pielonefritis.",
+          reference: "IDSA / MINSAL"
         },
         {
-          name: "Primera Línea (Alternativa)",
-          type: "alternative",
+          name: "Primera Línea Alternativa",
+          type: "empiric",
           scenario: "outpatient_uncomplicated",
           targets: ["E. coli"],
-          drug: "Fosfomicina Trometamol",
+          drug: "Fosfomicina trometamol",
           drugIds: ["fosfomicina_trometamol"],
           dose: "3 g",
           route: "PO",
-          interval: "Dosis única",
+          interval: "dosis única",
           duration: "1 día",
-          comments: "Útil para adherencia. Menor eficacia que nitrofurantoína en algunas series.",
-          reference: "IDSA 2011 / Update 2024",
+          comments: "Útil en adherencia o alergia a otras opciones.",
+          reference: "IDSA / MINSAL"
         },
         {
-          name: "Segunda Línea",
+          name: "Primera Línea Condicional",
+          type: "empiric",
+          scenario: "outpatient_uncomplicated",
+          targets: ["E. coli"],
+          drug: "Trimetoprim-Sulfametoxazol",
+          drugIds: ["cotrimoxazol"],
+          dose: "160/800 mg",
+          route: "PO",
+          interval: "cada 12 horas",
+          duration: "3 días",
+          comments: "Usar solo si resistencia local de E. coli <20%.",
+          reference: "IDSA"
+        },
+        {
+          name: "Alternativa",
           type: "alternative",
           scenario: "outpatient_uncomplicated",
-          drug: "Cefalexina",
-          drugIds: ["cefalexina"],
+          drug: "Cefadroxilo",
+          drugIds: ["cefadroxilo"],
           dose: "500 mg",
           route: "PO",
-          interval: "cada 6-8 horas",
-          duration: "5-7 días",
-          comments: "Beta-lactámico oral común.",
-          reference: "IDSA 2011 / Update 2024",
+          interval: "cada 12 horas",
+          duration: "5 días",
+          comments: "Alternativa si intolerancia a primera línea.",
+          reference: "Guías clínicas Chile"
         },
         {
-          name: "Alergia a Beta-lactámicos",
+          name: "Reserva",
           type: "alternative",
           scenario: "outpatient_uncomplicated",
           drug: "Ciprofloxacino",
           drugIds: ["ciprofloxacino"],
-          dose: "250-500 mg",
+          dose: "250 mg",
           route: "PO",
           interval: "cada 12 horas",
           duration: "3 días",
-          comments: "Reservar para casos donde otras opciones no son viables debido a resistencias.",
-          reference: "IDSA 2011 / Update 2024",
+          comments: "Evitar uso rutinario por impacto en resistencia antimicrobiana (PROA).",
+          reference: "IDSA"
         }
       ],
-      pathogens: ["E. coli", "Klebsiella spp.", "Proteus mirabilis", "S. saprophyticus"],
+      pathogens: [
+        "Escherichia coli",
+        "Klebsiella spp.",
+        "Proteus mirabilis",
+        "Staphylococcus saprophyticus"
+      ]
+    },
+    {
+      id: "itu_pielonefritis",
+      name: "ITU – Pielonefritis Aguda",
+      synonyms: ["Pielonefritis", "ITU alta"],
+      description: "Infección bacteriana del parénquima renal asociada a síntomas sistémicos.",
+      criteria: {
+        outpatient: "Paciente estable sin sepsis, tolera VO, sin comorbilidad grave.",
+        hospital: "Sepsis, vómitos persistentes, embarazo, inmunosupresión o imposibilidad de VO."
+      },
+      regimens: [
+        {
+          name: "Ambulatorio Primera Línea",
+          type: "empiric",
+          scenario: "outpatient",
+          drug: "Ciprofloxacino",
+          drugIds: ["ciprofloxacino"],
+          dose: "500 mg",
+          route: "PO",
+          interval: "cada 12 horas",
+          duration: "7 días",
+          comments: "Evitar si resistencia local >10%.",
+          reference: "IDSA"
+        },
+        {
+          name: "Ambulatorio Alternativa",
+          type: "empiric",
+          scenario: "outpatient",
+          drug: "Levofloxacino",
+          drugIds: ["levofloxacino"],
+          dose: "750 mg",
+          route: "PO",
+          interval: "cada 24 horas",
+          duration: "5 días",
+          comments: "Fluoroquinolona de alta penetración renal.",
+          reference: "IDSA"
+        },
+        {
+          name: "Hospitalario Empírico",
+          type: "empiric",
+          scenario: "hospital",
+          drug: "Ceftriaxona",
+          drugIds: ["ceftriaxona"],
+          dose: "1-2 g",
+          route: "EV",
+          interval: "cada 24 horas",
+          duration: "7 días si buena respuesta; extender si respuesta lenta o bacteriemia",
+          comments: "Desescalar según cultivo. Considerar switch a VO si estable.",
+          reference: "IDSA / guías hospitalarias"
+        },
+        {
+          name: "Hospitalario Alternativa",
+          type: "empiric",
+          scenario: "hospital",
+          drug: "Piperacilina-Tazobactam",
+          drugIds: ["piperacilina_tazobactam"],
+          dose: "4.5 g",
+          route: "EV",
+          interval: "cada 6-8 horas",
+          duration: "7-10 días",
+          comments: "Considerar si riesgo de Pseudomonas.",
+          reference: "IDSA"
+        }
+      ],
+      pathogens: [
+        "Escherichia coli",
+        "Klebsiella spp.",
+        "Proteus mirabilis",
+        "Enterobacter spp."
+      ]
+    },
+    {
+      id: "itu_complicada",
+      name: "ITU – Complicada",
+      synonyms: ["ITU complicada"],
+      description: "ITU en presencia de factores predisponentes como obstrucción urinaria, diabetes, inmunosupresión o anomalías anatómicas.",
+      criteria: {
+        outpatient: "Solo si estabilidad clínica y sin sepsis.",
+        hospital: "Sepsis, riesgo de patógeno resistente o imposibilidad de manejo ambulatorio."
+      },
+      regimens: [
+        {
+          name: "Empírico Hospitalario",
+          type: "empiric",
+          scenario: "hospital",
+          drug: "Ceftriaxona",
+          drugIds: ["ceftriaxona"],
+          dose: "1-2 g",
+          route: "EV",
+          interval: "cada 24 horas",
+          duration: "7 días en la mayoría; extender si respuesta lenta o foco no controlado",
+          comments: "Desescalar según antibiograma.",
+          reference: "IDSA"
+        },
+        {
+          name: "Alternativa Amplio Espectro",
+          type: "empiric",
+          scenario: "hospital",
+          drug: "Piperacilina-Tazobactam",
+          drugIds: ["piperacilina_tazobactam"],
+          dose: "4.5 g",
+          route: "EV",
+          interval: "cada 6-8 horas",
+          duration: "7 días en la mayoría; extender si respuesta lenta o foco no controlado",
+          comments: "Considerar en sospecha de patógenos resistentes o Pseudomonas.",
+          reference: "IDSA"
+        }
+      ],
+      pathogens: [
+        "Escherichia coli",
+        "Klebsiella spp.",
+        "Proteus mirabilis",
+        "Enterobacter spp.",
+        "Pseudomonas aeruginosa",
+        "Enterococcus spp."
+      ]
+    },
+    {
+      id: "itu_cauti",
+      name: "ITU – Asociada a Catéter (CAUTI)",
+      synonyms: ["CAUTI", "ITU catéter"],
+      description: "Infección urinaria en paciente portador de catéter urinario actual o reciente.",
+      criteria: {
+        outpatient: "Paciente estable sin sepsis.",
+        hospital: "Sepsis, deterioro clínico o comorbilidad significativa."
+      },
+      regimens: [
+        {
+          name: "Empírico Hospitalario",
+          type: "empiric",
+          scenario: "hospital",
+          drug: "Ceftriaxona",
+          drugIds: ["ceftriaxona"],
+          dose: "1-2 g",
+          route: "EV",
+          interval: "cada 24 horas",
+          duration: "7 días (10-14 si respuesta lenta)",
+          comments: "No tratar bacteriuria asintomática. Cambiar o retirar catéter antes de iniciar antibióticos si es posible.",
+          reference: "IDSA"
+        },
+        {
+          name: "Riesgo de Pseudomonas",
+          type: "empiric",
+          scenario: "hospital",
+          drug: "Piperacilina-Tazobactam",
+          drugIds: ["piperacilina_tazobactam"],
+          dose: "4.5 g",
+          route: "EV",
+          interval: "cada 6-8 horas",
+          duration: "7-14 días",
+          comments: "Considerar en hospitalización prolongada o antibióticos previos.",
+          reference: "IDSA"
+        }
+      ],
+      pathogens: [
+        "Escherichia coli",
+        "Klebsiella spp.",
+        "Proteus mirabilis",
+        "Pseudomonas aeruginosa",
+        "Enterococcus spp."
+      ]
     },
 
     {
