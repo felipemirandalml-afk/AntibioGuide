@@ -169,6 +169,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Keep a stable welcome HTML (avoid moving DOM nodes around)
   const welcomeHTML = welcomeScreen ? welcomeScreen.outerHTML : "";
+  let durationPopoverEl = null;
+  let durationPopoverTrigger = null;
+
   function showWelcome() {
     contentDisplay.innerHTML = welcomeHTML || "";
   }
@@ -188,6 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let activeTabId = existingTabs.syndrome ? "syndrome" : existingTabEntries[0]?.[0] || "syndrome";
 
   function setTab(tabId) {
+    closeDurationPopover();
     Object.values(existingTabs).forEach((tab) => tab.classList.remove("active-tab"));
     existingTabs[tabId]?.classList.add("active-tab");
     activeTabId = tabId;
@@ -279,6 +283,74 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Modal: open/close + UX improvements ---
   let lastFocusedEl = null;
 
+  function isSmallViewport() {
+    return window.matchMedia && window.matchMedia("(max-width: 639px)").matches;
+  }
+
+  function ensureDurationPopover() {
+    if (durationPopoverEl) return durationPopoverEl;
+    const el = document.createElement("div");
+    el.id = "duration-popover";
+    el.className = "hidden fixed z-[80]";
+    document.body.appendChild(el);
+    durationPopoverEl = el;
+    return durationPopoverEl;
+  }
+
+  function closeDurationPopover() {
+    if (!durationPopoverEl) return;
+    durationPopoverEl.className = "hidden fixed z-[80]";
+    durationPopoverEl.style.left = "";
+    durationPopoverEl.style.top = "";
+    durationPopoverEl.innerHTML = "";
+    durationPopoverTrigger = null;
+  }
+
+  function isDurationPopoverOpen() {
+    return !!durationPopoverEl && !durationPopoverEl.classList.contains("hidden");
+  }
+
+  function openDurationPopover({ trigger, info, refs }) {
+    if (!trigger || !info) return;
+    const popover = ensureDurationPopover();
+    durationPopoverTrigger = trigger;
+    const infoText = escapeHTML(info);
+    const refsText = Array.isArray(refs) && refs.length > 0
+      ? `<p class="mt-2 text-xs text-gray-500 dark:text-slate-300"><span class="font-semibold">Fuente:</span> ${escapeHTML(refs.join("; "))}</p>`
+      : "";
+
+    if (isSmallViewport()) {
+      popover.className = "fixed inset-0 z-[80]";
+      popover.style.left = "";
+      popover.style.top = "";
+      popover.innerHTML = `
+        <div data-duration-popover-backdrop class="absolute inset-0 bg-black/40"></div>
+        <div class="absolute inset-x-0 bottom-0 rounded-t-xl border border-slate-200 bg-white p-4 shadow-2xl dark:border-slate-700 dark:bg-slate-900">
+          <p class="text-sm text-gray-700 dark:text-slate-200">${infoText}</p>
+          ${refsText}
+          <div class="mt-3 flex justify-end">
+            <button type="button" data-duration-popover-close class="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">Cerrar</button>
+          </div>
+        </div>
+      `;
+      return;
+    }
+
+    const rect = trigger.getBoundingClientRect();
+    popover.className = "fixed z-[80]";
+    popover.style.left = `${Math.max(8, rect.left)}px`;
+    popover.style.top = `${Math.min(window.innerHeight - 8, rect.bottom + 8)}px`;
+    popover.innerHTML = `
+      <div class="w-80 max-w-[calc(100vw-1rem)] rounded-lg border border-slate-200 bg-white p-3 shadow-2xl dark:border-slate-700 dark:bg-slate-900">
+        <p class="text-sm text-gray-700 dark:text-slate-200">${infoText}</p>
+        ${refsText}
+        <div class="mt-3 flex justify-end">
+          <button type="button" data-duration-popover-close class="rounded-md border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-800">Cerrar</button>
+        </div>
+      </div>
+    `;
+  }
+
   function openModal() {
     lastFocusedEl = document.activeElement;
     medModal.classList.remove("hidden");
@@ -288,6 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function closeModal() {
+    closeDurationPopover();
     medModal.classList.add("hidden");
     document.body.classList.remove("overflow-hidden");
     if (lastFocusedEl && typeof lastFocusedEl.focus === "function") {
@@ -303,13 +376,52 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   window.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !medModal.classList.contains("hidden")) {
+    if (e.key !== "Escape") return;
+    if (isDurationPopoverOpen()) {
+      closeDurationPopover();
+      return;
+    }
+    if (!medModal.classList.contains("hidden")) {
       closeModal();
     }
   });
 
+  document.addEventListener("mousedown", (e) => {
+    if (!isDurationPopoverOpen()) return;
+    const target = e.target;
+    const clickedInsidePopover = durationPopoverEl?.contains(target);
+    const clickedTrigger = durationPopoverTrigger?.contains?.(target);
+    if (clickedInsidePopover || clickedTrigger) return;
+    closeDurationPopover();
+  });
+
+  document.addEventListener("click", (e) => {
+    const closeBtn = e.target?.closest?.("[data-duration-popover-close],[data-duration-popover-backdrop]");
+    if (!closeBtn) return;
+    closeDurationPopover();
+  });
+
   // Global delegation: clicking a drug chip inside the modal opens its med detail
   modalContent?.addEventListener("click", (e) => {
+    const closePopoverBtn = e.target?.closest?.("[data-duration-popover-close],[data-duration-popover-backdrop]");
+    if (closePopoverBtn) {
+      closeDurationPopover();
+      return;
+    }
+
+    const infoBtn = e.target?.closest?.("[data-duration-info-btn]");
+    if (infoBtn) {
+      const info = infoBtn.getAttribute("data-duration-info") || "";
+      const refsRaw = infoBtn.getAttribute("data-duration-refs") || "";
+      const refs = refsRaw ? refsRaw.split("||").map((x) => x.trim()).filter(Boolean) : [];
+      openDurationPopover({
+        trigger: infoBtn,
+        info,
+        refs
+      });
+      return;
+    }
+
     const btn = e.target?.closest?.("[data-drugid],[data-drugname]");
     if (!btn) return;
 
@@ -790,6 +902,21 @@ document.addEventListener("DOMContentLoaded", () => {
             const route = escapeHTML(r?.route || "");
             const interval = escapeHTML(r?.interval || "");
             const duration = escapeHTML(r?.duration || "");
+            const durationInfoRaw = typeof r?.durationInfo === "string" ? r.durationInfo.trim() : "";
+            const durationRefs = Array.isArray(r?.durationRefsShort) ? r.durationRefsShort.filter(Boolean) : [];
+            const durationInfo = escapeHTML(durationInfoRaw);
+            const durationRefsAttr = escapeHTML(durationRefs.join("||"));
+            const durationInfoBtn = durationInfoRaw
+              ? `<button type="button"
+                  data-duration-info-btn="true"
+                  data-duration-info="${durationInfo}"
+                  data-duration-refs="${durationRefsAttr}"
+                  class="ml-1 inline-flex h-5 w-5 items-center justify-center rounded-full border border-slate-300 text-xs font-bold text-slate-600 hover:bg-slate-100 dark:border-slate-600 dark:text-slate-300 dark:hover:bg-slate-800"
+                  aria-label="Ver respaldo de duración"
+                  title="Ver respaldo de duración">
+                  ⓘ
+                </button>`
+              : "";
             const comments = escapeHTML(r?.comments || "");
 
             const ids = Array.isArray(r?.drugIds) ? r.drugIds.filter(Boolean) : [];
@@ -829,7 +956,7 @@ document.addEventListener("DOMContentLoaded", () => {
                   <span class="text-xs bg-gray-100 text-gray-500 dark:bg-slate-800 dark:text-slate-400 px-2 py-1 rounded">${ref}</span>
                 </div>
                 ${drugBlock}
-                <p class="text-sm text-gray-600 dark:text-slate-300 font-medium">${dose} ${route} ${interval} (${duration})</p>
+                <p class="text-sm text-gray-600 dark:text-slate-300 font-medium">${dose} ${route} ${interval} (${duration})${durationInfoBtn}</p>
                 <p class="text-sm text-gray-500 dark:text-slate-300 mt-2 italic">${comments}</p>
                 ${
                   regimenWarnings.length > 0
