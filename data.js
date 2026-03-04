@@ -121,7 +121,7 @@ const clinicalData = {
           scenario: "outpatient_uncomplicated",
           targets: ["E. coli"],
           drug: "Trimetoprim-Sulfametoxazol",
-          drugIds: ["cotrimoxazol"],
+          drugIds: ["tmp_smx"],
           dose: "160/800 mg",
           route: "PO",
           interval: "cada 12 horas",
