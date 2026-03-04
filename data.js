@@ -76,6 +76,7 @@ const clinicalData = {
         }
       ],
       pathogens: ["S. pneumoniae", "H. influenzae", "Mycoplasma pneumoniae", "Chlamydia pneumoniae"],
+      pathogenIds: ["streptococcus_pneumoniae", "haemophilus_influenzae", "mycoplasma_pneumoniae", "chlamydia_pneumoniae"],
     },
     {
       id: "itu_cistitis",
@@ -161,7 +162,8 @@ const clinicalData = {
         "Klebsiella spp.",
         "Proteus mirabilis",
         "Staphylococcus saprophyticus"
-      ]
+      ],
+      pathogenIds: ["escherichia_coli", "klebsiella_spp", "proteus_mirabilis", "staphylococcus_saprophyticus"]
     },
     {
       id: "itu_pielonefritis",
@@ -235,7 +237,8 @@ const clinicalData = {
         "Klebsiella spp.",
         "Proteus mirabilis",
         "Enterobacter spp."
-      ]
+      ],
+      pathogenIds: ["escherichia_coli", "klebsiella_spp", "proteus_mirabilis", "enterobacter_spp"]
     },
     {
       id: "itu_complicada",
@@ -285,7 +288,8 @@ const clinicalData = {
         "Enterobacter spp.",
         "Pseudomonas aeruginosa",
         "Enterococcus spp."
-      ]
+      ],
+      pathogenIds: ["escherichia_coli", "klebsiella_spp", "proteus_mirabilis", "enterobacter_spp", "pseudomonas_aeruginosa", "enterococcus_spp"]
     },
     {
       id: "itu_cauti",
@@ -332,7 +336,8 @@ const clinicalData = {
         "Proteus mirabilis",
         "Pseudomonas aeruginosa",
         "Enterococcus spp."
-      ]
+      ],
+      pathogenIds: ["escherichia_coli", "klebsiella_spp", "proteus_mirabilis", "pseudomonas_aeruginosa", "enterococcus_spp"]
     },
 
     {
@@ -411,6 +416,7 @@ const clinicalData = {
         }
       ],
       pathogens: ["Streptococcus pyogenes", "Staphylococcus aureus", "MRSA"],
+      pathogenIds: ["streptococcus_pyogenes", "staphylococcus_aureus", "methicillin_resistant_staphylococcus_aureus"],
     },
 
     {
@@ -467,6 +473,7 @@ const clinicalData = {
         }
       ],
       pathogens: ["Neisseria gonorrhoeae", "Chlamydia trachomatis", "Anaerobios", "Mycoplasma genitalium"],
+      pathogenIds: ["neisseria_gonorrhoeae", "chlamydia_trachomatis", "anaerobes", "mycoplasma_genitalium"],
     },
 
     {
@@ -522,6 +529,7 @@ const clinicalData = {
         }
       ],
       pathogens: ["S. pneumoniae", "N. meningitidis", "Listeria monocytogenes", "H. influenzae"],
+      pathogenIds: ["streptococcus_pneumoniae", "neisseria_meningitidis", "listeria_monocytogenes", "haemophilus_influenzae"],
     },
 
     {
@@ -578,6 +586,7 @@ const clinicalData = {
         }
       ],
       pathogens: ["S. aureus (MSSA/MRSA)", "Streptococcus spp.", "Enterobacteriaceae", "Anaerobios"],
+      pathogenIds: ["staphylococcus_aureus", "streptococcus_spp", "enterobacterales", "anaerobes"],
     },
 
     {
@@ -639,6 +648,7 @@ const clinicalData = {
         }
       ],
       pathogens: ["E. coli", "Bacteroides fragilis", "Klebsiella spp.", "Enterococcus spp."],
+      pathogenIds: ["escherichia_coli", "bacteroides_fragilis", "klebsiella_spp", "enterococcus_spp"],
     },
 
     {
@@ -694,6 +704,7 @@ const clinicalData = {
         }
       ],
       pathogens: ["Streptococcus pyogenes (Grupo A)"],
+      pathogenIds: ["streptococcus_pyogenes"],
     },
 
     {
@@ -763,6 +774,7 @@ const clinicalData = {
         }
       ],
       pathogens: ["E. coli (MDR/ESBL)", "Klebsiella spp.", "Pseudomonas aeruginosa", "Enterococcus spp."],
+      pathogenIds: ["escherichia_coli", "klebsiella_spp", "pseudomonas_aeruginosa", "enterococcus_spp"],
     },
 
     // Endocarditis: mantenemos 1 entrada (compatibilidad), pero ya con escenarios + type
@@ -988,6 +1000,17 @@ const clinicalData = {
         "Bacilos gramnegativos (nosocomial/no-HACEK)",
         "Candida spp. (seleccionados)",
         "Coxiella burnetii / Bartonella / Brucella (cultivos negativos, seleccionados)"
+      ],
+      pathogenIds: [
+        "staphylococcus_aureus",
+        "staphylococcus_cons",
+        "streptococcus_viridans_group",
+        "streptococcus_gallolyticus",
+        "enterococcus_faecalis",
+        "hacek_group",
+        "gram_negative_bacilli_non_hacek",
+        "candida_spp",
+        "culture_negative_endocarditis_zoonotic"
       ]
     },
     {
@@ -1050,6 +1073,14 @@ const clinicalData = {
         "Klebsiella pneumoniae",
         "Escherichia coli",
         "Acinetobacter baumannii"
+      ],
+      pathogenIds: [
+        "staphylococcus_aureus",
+        "methicillin_resistant_staphylococcus_aureus",
+        "pseudomonas_aeruginosa",
+        "klebsiella_pneumoniae",
+        "escherichia_coli",
+        "acinetobacter_baumannii"
       ]
     }
   ],
@@ -1125,7 +1156,35 @@ const clinicalData = {
     typical_resistance: ["Resistencia adquirida frecuente en exposición previa a antibióticos o estadías prolongadas."],
     stewardship_note: "Evitar cobertura anti-Pseudomonas si no hay factores de riesgo; de-escalar con cultivos.",
     refs: [{ source: "Pendiente", year: 2025, note: "—" }]
-  }
+  },
+  { id: "haemophilus_influenzae", name: "Haemophilus influenzae", category: "bacteria", tags: ["gram_negative", "respiratory"] },
+  { id: "mycoplasma_pneumoniae", name: "Mycoplasma pneumoniae", category: "bacteria", tags: ["atypical", "respiratory"] },
+  { id: "chlamydia_pneumoniae", name: "Chlamydia pneumoniae", category: "bacteria", tags: ["atypical", "respiratory"] },
+  { id: "klebsiella_spp", name: "Klebsiella spp.", category: "group", tags: ["gram_negative", "enterobacterales"] },
+  { id: "klebsiella_pneumoniae", name: "Klebsiella pneumoniae", category: "bacteria", tags: ["gram_negative", "enterobacterales"] },
+  { id: "proteus_mirabilis", name: "Proteus mirabilis", category: "bacteria", tags: ["gram_negative", "enterobacterales"] },
+  { id: "staphylococcus_saprophyticus", name: "Staphylococcus saprophyticus", category: "bacteria", tags: ["gram_positive", "cocci"] },
+  { id: "enterobacter_spp", name: "Enterobacter spp.", category: "group", tags: ["gram_negative", "enterobacterales"] },
+  { id: "enterococcus_spp", name: "Enterococcus spp.", category: "group", tags: ["gram_positive", "cocci"] },
+  { id: "methicillin_resistant_staphylococcus_aureus", name: "MRSA", category: "group", tags: ["gram_positive", "cocci", "resistant"] },
+  { id: "neisseria_gonorrhoeae", name: "Neisseria gonorrhoeae", category: "bacteria", tags: ["gram_negative", "diplococci"] },
+  { id: "chlamydia_trachomatis", name: "Chlamydia trachomatis", category: "bacteria", tags: ["atypical"] },
+  { id: "anaerobes", name: "Anaerobios", category: "group", tags: ["anaerobic"] },
+  { id: "mycoplasma_genitalium", name: "Mycoplasma genitalium", category: "bacteria", tags: ["atypical"] },
+  { id: "neisseria_meningitidis", name: "Neisseria meningitidis", category: "bacteria", tags: ["gram_negative", "diplococci"] },
+  { id: "listeria_monocytogenes", name: "Listeria monocytogenes", category: "bacteria", tags: ["gram_positive", "bacilli"] },
+  { id: "streptococcus_spp", name: "Streptococcus spp.", category: "group", tags: ["gram_positive", "cocci"] },
+  { id: "enterobacterales", name: "Enterobacterales", category: "group", tags: ["gram_negative"] },
+  { id: "bacteroides_fragilis", name: "Bacteroides fragilis", category: "bacteria", tags: ["gram_negative", "anaerobic"] },
+  { id: "staphylococcus_cons", name: "Staphylococcus coagulasa-negativo (CoNS)", category: "group", tags: ["gram_positive", "cocci"] },
+  { id: "streptococcus_viridans_group", name: "Streptococcus viridans", category: "group", tags: ["gram_positive", "cocci"] },
+  { id: "streptococcus_gallolyticus", name: "Streptococcus gallolyticus", category: "bacteria", tags: ["gram_positive", "cocci"] },
+  { id: "enterococcus_faecalis", name: "Enterococcus faecalis", category: "bacteria", tags: ["gram_positive", "cocci"] },
+  { id: "hacek_group", name: "HACEK", category: "group", tags: ["gram_negative", "fastidious"] },
+  { id: "gram_negative_bacilli_non_hacek", name: "Bacilos gramnegativos (nosocomial/no-HACEK)", category: "group", tags: ["gram_negative", "bacilli"] },
+  { id: "candida_spp", name: "Candida spp.", category: "group", tags: ["fungi", "yeast"] },
+  { id: "culture_negative_endocarditis_zoonotic", name: "Coxiella burnetii / Bartonella / Brucella (cultivos negativos, seleccionados)", category: "group", tags: ["zoonotic", "endocarditis"] },
+  { id: "acinetobacter_baumannii", name: "Acinetobacter baumannii", category: "bacteria", tags: ["gram_negative", "nosocomial"] }
 ],
 
   antibiotics: [
