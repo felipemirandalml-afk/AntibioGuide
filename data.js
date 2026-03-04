@@ -99,7 +99,7 @@ const clinicalData = {
           interval: "cada 12 horas",
           duration: "5 días",
           comments: "Evitar si ClCr <30 mL/min. No usar si sospecha de pielonefritis.",
-          reference: "IDSA / MINSAL"
+          reference: "IDSA UTI guideline (2011) + updates; PROA/Chile (local)"
         },
         {
           name: "Primera Línea Alternativa",
@@ -113,7 +113,7 @@ const clinicalData = {
           interval: "dosis única",
           duration: "1 día",
           comments: "Útil en adherencia o alergia a otras opciones.",
-          reference: "IDSA / MINSAL"
+          reference: "IDSA UTI guideline (2011) + updates; PROA/Chile (local)"
         },
         {
           name: "Primera Línea Condicional",
@@ -127,7 +127,7 @@ const clinicalData = {
           interval: "cada 12 horas",
           duration: "3 días",
           comments: "Usar solo si resistencia local de E. coli <20%.",
-          reference: "IDSA"
+          reference: "IDSA UTI guideline (2011) + updates"
         },
         {
           name: "Alternativa",
@@ -140,7 +140,7 @@ const clinicalData = {
           interval: "cada 12 horas",
           duration: "5 días",
           comments: "Alternativa si intolerancia a primera línea.",
-          reference: "Guías clínicas Chile"
+          reference: "PROA ITU (deck infectología, local)"
         },
         {
           name: "Reserva",
@@ -153,7 +153,7 @@ const clinicalData = {
           interval: "cada 12 horas",
           duration: "3 días",
           comments: "Evitar uso rutinario por impacto en resistencia antimicrobiana (PROA).",
-          reference: "IDSA"
+          reference: "IDSA UTI guideline (2011) + updates"
         }
       ],
       pathogens: [
@@ -184,7 +184,7 @@ const clinicalData = {
           interval: "cada 12 horas",
           duration: "7 días",
           comments: "Evitar si resistencia local >10%.",
-          reference: "IDSA"
+          reference: "IDSA UTI guideline (2011) + updates"
         },
         {
           name: "Ambulatorio Alternativa",
@@ -196,8 +196,10 @@ const clinicalData = {
           route: "PO",
           interval: "cada 24 horas",
           duration: "5 días",
+          durationInfo: "Esquema corto (5 días) aceptado en pacientes estables con buena evolución.",
+          durationRefsShort: ["IDSA/EAU (UTI/Pyelo)"],
           comments: "Fluoroquinolona de alta penetración renal.",
-          reference: "IDSA"
+          reference: "IDSA UTI guideline (2011) + updates"
         },
         {
           name: "Hospitalario Empírico",
@@ -209,8 +211,10 @@ const clinicalData = {
           route: "EV",
           interval: "cada 24 horas",
           duration: "7 días si buena respuesta; extender si respuesta lenta o bacteriemia",
+          durationInfo: "Duración total usual 7 días si buena respuesta; extender si respuesta lenta o bacteriemia. Considerar switch a VO si estable.",
+          durationRefsShort: ["IDSA/EAU (UTI/Pyelo)", "PROA ITU (deck)"],
           comments: "Desescalar según cultivo. Considerar switch a VO si estable.",
-          reference: "IDSA / guías hospitalarias"
+          reference: "IDSA UTI guideline (2011) + updates; PROA ITU (deck infectología, local)"
         },
         {
           name: "Hospitalario Alternativa",
@@ -223,7 +227,7 @@ const clinicalData = {
           interval: "cada 6-8 horas",
           duration: "7-10 días",
           comments: "Considerar si riesgo de Pseudomonas.",
-          reference: "IDSA"
+          reference: "IDSA UTI guideline (2011) + updates"
         }
       ],
       pathogens: [
@@ -253,8 +257,10 @@ const clinicalData = {
           route: "EV",
           interval: "cada 24 horas",
           duration: "7 días en la mayoría; extender si respuesta lenta o foco no controlado",
+          durationInfo: "En la mayoría: 7 días con buena respuesta y foco controlado; prolongar si mala respuesta o foco no resuelto.",
+          durationRefsShort: ["IDSA cUTI", "PROA ITU (deck)"],
           comments: "Desescalar según antibiograma.",
-          reference: "IDSA"
+          reference: "IDSA UTI guideline (2011) + updates"
         },
         {
           name: "Alternativa Amplio Espectro",
@@ -266,8 +272,10 @@ const clinicalData = {
           route: "EV",
           interval: "cada 6-8 horas",
           duration: "7 días en la mayoría; extender si respuesta lenta o foco no controlado",
+          durationInfo: "En la mayoría: 7 días con buena respuesta y foco controlado; prolongar si mala respuesta o foco no resuelto.",
+          durationRefsShort: ["IDSA cUTI", "PROA ITU (deck)"],
           comments: "Considerar en sospecha de patógenos resistentes o Pseudomonas.",
-          reference: "IDSA"
+          reference: "IDSA UTI guideline (2011) + updates"
         }
       ],
       pathogens: [
@@ -299,8 +307,10 @@ const clinicalData = {
           route: "EV",
           interval: "cada 24 horas",
           duration: "7 días (10-14 si respuesta lenta)",
+          durationInfo: "CAUTI/CUP: 5–7 días si buena respuesta; considerar más si respuesta lenta. Cambiar/retirar catéter siempre que sea posible. No tratar bacteriuria asintomática.",
+          durationRefsShort: ["IDSA CAUTI", "PROA ITU (deck)"],
           comments: "No tratar bacteriuria asintomática. Cambiar o retirar catéter antes de iniciar antibióticos si es posible.",
-          reference: "IDSA"
+          reference: "IDSA UTI guideline (2011) + updates"
         },
         {
           name: "Riesgo de Pseudomonas",
@@ -313,7 +323,7 @@ const clinicalData = {
           interval: "cada 6-8 horas",
           duration: "7-14 días",
           comments: "Considerar en hospitalización prolongada o antibióticos previos.",
-          reference: "IDSA"
+          reference: "IDSA UTI guideline (2011) + updates"
         }
       ],
       pathogens: [
