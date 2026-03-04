@@ -103,7 +103,27 @@ function validateRegimenDrugIds(data, antibioticIds, issues) {
   (data.syndromes || []).forEach((syndrome, sIndex) => {
     const regimens = Array.isArray(syndrome.regimens) ? syndrome.regimens : [];
     regimens.forEach((regimen, rIndex) => {
-      if (!Array.isArray(regimen.drugIds)) return;
+      const regimenRef = regimen && regimen.id ? `id="${regimen.id}"` : `index=${rIndex}`;
+      if (!Object.prototype.hasOwnProperty.call(regimen || {}, "drugIds")) {
+        addIssue(
+          issues,
+          "missing_regimen_drugids",
+          `syndromes[${sIndex}] (${syndrome.id}) regimen (${regimenRef}) regimen missing drugIds`,
+          { syndromeId: syndrome.id, regimenId: regimen && regimen.id ? regimen.id : null, regimenIndex: rIndex }
+        );
+        return;
+      }
+
+      if (!Array.isArray(regimen.drugIds) || regimen.drugIds.length === 0) {
+        addIssue(
+          issues,
+          "empty_regimen_drugids",
+          `syndromes[${sIndex}] (${syndrome.id}) regimen (${regimenRef}) regimen has empty drugIds`,
+          { syndromeId: syndrome.id, regimenId: regimen && regimen.id ? regimen.id : null, regimenIndex: rIndex }
+        );
+        return;
+      }
+
       regimen.drugIds.forEach((drugId, dIndex) => {
         if (!antibioticIds.has(drugId)) {
           addIssue(
