@@ -122,7 +122,7 @@ const clinicalData = {
           scenario: "outpatient_uncomplicated",
           targets: ["E. coli"],
           drug: "Trimetoprim-Sulfametoxazol",
-          drugIds: ["cotrimoxazol"],
+          drugIds: ["tmp_smx"],
           dose: "160/800 mg",
           route: "PO",
           interval: "cada 12 horas",
@@ -1184,7 +1184,15 @@ const clinicalData = {
   { id: "gram_negative_bacilli_non_hacek", name: "Bacilos gramnegativos (nosocomial/no-HACEK)", category: "group", tags: ["gram_negative", "bacilli"] },
   { id: "candida_spp", name: "Candida spp.", category: "group", tags: ["fungi", "yeast"] },
   { id: "culture_negative_endocarditis_zoonotic", name: "Coxiella burnetii / Bartonella / Brucella (cultivos negativos, seleccionados)", category: "group", tags: ["zoonotic", "endocarditis"] },
-  { id: "acinetobacter_baumannii", name: "Acinetobacter baumannii", category: "bacteria", tags: ["gram_negative", "nosocomial"] }
+  { id: "acinetobacter_baumannii", name: "Acinetobacter baumannii", category: "bacteria", tags: ["gram_negative", "nosocomial"] },
+  { id: "staphylococcus_sp", name: "Staphylococcus spp.", category: "group", tags: ["gram_positive", "cocci"] },
+  { id: "enterococcus_faecium", name: "Enterococcus faecium", category: "bacteria", tags: ["gram_positive", "cocci"] },
+  { id: "klebsiella_oxytoca", name: "Klebsiella oxytoca", category: "bacteria", tags: ["gram_negative", "enterobacterales"] },
+  { id: "enterobacter_cloacae_complex", name: "Enterobacter cloacae complex", category: "group", tags: ["gram_negative", "enterobacterales"] },
+  { id: "citrobacter_freundii", name: "Citrobacter freundii", category: "bacteria", tags: ["gram_negative", "enterobacterales"] },
+  { id: "serratia_marcescens", name: "Serratia marcescens", category: "bacteria", tags: ["gram_negative", "enterobacterales"] },
+  { id: "morganella_morganii", name: "Morganella morganii", category: "bacteria", tags: ["gram_negative", "enterobacterales"] },
+  { id: "stenotrophomonas_maltophilia", name: "Stenotrophomonas maltophilia", category: "bacteria", tags: ["gram_negative", "nonfermenter", "nosocomial"] }
 ],
 
   antibiotics: [
@@ -1553,6 +1561,18 @@ const clinicalData = {
       contraindications: "Hipersensibilidad.",
       adverse: "GI, cefalea.",
       uses: "Cistitis no complicada."
+    },
+    {
+      id: "cefadroxilo",
+      name: "Cefadroxilo",
+      family: "Cefalosporina de primera generación",
+      mechanism: "Inhibe síntesis de pared celular.",
+      spectrum: "Gram+ y algunos Gram- urinarios.",
+      dose: "500 mg PO c/12h",
+      renal: "Ajustar en insuficiencia renal.",
+      contraindications: "Alergia a cefalosporinas.",
+      adverse: "GI, rash, hipersensibilidad.",
+      uses: "Alternativa en cistitis no complicada."
     },
 
     // --- Otros relevantes por tus síndromes ---
