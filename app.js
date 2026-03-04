@@ -19,14 +19,12 @@ document.addEventListener("DOMContentLoaded", () => {
     '<svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
 
   function applyTheme(theme) {
-    const html = document.documentElement; // <html>
-    const body = document.body;            // <body>
-
-    const isDark = theme === "dark";
+    const safeTheme = theme === "dark" ? "dark" : "light";
+    const isDark = safeTheme === "dark";
 
     // Apply to BOTH to avoid any Tailwind/selector edge-cases
-    html.classList.toggle("dark", isDark);
-    body.classList.toggle("dark", isDark);
+    document.documentElement.classList.toggle("dark", isDark);
+    document.body?.classList?.toggle("dark", isDark);
 
     if (themeIcon) themeIcon.innerHTML = isDark ? themeSunSvg : themeMoonSvg;
     if (themeToggleBtn) {
@@ -38,8 +36,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getPreferredTheme() {
-    const saved = localStorage.getItem("theme");
-    if (saved === "dark" || saved === "light") return saved;
+    try {
+      const saved = localStorage.getItem("theme");
+      if (saved === "dark" || saved === "light") return saved;
+    } catch (_err) {
+      // localStorage can fail (privacy mode / blocked storage), continue to fallback.
+    }
 
     return window.matchMedia &&
       window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -48,8 +50,13 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setTheme(theme) {
-    localStorage.setItem("theme", theme);
-    applyTheme(theme);
+    const safeTheme = theme === "dark" ? "dark" : "light";
+    try {
+      localStorage.setItem("theme", safeTheme);
+    } catch (_err) {
+      // Ignore storage write failures; theme still applies for current session.
+    }
+    applyTheme(safeTheme);
   }
 
   // init
@@ -58,7 +65,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Safety: if button missing, at least you don't crash silently
   if (themeToggleBtn) {
     themeToggleBtn.addEventListener("click", () => {
-      const isDark = document.documentElement.classList.contains("dark") || document.body.classList.contains("dark");
+      const isDark =
+        document.documentElement.classList.contains("dark") ||
+        document.body?.classList?.contains("dark");
       setTheme(isDark ? "light" : "dark");
     });
   } else {
@@ -66,13 +75,24 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // --- Helpers: security + search robustness ---
-  function escapeHTML(str = "") {
-    return String(str)
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#039;");
+  function escapeHTML(str) {
+    if (str === null || str === undefined) return "";
+    return String(str).replace(/[&<>"']/g, (ch) => {
+      switch (ch) {
+        case "&":
+          return "&amp;";
+        case "<":
+          return "&lt;";
+        case ">":
+          return "&gt;";
+        case '"':
+          return "&quot;";
+        case "'":
+          return "&#39;";
+        default:
+          return ch;
+      }
+    });
   }
 
   // Normalize: lower + remove accents + remove punctuation + collapse spaces
@@ -625,13 +645,13 @@ document.addEventListener("DOMContentLoaded", () => {
           const icon = item.s >= threshold ? "🟢" : item.s >= 50 ? "🟡" : "🔴";
           return `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">${icon} ${escapeHTML(
             item.label
-          )} ${item.s}%</span>`;
+          )} ${escapeHTML(item.s)}%</span>`;
         })
         .join("");
 
       const bleeChip =
         typeof local.blee_pct === "number"
-          ? `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">BLEE ${local.blee_pct}%</span>`
+          ? `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">BLEE ${escapeHTML(local.blee_pct)}%</span>`
           : "";
 
       // TODO: Optional future enhancement — expandable full antibiotic list view
