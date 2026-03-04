@@ -1694,11 +1694,27 @@ const clinicalData = {
       },
       modifiers: [
         {
-          id: "itu_fq_warning",
+          id: "itu_cistitis_fq_warning",
           action: "show_warning",
-          syndrome_id: "itu",
+          syndrome_id: "itu_cistitis",
           match: { pathogen_id: "escherichia_coli", antibiotic_id: "ciprofloxacino" },
           threshold_r_pct: 20,
+          message: "Resistencia local elevada a fluoroquinolonas en E. coli: evitar uso empírico si es posible."
+        },
+        {
+          id: "itu_pielonefritis_fq_warning_cipro",
+          action: "show_warning",
+          syndrome_id: "itu_pielonefritis",
+          match: { pathogen_id: "escherichia_coli", antibiotic_id: "ciprofloxacino" },
+          threshold_r_pct: 10,
+          message: "Resistencia local elevada a fluoroquinolonas en E. coli: evitar uso empírico si es posible."
+        },
+        {
+          id: "itu_pielonefritis_fq_warning_levo",
+          action: "show_warning",
+          syndrome_id: "itu_pielonefritis",
+          match: { pathogen_id: "escherichia_coli", antibiotic_id: "levofloxacino" },
+          threshold_r_pct: 10,
           message: "Resistencia local elevada a fluoroquinolonas en E. coli: evitar uso empírico si es posible."
         },
         {
