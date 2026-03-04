@@ -21,7 +21,7 @@ const clinicalData = {
           route: "PO",
           interval: "cada 8 horas",
           duration: "5-7 días",
-          durationInfo: "Cursos cortos (≈3–5 días) no son inferiores en NAC estable con buena respuesta clínica; individualizar según gravedad y evolución.",
+          durationInfo: "Cursos cortos (≈3–5 días) no son inferiores en NAC estable con buena respuesta clínica; individualizar según evolución.",
           durationRefsShort: ["Uranga 2016 JAMA Intern Med", "PTC trial Lancet"],
           comments: "Primera línea en áreas con baja resistencia de S. pneumoniae.",
           reference: "IDSA/ATS 2019/2024",
@@ -37,7 +37,7 @@ const clinicalData = {
           route: "PO",
           interval: "Ver dosis",
           duration: "5-7 días",
-          durationInfo: "Cursos cortos (≈3–5 días) no son inferiores en NAC estable con buena respuesta clínica; individualizar según gravedad y evolución.",
+          durationInfo: "Cursos cortos (≈3–5 días) no son inferiores en NAC estable con buena respuesta clínica; individualizar según evolución.",
           durationRefsShort: ["Uranga 2016 JAMA Intern Med", "PTC trial Lancet"],
           comments: "Cubre patógenos típicos y atípicos. Alternativa: Doxiciclina 100 mg c/12h.",
           reference: "IDSA/ATS 2019/2024",
@@ -53,7 +53,7 @@ const clinicalData = {
           route: "IV/PO",
           interval: "Ceftriaxona diaria, Azitro diaria",
           duration: "5-7 días",
-          durationInfo: "Cursos cortos (≈3–5 días) no son inferiores en NAC estable con buena respuesta clínica; individualizar según gravedad y evolución.",
+          durationInfo: "Cursos cortos (≈3–5 días) no son inferiores en NAC estable con buena respuesta clínica; individualizar según evolución.",
           durationRefsShort: ["Uranga 2016 JAMA Intern Med", "PTC trial Lancet"],
           comments: "Esquema estándar para pacientes hospitalizados.",
           reference: "IDSA/ATS 2019/2024",
@@ -69,7 +69,7 @@ const clinicalData = {
           route: "PO",
           interval: "cada 24 horas",
           duration: "5 días",
-          durationInfo: "Cursos cortos (≈3–5 días) no son inferiores en NAC estable con buena respuesta clínica; individualizar según gravedad y evolución.",
+          durationInfo: "Cursos cortos (≈3–5 días) no son inferiores en NAC estable con buena respuesta clínica; individualizar según evolución.",
           durationRefsShort: ["Uranga 2016 JAMA Intern Med", "PTC trial Lancet"],
           comments: "Fluoroquinolona respiratoria. Evitar si hay sospecha de tuberculosis.",
           reference: "IDSA/ATS 2019/2024",
@@ -167,6 +167,8 @@ const clinicalData = {
           route: "PO",
           interval: "cada 6 horas",
           duration: "5-10 días",
+          durationInfo: "En infecciones cutáneas no complicadas con buena evolución, 5–7 días puede ser suficiente.",
+          durationRefsShort: ["Cranendonk 2020 CMI"],
           comments: "Cubre estreptococos y S. aureus sensible (MSSA).",
           reference: "IDSA SSTI 2014 / 2024",
         },
@@ -181,6 +183,8 @@ const clinicalData = {
           route: "PO",
           interval: "cada 12 horas",
           duration: "5-10 días",
+          durationInfo: "En infecciones cutáneas no complicadas con buena evolución, 5–7 días puede ser suficiente.",
+          durationRefsShort: ["Cranendonk 2020 CMI"],
           comments: "Usar si hay sospecha de Staphylococcus aureus resistente a meticilina.",
           reference: "IDSA SSTI 2014 / 2024",
         },
@@ -195,6 +199,8 @@ const clinicalData = {
           route: "IV",
           interval: "cada 8 horas",
           duration: "5-10 días",
+          durationInfo: "En infecciones cutáneas no complicadas con buena evolución, 5–7 días puede ser suficiente.",
+          durationRefsShort: ["Cranendonk 2020 CMI"],
           comments: "Estándar para celulitis grave no purulenta.",
           reference: "IDSA SSTI 2014 / 2024",
         },
@@ -209,6 +215,8 @@ const clinicalData = {
           route: "PO/IV",
           interval: "cada 6-8 horas",
           duration: "5-10 días",
+          durationInfo: "En infecciones cutáneas no complicadas con buena evolución, 5–7 días puede ser suficiente.",
+          durationRefsShort: ["Cranendonk 2020 CMI"],
           comments: "Riesgo de infección por C. difficile.",
           reference: "IDSA SSTI 2014 / 2024",
         }
@@ -403,6 +411,8 @@ const clinicalData = {
           route: "IV",
           interval: "Ceftriaxona diaria / Metro cada 8h",
           duration: "4-7 días (tras control de foco)",
+          durationInfo: "Tras adecuado control de foco, cursos cortos son efectivos en infecciones intraabdominales.",
+          durationRefsShort: ["STOP-IT 2015 NEJM"],
           comments: "Esquema estándar para apendicitis/colecistitis.",
           reference: "IDSA 2010 / 2024",
         },
@@ -417,6 +427,8 @@ const clinicalData = {
           route: "IV",
           interval: "cada 6 horas",
           duration: "4-7 días",
+          durationInfo: "Tras adecuado control de foco, cursos cortos son efectivos en infecciones intraabdominales.",
+          durationRefsShort: ["STOP-IT 2015 NEJM"],
           comments: "Para peritonitis generalizada o sospecha de Pseudomonas.",
           reference: "IDSA 2010 / 2024",
         },
@@ -431,6 +443,8 @@ const clinicalData = {
           route: "IV",
           interval: "Levofloxacino diario / Metro c/8h",
           duration: "4-7 días",
+          durationInfo: "Tras adecuado control de foco, cursos cortos son efectivos en infecciones intraabdominales.",
+          durationRefsShort: ["STOP-IT 2015 NEJM"],
           comments: "Alternativa para alérgicos graves.",
           reference: "IDSA 2010 / 2024",
         }
@@ -596,6 +610,8 @@ const clinicalData = {
           route: "IV (gentamicina IV/IM)",
           interval: "Ampicilina en 4–6 dosis; Ceftriaxona 1–2 dosis; Gentamicina 1 dosis/día",
           duration: "Hasta identificación microbiológica y ajuste dirigido",
+          durationInfo: "En casos seleccionados y estables, transición parcial a VO ha mostrado no inferioridad.",
+          durationRefsShort: ["POET 2019 NEJM"],
           comments:
             "Cubre enterococos, estreptococos y HACEK. Monitorizar niveles de gentamicina y función renal.",
           reference: "ESC 2023"
@@ -610,6 +626,8 @@ const clinicalData = {
           route: "IV (rifampicina IV/VO)",
           interval: "Vanco 2–3 dosis; Genta 1 dosis/día; Rifampicina 2–3 dosis",
           duration: "Hasta identificación microbiológica y ajuste dirigido",
+          durationInfo: "En casos seleccionados y estables, transición parcial a VO ha mostrado no inferioridad.",
+          durationRefsShort: ["POET 2019 NEJM"],
           comments:
             "Rifampicina iniciar tras 3–5 días de terapia efectiva (ideal con hemocultivos en negativización). Objetivo vanco AUC/MIC 400–600.",
           reference: "ESC 2023"
@@ -626,6 +644,8 @@ const clinicalData = {
           route: "IV (ceftriaxona IV/IM)",
           interval: "Penicilina 4 dosis o infusión continua; Amoxicilina 4–6 dosis; Ceftriaxona 1 dosis/día",
           duration: "4 semanas",
+          durationInfo: "En casos seleccionados y estables, transición parcial a VO ha mostrado no inferioridad.",
+          durationRefsShort: ["POET 2019 NEJM"],
           comments: "Alternativa útil para OPAT: ceftriaxona 1 vez/día (seleccionados).",
           reference: "ESC 2023"
         },
@@ -640,6 +660,8 @@ const clinicalData = {
           route: "IV (ceftriaxona IV/IM; gentamicina IV/IM)",
           interval: "β-lactámico según esquema + Gentamicina 1 dosis/día",
           duration: "2 semanas",
+          durationInfo: "En casos seleccionados y estables, transición parcial a VO ha mostrado no inferioridad.",
+          durationRefsShort: ["POET 2019 NEJM"],
           comments:
             "Solo en NVE NO complicada con función renal normal. NO usar en PVE, absceso, IC, vegetación grande o complicaciones.",
           reference: "ESC 2023"
@@ -655,6 +677,8 @@ const clinicalData = {
           route: "IV (ceftriaxona IV/IM)",
           interval: "Penicilina 4 dosis; Amoxicilina 4–6 dosis; Ceftriaxona 1 dosis/día",
           duration: "6 semanas",
+          durationInfo: "En casos seleccionados y estables, transición parcial a VO ha mostrado no inferioridad.",
+          durationRefsShort: ["POET 2019 NEJM"],
           comments: "Duración prolongada por prótesis.",
           reference: "ESC 2023"
         },
@@ -670,6 +694,8 @@ const clinicalData = {
           route: "IV",
           interval: "Cloxacilina 4–6 dosis; Cefazolina 3 dosis",
           duration: "4 semanas",
+          durationInfo: "En casos seleccionados y estables, transición parcial a VO ha mostrado no inferioridad.",
+          durationRefsShort: ["POET 2019 NEJM"],
           comments:
             "En NVE estafilocócica NO se recomiendan aminoglucósidos (↑ nefrotoxicidad sin beneficio).",
           reference: "ESC 2023"
@@ -685,6 +711,8 @@ const clinicalData = {
           route: "IV (rifampicina IV/VO; gentamicina IV/IM)",
           interval: "β-lactámico 4–6 dosis (cefazolina 3); Rifampicina 3 dosis; Gentamicina 1 dosis/día",
           duration: "β-lactámico + rifampicina ≥6 semanas; gentamicina 2 semanas",
+          durationInfo: "En casos seleccionados y estables, transición parcial a VO ha mostrado no inferioridad.",
+          durationRefsShort: ["POET 2019 NEJM"],
           comments:
             "Rifampicina iniciar tras 3–5 días de antibiótico efectivo (ideal con hemocultivos negativizando).",
           reference: "ESC 2023"
@@ -701,6 +729,8 @@ const clinicalData = {
           route: "IV",
           interval: "Vancomicina 2–3 dosis; Daptomicina 1 dosis/día",
           duration: "4–6 semanas",
+          durationInfo: "En casos seleccionados y estables, transición parcial a VO ha mostrado no inferioridad.",
+          durationRefsShort: ["POET 2019 NEJM"],
           comments:
             "Objetivo AUC/MIC 400–600. Monitorizar función renal; CPK semanal si daptomicina.",
           reference: "ESC 2023"
@@ -716,6 +746,8 @@ const clinicalData = {
           route: "IV (rifampicina IV/VO; gentamicina IV/IM)",
           interval: "Vanco 2–3 dosis; Rifampicina 2–3 dosis; Gentamicina 1 dosis/día",
           duration: "Vancomicina + rifampicina ≥6 semanas; gentamicina 2 semanas",
+          durationInfo: "En casos seleccionados y estables, transición parcial a VO ha mostrado no inferioridad.",
+          durationRefsShort: ["POET 2019 NEJM"],
           comments:
             "Considerar omitir gentamicina si alto riesgo renal. Rifampicina iniciar tras 3–5 días de tratamiento efectivo.",
           reference: "ESC 2023"
@@ -732,6 +764,8 @@ const clinicalData = {
           route: "IV (ceftriaxona IV/IM)",
           interval: "Ampicilina/Amoxicilina 4–6 dosis; Ceftriaxona 2 dosis",
           duration: "6 semanas",
+          durationInfo: "En casos seleccionados y estables, transición parcial a VO ha mostrado no inferioridad.",
+          durationRefsShort: ["POET 2019 NEJM"],
           comments:
             "Preferido por menor nefrotoxicidad y eficacia incluso con HLAR.",
           reference: "ESC 2023"
@@ -748,6 +782,8 @@ const clinicalData = {
           route: "IV/IM",
           interval: "1 dosis/día",
           duration: "4 semanas (NVE) o 6 semanas (PVE)",
+          durationInfo: "En casos seleccionados y estables, transición parcial a VO ha mostrado no inferioridad.",
+          durationRefsShort: ["POET 2019 NEJM"],
           comments:
             "Primera elección. Alternativa en alergia: ciprofloxacino según susceptibilidad.",
           reference: "ESC 2023"
