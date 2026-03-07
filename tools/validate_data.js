@@ -76,6 +76,40 @@ function getIdSet(items) {
   return new Set((items || []).map((x) => x && x.id).filter(Boolean));
 }
 
+function validatePathogens(data, syndromeIds) {
+  (data.pathogens || []).forEach((p, index) => {
+    if (!p) return;
+
+    // Check canonical nested objects
+    if (!p.taxonomy || typeof p.taxonomy !== 'object') {
+      addError("missing_taxonomy", `pathogens[${index}] (${p.id}) is missing the 'taxonomy' object`);
+    } else {
+      if (!p.taxonomy.gram) addError("missing_taxonomy_gram", `pathogens[${index}] (${p.id}) missing taxonomy.gram`);
+    }
+
+    if (!p.clinical || typeof p.clinical !== 'object') {
+      addError("missing_clinical", `pathogens[${index}] (${p.id}) is missing the 'clinical' object`);
+    } else {
+      if (!p.clinical.summary) addError("missing_clinical_summary", `pathogens[${index}] (${p.id}) missing clinical.summary`);
+      if (p.clinical.usualSyndromes && Array.isArray(p.clinical.usualSyndromes)) {
+        p.clinical.usualSyndromes.forEach(sId => {
+          if (!syndromeIds.has(sId)) {
+            addWarn("missing_clinical_syndrome_ref", `pathogens[${index}] (${p.id}) syndrome ref "${sId}" in usualSyndromes not found`);
+          }
+        });
+      }
+    }
+
+    if (!p.resistance || typeof p.resistance !== 'object') {
+      addError("missing_resistance", `pathogens[${index}] (${p.id}) is missing the 'resistance' object`);
+    }
+
+    if (!p.appMeta || typeof p.appMeta !== 'object') {
+      addWarn("missing_appMeta", `pathogens[${index}] (${p.id}) is missing the 'appMeta' object`);
+    }
+  });
+}
+
 function validateSyndromes(data, pathogenIds, antibioticsIds) {
   const syndromeIds = getIdSet(data.syndromes);
 
@@ -234,6 +268,7 @@ function main() {
   const antibioticIds = getIdSet(clinicalData.antibiotics);
 
   const syndromeIds = validateSyndromes(clinicalData, pathogenIds, antibioticIds);
+  validatePathogens(clinicalData, syndromeIds);
   validateResistanceProfiles(clinicalData, pathogenIds, antibioticIds, syndromeIds);
 
   printReport(clinicalData);
