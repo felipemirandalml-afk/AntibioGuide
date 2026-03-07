@@ -143,15 +143,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let score = 0;
 
-    // Starts with
-    if (textNorm.startsWith(queryNorm)) score = Math.max(score, 70);
-
-    // Word boundary match (whole word)
+    // Word boundary match (whole exact word) - works for any length, e.g. "e" in "e coli"
     const wordRe = new RegExp(`(^|\\s)${escapeRegExp(queryNorm)}(\\s|$)`, "i");
-    if (wordRe.test(textNorm)) score = Math.max(score, 60);
+    if (wordRe.test(textNorm)) score = Math.max(score, 80);
 
-    // Includes
-    if (textNorm.includes(queryNorm)) score = Math.max(score, 40);
+    // Prefix and substring matches (only if token >= 3 to avoid stray single-character matching)
+    if (queryNorm.length >= 3) {
+      // Starts with
+      if (textNorm.startsWith(queryNorm)) score = Math.max(score, 70);
+
+      // Starts with any word (Prefix match)
+      const wordPrefixRe = new RegExp(`(^|\\s)${escapeRegExp(queryNorm)}`, "i");
+      if (wordPrefixRe.test(textNorm)) score = Math.max(score, 60);
+
+      // Includes
+      if (textNorm.includes(queryNorm)) score = Math.max(score, 40);
+    }
 
     return score;
   }
@@ -678,7 +685,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function createSyndromeCard(s) {
     const card = document.createElement("div");
     card.className =
-  "bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200 dark:border-slate-700 dark:shadow-none";
+      "bg-white dark:bg-slate-900 p-6 rounded-lg shadow-md border-t-4 border-blue-500 hover:shadow-lg transition-shadow cursor-pointer border border-gray-200 dark:border-slate-700 dark:shadow-none";
 
     const name = escapeHTML(s?.name || "");
     const desc = escapeHTML(s?.description || "");
@@ -689,8 +696,8 @@ document.addEventListener("DOMContentLoaded", () => {
       <p class="text-gray-600 dark:text-slate-300 text-sm mb-4 line-clamp-2">${desc}</p>
       <div class="flex flex-wrap gap-2 mb-4">
         ${pathogens
-          .map((p) => `<span class="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded dark:bg-slate-800 dark:text-slate-300">${escapeHTML(p)}</span>`)
-          .join("")}
+        .map((p) => `<span class="bg-gray-100 text-gray-500 text-xs px-2 py-1 rounded dark:bg-slate-800 dark:text-slate-300">${escapeHTML(p)}</span>`)
+        .join("")}
       </div>
       <button type="button" class="text-blue-600 dark:text-blue-300 font-semibold text-sm flex items-center">
         Ver esquemas recomendados <i class="fas fa-chevron-right ml-1"></i>
@@ -725,30 +732,27 @@ document.addEventListener("DOMContentLoaded", () => {
       <p class="text-sm text-gray-700 dark:text-slate-300 mb-4">${summary}</p>
       ${localBanner}
       <div class="space-y-3 mt-4">
-        ${
-          typicalHTML
-            ? `<div>
+        ${typicalHTML
+        ? `<div>
           <span class="text-xs font-bold text-gray-400 dark:text-slate-400 uppercase tracking-wider">Resistencia tipica</span>
           <ul class="list-disc pl-5 mt-1 space-y-1">${typicalHTML}</ul>
         </div>`
-            : ""
-        }
-        ${
-          intrinsicHTML
-            ? `<div>
+        : ""
+      }
+        ${intrinsicHTML
+        ? `<div>
           <span class="text-xs font-bold text-gray-400 dark:text-slate-400 uppercase tracking-wider">Resistencia intrinseca</span>
           <ul class="list-disc pl-5 mt-1 space-y-1">${intrinsicHTML}</ul>
         </div>`
-            : ""
-        }
-        ${
-          stewardship
-            ? `<div class="bg-amber-50 border border-amber-200 rounded p-2 dark:bg-amber-950/30 dark:border-amber-800/40 dark:text-amber-200">
+        : ""
+      }
+        ${stewardship
+        ? `<div class="bg-amber-50 border border-amber-200 rounded p-2 dark:bg-amber-950/30 dark:border-amber-800/40 dark:text-amber-200">
           <span class="text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider">PROA</span>
           <p class="text-sm text-amber-900 dark:text-amber-200">PROA: ${stewardship}</p>
         </div>`
-            : ""
-        }
+        : ""
+      }
       </div>
     `;
     return card;
@@ -833,12 +837,11 @@ document.addEventListener("DOMContentLoaded", () => {
         card.innerHTML = `
           <h3 class="font-bold text-blue-700 dark:text-blue-300 text-lg mb-2">${title}</h3>
           <p class="text-gray-700 dark:text-slate-300 text-sm mb-4 flex-grow">${description}</p>
-          ${
-            clues
-              ? `<div class="bg-blue-50 p-3 rounded text-xs text-blue-800 border-l-2 border-blue-300 dark:bg-slate-800 dark:text-slate-200 dark:border-blue-500/60">
+          ${clues
+            ? `<div class="bg-blue-50 p-3 rounded text-xs text-blue-800 border-l-2 border-blue-300 dark:bg-slate-800 dark:text-slate-200 dark:border-blue-500/60">
                 <strong><i class="fas fa-microscope"></i> Clave clínica:</strong> ${clues}
               </div>`
-              : ""
+            : ""
           }
         `;
         itemGrid.appendChild(card);
@@ -915,19 +918,19 @@ document.addEventListener("DOMContentLoaded", () => {
       <h3 class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Esquemas Antibióticos Recomendados</h3>
       <div class="space-y-6">
         ${regimens
-          .map((r) => {
-            const rName = escapeHTML(r?.name || "");
-            const ref = escapeHTML(r?.reference || "");
-            const dose = escapeHTML(r?.dose || "");
-            const route = escapeHTML(r?.route || "");
-            const interval = escapeHTML(r?.interval || "");
-            const duration = escapeHTML(r?.duration || "");
-            const durationInfoRaw = typeof r?.durationInfo === "string" ? r.durationInfo.trim() : "";
-            const durationRefs = Array.isArray(r?.durationRefsShort) ? r.durationRefsShort.filter(Boolean) : [];
-            const durationInfo = escapeHTML(durationInfoRaw);
-            const durationRefsAttr = escapeHTML(durationRefs.join("||"));
-            const durationInfoBtn = durationInfoRaw
-              ? `<button type="button"
+        .map((r) => {
+          const rName = escapeHTML(r?.name || "");
+          const ref = escapeHTML(r?.reference || "");
+          const dose = escapeHTML(r?.dose || "");
+          const route = escapeHTML(r?.route || "");
+          const interval = escapeHTML(r?.interval || "");
+          const duration = escapeHTML(r?.duration || "");
+          const durationInfoRaw = typeof r?.durationInfo === "string" ? r.durationInfo.trim() : "";
+          const durationRefs = Array.isArray(r?.durationRefsShort) ? r.durationRefsShort.filter(Boolean) : [];
+          const durationInfo = escapeHTML(durationInfoRaw);
+          const durationRefsAttr = escapeHTML(durationRefs.join("||"));
+          const durationInfoBtn = durationInfoRaw
+            ? `<button type="button"
                   data-duration-info-btn="true"
                   data-duration-info="${durationInfo}"
                   data-duration-refs="${durationRefsAttr}"
@@ -936,40 +939,40 @@ document.addEventListener("DOMContentLoaded", () => {
                   title="Ver respaldo de duración">
                   ⓘ
                 </button>`
-              : "";
-            const comments = escapeHTML(r?.comments || "");
+            : "";
+          const comments = escapeHTML(r?.comments || "");
 
-            const ids = Array.isArray(r?.drugIds) ? r.drugIds.filter(Boolean) : [];
-            const regimenWarnings = getRegimenWarnings(s?.id, ids);
-            let drugBlock = "";
+          const ids = Array.isArray(r?.drugIds) ? r.drugIds.filter(Boolean) : [];
+          const regimenWarnings = getRegimenWarnings(s?.id, ids);
+          let drugBlock = "";
 
-            if (ids.length > 0) {
-              const chips = ids
-                .map((id) => {
-                  const abx = getAntibioticById(id);
-                  const label = escapeHTML(abx?.name || id);
-                  return `<button type="button"
+          if (ids.length > 0) {
+            const chips = ids
+              .map((id) => {
+                const abx = getAntibioticById(id);
+                const label = escapeHTML(abx?.name || id);
+                return `<button type="button"
                     data-drugid="${escapeHTML(id)}"
                     class="inline-flex items-center px-2 py-1 mr-2 mt-2 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-800 text-sm font-semibold hover:bg-emerald-100">
                     <i class="fas fa-pills mr-1"></i>${label}
                   </button>`;
-                })
-                .join("");
-              drugBlock = `<div class="mt-2">${chips}</div>`;
-            } else {
-              // Fallback: old regimen without drugIds
-              const drugNameRaw = r?.drug || "";
-              const drugNameEsc = escapeHTML(drugNameRaw);
-              drugBlock = drugNameRaw
-                ? `<button type="button"
+              })
+              .join("");
+            drugBlock = `<div class="mt-2">${chips}</div>`;
+          } else {
+            // Fallback: old regimen without drugIds
+            const drugNameRaw = r?.drug || "";
+            const drugNameEsc = escapeHTML(drugNameRaw);
+            drugBlock = drugNameRaw
+              ? `<button type="button"
                     data-drugname="${drugNameEsc}"
                     class="text-lg font-semibold mt-1 text-emerald-800 underline hover:text-emerald-900">
                     ${drugNameEsc}
                   </button>`
-                : "";
-            }
+              : "";
+          }
 
-            return `
+          return `
               <div class="border-l-4 border-blue-400 pl-4 py-2">
                 <div class="flex justify-between items-start">
                   <h4 class="font-bold text-blue-700">${rName}</h4>
@@ -978,9 +981,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 ${drugBlock}
                 <p class="text-sm text-gray-600 dark:text-slate-300 font-medium">${dose} ${route} ${interval} (${duration})${durationInfoBtn}</p>
                 <p class="text-sm text-gray-500 dark:text-slate-300 mt-2 italic">${comments}</p>
-                ${
-                  regimenWarnings.length > 0
-                    ? `
+                ${regimenWarnings.length > 0
+              ? `
                     <div class="mt-3 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">
                       <div class="font-semibold">⚠️ Contexto local</div>
                       <ul class="list-disc pl-5 mt-1">
@@ -988,25 +990,25 @@ document.addEventListener("DOMContentLoaded", () => {
                       </ul>
                     </div>
                     `
-                    : ""
-                }
+              : ""
+            }
               </div>
             `;
-          })
-          .join("")}
+        })
+        .join("")}
       </div>
 
       <div class="mt-8 pt-6 border-t">
         <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Patógenos habituales</h4>
         <div class="flex flex-wrap gap-2">
           ${pathogens
-            .map(
-              (p) =>
-                `<span class="bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-300 text-xs px-2 py-1 rounded-full border border-gray-200 dark:border-slate-700">${escapeHTML(
-                  p
-                )}</span>`
-            )
-            .join("")}
+        .map(
+          (p) =>
+            `<span class="bg-gray-100 text-gray-600 dark:bg-slate-800 dark:text-slate-300 text-xs px-2 py-1 rounded-full border border-gray-200 dark:border-slate-700">${escapeHTML(
+              p
+            )}</span>`
+        )
+        .join("")}
         </div>
       </div>
     `;
@@ -1070,7 +1072,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Start state ---
   // If user hasn't typed yet, show welcome (stable)
- // =============================
+  // =============================
   // FOOTER META (VERSION)
   // =============================
   function renderFooterMeta() {
