@@ -219,9 +219,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function setTab(tabId) {
     closeDurationPopover();
-    Object.values(existingTabs).forEach((tab) => tab.classList.remove("active-tab"));
-    existingTabs[tabId]?.classList.add("active-tab");
+
+    // Reset all tabs
+    Object.values(existingTabs).forEach((tab) => {
+      tab.classList.remove("active-tab");
+      tab.setAttribute("aria-selected", "false");
+      tab.setAttribute("tabindex", "-1");
+    });
+
+    // Set active tab
+    const activeTabBtn = existingTabs[tabId];
+    if (activeTabBtn) {
+      activeTabBtn.classList.add("active-tab");
+      activeTabBtn.setAttribute("aria-selected", "true");
+      activeTabBtn.setAttribute("tabindex", "0");
+    }
+
     activeTabId = tabId;
+
+    if (contentDisplay) {
+      contentDisplay.setAttribute("aria-labelledby", `tab-${tabId}`);
+    }
 
     const placeholders = {
       syndrome: "Buscar síndrome (NAC, ITU, Meningitis...)",
@@ -232,11 +250,39 @@ document.addEventListener("DOMContentLoaded", () => {
     if (searchInput) searchInput.placeholder = placeholders[tabId] || "Buscar...";
   }
 
-  // Wire tab clicks
-  Object.keys(existingTabs).forEach((tabId) => {
-    existingTabs[tabId].addEventListener("click", () => {
+  // Wire tab clicks and keyboard navigation
+  const validTabIds = Object.keys(existingTabs);
+  validTabIds.forEach((tabId, index) => {
+    const tabEl = existingTabs[tabId];
+    if (!tabEl) return;
+
+    tabEl.addEventListener("click", () => {
       setTab(tabId);
       handleSearch(); // refresh
+    });
+
+    tabEl.addEventListener("keydown", (e) => {
+      let nextIndex = index;
+      if (e.key === "ArrowRight") {
+        nextIndex = (index + 1) % validTabIds.length;
+      } else if (e.key === "ArrowLeft") {
+        nextIndex = (index - 1 + validTabIds.length) % validTabIds.length;
+      } else if (e.key === "Home") {
+        nextIndex = 0;
+      } else if (e.key === "End") {
+        nextIndex = validTabIds.length - 1;
+      } else {
+        return; // normal key, do nothing
+      }
+      e.preventDefault();
+
+      const nextTabId = validTabIds[nextIndex];
+      const nextTabEl = existingTabs[nextTabId];
+      if (nextTabEl) {
+        nextTabEl.focus();
+        setTab(nextTabId);
+        handleSearch();
+      }
     });
   });
 
@@ -460,7 +506,19 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // --- Search Logic ---
-  searchInput?.addEventListener("input", handleSearch);
+  function debounce(func, wait) {
+    let timeout;
+    return function (...args) {
+      const context = this;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+  }
+
+  const debouncedHandleSearch = debounce(handleSearch, 300);
+  if (searchInput) {
+    searchInput.addEventListener("input", debouncedHandleSearch);
+  }
 
   function handleSearch() {
     const queryRaw = searchInput?.value ?? "";
