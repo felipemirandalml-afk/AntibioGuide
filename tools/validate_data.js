@@ -4,28 +4,71 @@
 const path = require("path");
 const clinicalData = require(path.join(__dirname, "..", "data.js"));
 
-function addIssue(issues, type, message, context) {
-  issues.push({ type, message, context });
+const errors = [];
+const warnings = [];
+
+function addError(type, message) {
+  errors.push({ type, message });
 }
 
-function collectDuplicateIds(items, groupName, issues) {
-  const seen = new Map();
+function addWarn(type, message) {
+  warnings.push({ type, message });
+}
+
+function normalizeName(name) {
+  return (name || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+}
+
+function isInvalidId(id) {
+  return typeof id !== "string" || id.trim() === "";
+}
+
+function checkTopLevelStructure(data) {
+  if (!data || typeof data !== "object") {
+    addError("structure", "clinicalData is not an object");
+    return false;
+  }
+  if (!Array.isArray(data.antibiotics)) addError("structure", "clinicalData.antibiotics is not an array");
+  if (!Array.isArray(data.pathogens)) addError("structure", "clinicalData.pathogens is not an array");
+  if (!Array.isArray(data.syndromes)) addError("structure", "clinicalData.syndromes is not an array");
+  if (!data.resistanceProfiles || typeof data.resistanceProfiles !== "object" || Array.isArray(data.resistanceProfiles)) {
+    addWarn("structure", "clinicalData.resistanceProfiles is not a valid object");
+  }
+  return true;
+}
+
+function collectDuplicateIdsAndNames(items, groupName) {
+  const seenIds = new Map();
+  const seenNames = new Map();
+
   (items || []).forEach((item, index) => {
-    const id = item && item.id;
-    if (!id) {
-      addIssue(issues, "missing_id", `${groupName}[${index}] is missing id`, { groupName, index });
+    if (!item) return;
+
+    // Minimum fields
+    if (!item.name) {
+      addError("missing_name", `${groupName}[${index}] is missing name`);
+    }
+
+    const id = item.id;
+    if (isInvalidId(id)) {
+      addError("invalid_id", `${groupName}[${index}] has invalid or missing id: "${id}"`);
       return;
     }
-    if (seen.has(id)) {
-      addIssue(issues, "duplicate_id", `Duplicate id "${id}" in ${groupName}`, {
-        groupName,
-        firstIndex: seen.get(id),
-        duplicateIndex: index,
-        id,
-      });
-      return;
+
+    if (seenIds.has(id)) {
+      addError("duplicate_id", `Duplicate id "${id}" in ${groupName}`);
+    } else {
+      seenIds.set(id, index);
     }
-    seen.set(id, index);
+
+    if (item.name) {
+      const normName = normalizeName(item.name);
+      if (seenNames.has(normName)) {
+        addWarn("duplicate_name", `Duplicate or similar name "${item.name}" in ${groupName}`);
+      } else {
+        seenNames.set(normName, index);
+      }
+    }
   });
 }
 
@@ -33,112 +76,118 @@ function getIdSet(items) {
   return new Set((items || []).map((x) => x && x.id).filter(Boolean));
 }
 
-function validateSyndromePathogenRefs(data, pathogenIds, issues) {
+function validateSyndromes(data, pathogenIds, antibioticsIds) {
+  const syndromeIds = getIdSet(data.syndromes);
+
   (data.syndromes || []).forEach((syndrome, sIndex) => {
-    const refs = Array.isArray(syndrome.pathogenIds) ? syndrome.pathogenIds : [];
-    refs.forEach((id, pIndex) => {
-      if (!pathogenIds.has(id)) {
-        addIssue(
-          issues,
-          "missing_pathogen_ref",
-          `syndromes[${sIndex}] (${syndrome.id}) pathogenIds[${pIndex}] "${id}" not found in pathogens`,
-          { syndromeId: syndrome.id, pathogenId: id }
-        );
+    if (!syndrome) return;
+
+    // PathogenIds validation
+    if (Object.prototype.hasOwnProperty.call(syndrome, "pathogenIds")) {
+      if (!Array.isArray(syndrome.pathogenIds)) {
+        addError("invalid_pathogenIds", `syndromes[${sIndex}] (${syndrome.id}) pathogenIds is not an array`);
+      } else {
+        syndrome.pathogenIds.forEach((id) => {
+          if (!pathogenIds.has(id)) {
+            addError("missing_pathogen_ref", `syndromes[${sIndex}] (${syndrome.id}) pathogen ref "${id}" not found`);
+          }
+        });
       }
-    });
-  });
-}
+    }
 
-function validateModifierMatchRefs(data, pathogenIds, antibioticIds, issues) {
-  const profiles = data.resistanceProfiles || {};
-  Object.keys(profiles).forEach((profileKey) => {
-    const profile = profiles[profileKey];
-    const modifiers = Array.isArray(profile && profile.modifiers) ? profile.modifiers : [];
-    modifiers.forEach((modifier, mIndex) => {
-      const match = modifier && modifier.match;
-      if (!match || typeof match !== "object") return;
-
-      if (match.pathogen_id && !pathogenIds.has(match.pathogen_id)) {
-        addIssue(
-          issues,
-          "missing_modifier_pathogen_ref",
-          `resistanceProfiles.${profileKey}.modifiers[${mIndex}].match.pathogen_id "${match.pathogen_id}" not found`,
-          { profileKey, modifierId: modifier.id, pathogenId: match.pathogen_id }
-        );
+    // Regimens validation
+    if (!Object.prototype.hasOwnProperty.call(syndrome, "regimens")) {
+      addWarn("missing_regimens", `syndromes[${sIndex}] (${syndrome.id}) has no regimens`);
+    } else if (!Array.isArray(syndrome.regimens)) {
+      addError("invalid_regimens", `syndromes[${sIndex}] (${syndrome.id}) regimens is not an array`);
+    } else {
+      if (syndrome.regimens.length === 0) {
+        addWarn("empty_regimens", `syndromes[${sIndex}] (${syndrome.id}) regimens array is empty`);
       }
+      syndrome.regimens.forEach((regimen, rIndex) => {
+        if (!regimen) return;
+        const hasVisibleName = regimen.name || regimen.title || regimen.regimen;
+        if (!hasVisibleName) {
+          addWarn("missing_regimen_name", `syndromes[${sIndex}] (${syndrome.id}) regimen[${rIndex}] missing name/title/regimen`);
+        }
 
-      if (match.antibiotic_id && !antibioticIds.has(match.antibiotic_id)) {
-        addIssue(
-          issues,
-          "missing_modifier_antibiotic_ref",
-          `resistanceProfiles.${profileKey}.modifiers[${mIndex}].match.antibiotic_id "${match.antibiotic_id}" not found`,
-          { profileKey, modifierId: modifier.id, antibioticId: match.antibiotic_id }
-        );
-      }
-    });
-  });
-}
-
-function validateResistanceDataPathogenKeys(data, pathogenIds, issues) {
-  const profiles = data.resistanceProfiles || {};
-  Object.keys(profiles).forEach((profileKey) => {
-    const profile = profiles[profileKey];
-    const profileData = profile && profile.data;
-    if (!profileData || typeof profileData !== "object" || Array.isArray(profileData)) return;
-
-    Object.keys(profileData).forEach((pathogenKey) => {
-      if (!pathogenIds.has(pathogenKey)) {
-        addIssue(
-          issues,
-          "missing_resistance_pathogen_key",
-          `resistanceProfiles.${profileKey}.data key "${pathogenKey}" not found in pathogens`,
-          { profileKey, pathogenId: pathogenKey }
-        );
-      }
-    });
-  });
-}
-
-function validateRegimenDrugIds(data, antibioticIds, issues) {
-  (data.syndromes || []).forEach((syndrome, sIndex) => {
-    const regimens = Array.isArray(syndrome.regimens) ? syndrome.regimens : [];
-    regimens.forEach((regimen, rIndex) => {
-      const regimenRef = regimen && regimen.id ? `id="${regimen.id}"` : `index=${rIndex}`;
-      if (!Object.prototype.hasOwnProperty.call(regimen || {}, "drugIds")) {
-        addIssue(
-          issues,
-          "missing_regimen_drugids",
-          `syndromes[${sIndex}] (${syndrome.id}) regimen (${regimenRef}) regimen missing drugIds`,
-          { syndromeId: syndrome.id, regimenId: regimen && regimen.id ? regimen.id : null, regimenIndex: rIndex }
-        );
-        return;
-      }
-
-      if (!Array.isArray(regimen.drugIds) || regimen.drugIds.length === 0) {
-        addIssue(
-          issues,
-          "empty_regimen_drugids",
-          `syndromes[${sIndex}] (${syndrome.id}) regimen (${regimenRef}) regimen has empty drugIds`,
-          { syndromeId: syndrome.id, regimenId: regimen && regimen.id ? regimen.id : null, regimenIndex: rIndex }
-        );
-        return;
-      }
-
-      regimen.drugIds.forEach((drugId, dIndex) => {
-        if (!antibioticIds.has(drugId)) {
-          addIssue(
-            issues,
-            "missing_regimen_drugid_ref",
-            `syndromes[${sIndex}] (${syndrome.id}) regimens[${rIndex}] drugIds[${dIndex}] "${drugId}" not found in antibiotics`,
-            { syndromeId: syndrome.id, regimenName: regimen.name, drugId }
-          );
+        if (Object.prototype.hasOwnProperty.call(regimen, "drugIds")) {
+          if (!Array.isArray(regimen.drugIds)) {
+            addError("invalid_drugIds", `syndromes[${sIndex}] (${syndrome.id}) regimen[${rIndex}] drugIds is not an array`);
+          } else if (regimen.drugIds.length === 0) {
+            addError("empty_drugIds", `syndromes[${sIndex}] (${syndrome.id}) regimen[${rIndex}] drugIds is empty`);
+          } else {
+            regimen.drugIds.forEach((drugId) => {
+              if (!antibioticsIds.has(drugId)) {
+                addError("missing_drugId_ref", `syndromes[${sIndex}] (${syndrome.id}) regimen[${rIndex}] drugId "${drugId}" not found`);
+              }
+            });
+          }
         }
       });
-    });
+    }
+  });
+
+  return syndromeIds;
+}
+
+function validateResistanceProfiles(data, pathogenIds, antibioticIds, syndromeIds) {
+  const profiles = data.resistanceProfiles;
+  if (!profiles || typeof profiles !== "object" || Array.isArray(profiles)) return;
+
+  Object.keys(profiles).forEach((profileKey) => {
+    const profile = profiles[profileKey];
+    if (!profile || typeof profile !== "object") return;
+
+    if (isInvalidId(profile.id)) {
+      addError("invalid_profile_id", `resistanceProfiles.${profileKey} missing or invalid id`);
+    }
+    if (!profile.label) {
+      addError("missing_profile_label", `resistanceProfiles.${profileKey} missing label`);
+    }
+
+    const profileData = profile.data;
+    if (profileData && typeof profileData === "object" && !Array.isArray(profileData)) {
+      Object.keys(profileData).forEach((pathogenKey) => {
+        if (!pathogenIds.has(pathogenKey)) {
+          addError("missing_resistance_pathogen_key", `resistanceProfiles.${profileKey}.data key "${pathogenKey}" not found in pathogens`);
+        }
+      });
+    }
+
+    if (Object.prototype.hasOwnProperty.call(profile, "modifiers")) {
+      if (!Array.isArray(profile.modifiers)) {
+        addError("invalid_modifiers", `resistanceProfiles.${profileKey}.modifiers is not an array`);
+      } else {
+        profile.modifiers.forEach((modifier, mIndex) => {
+          if (!modifier || typeof modifier !== "object") return;
+
+          if (modifier.syndrome_id && !syndromeIds.has(modifier.syndrome_id)) {
+            addError("missing_modifier_syndrome_ref", `resistanceProfiles.${profileKey}.modifiers[${mIndex}] syndrome_id "${modifier.syndrome_id}" not found`);
+          }
+          if (modifier.pathogen_id && !pathogenIds.has(modifier.pathogen_id)) {
+            addError("missing_modifier_pathogen_ref", `resistanceProfiles.${profileKey}.modifiers[${mIndex}] pathogen_id "${modifier.pathogen_id}" not found`);
+          }
+          if (modifier.antibiotic_id && !antibioticIds.has(modifier.antibiotic_id)) {
+            addError("missing_modifier_antibiotic_ref", `resistanceProfiles.${profileKey}.modifiers[${mIndex}] antibiotic_id "${modifier.antibiotic_id}" not found`);
+          }
+
+          if (modifier.match && typeof modifier.match === "object") {
+            const match = modifier.match;
+            if (match.pathogen_id && !pathogenIds.has(match.pathogen_id)) {
+              addError("missing_modifier_match_pathogen_ref", `resistanceProfiles.${profileKey}.modifiers[${mIndex}].match.pathogen_id "${match.pathogen_id}" not found`);
+            }
+            if (match.antibiotic_id && !antibioticIds.has(match.antibiotic_id)) {
+              addError("missing_modifier_match_antibiotic_ref", `resistanceProfiles.${profileKey}.modifiers[${mIndex}].match.antibiotic_id "${match.antibiotic_id}" not found`);
+            }
+          }
+        });
+      }
+    }
   });
 }
 
-function printReport(data, issues) {
+function printReport(data) {
   const counts = {
     syndromes: (data.syndromes || []).length,
     pathogens: (data.pathogens || []).length,
@@ -150,35 +199,50 @@ function printReport(data, issues) {
   console.log(
     `Collections: syndromes=${counts.syndromes}, pathogens=${counts.pathogens}, antibiotics=${counts.antibiotics}, resistanceProfiles=${counts.resistanceProfiles}`
   );
+  console.log(`Errors: ${errors.length}`);
+  console.log(`Warnings: ${warnings.length}`);
+  console.log("");
 
-  if (issues.length === 0) {
-    console.log("Result: OK (no integrity errors)");
-    return;
+  if (errors.length > 0) {
+    errors.forEach((e) => console.log(`[ERROR] ${e.type}: ${e.message}`));
+    console.log("");
   }
 
-  console.log(`Result: FAIL (${issues.length} error${issues.length === 1 ? "" : "s"})`);
-  issues.forEach((issue, index) => {
-    console.log(`${index + 1}. [${issue.type}] ${issue.message}`);
-  });
+  if (warnings.length > 0) {
+    warnings.forEach((w) => console.log(`[WARN] ${w.type}: ${w.message}`));
+    console.log("");
+  }
+
+  if (errors.length === 0) {
+    console.log("Result: OK");
+  } else {
+    console.log("Result: FAIL");
+  }
 }
 
 function main() {
-  const issues = [];
+  if (!checkTopLevelStructure(clinicalData)) {
+    printReport(clinicalData);
+    process.exit(1);
+  }
 
-  collectDuplicateIds(clinicalData.syndromes, "syndromes", issues);
-  collectDuplicateIds(clinicalData.pathogens, "pathogens", issues);
-  collectDuplicateIds(clinicalData.antibiotics, "antibiotics", issues);
+  collectDuplicateIdsAndNames(clinicalData.syndromes, "syndromes");
+  collectDuplicateIdsAndNames(clinicalData.pathogens, "pathogens");
+  collectDuplicateIdsAndNames(clinicalData.antibiotics, "antibiotics");
 
   const pathogenIds = getIdSet(clinicalData.pathogens);
   const antibioticIds = getIdSet(clinicalData.antibiotics);
 
-  validateSyndromePathogenRefs(clinicalData, pathogenIds, issues);
-  validateModifierMatchRefs(clinicalData, pathogenIds, antibioticIds, issues);
-  validateResistanceDataPathogenKeys(clinicalData, pathogenIds, issues);
-  validateRegimenDrugIds(clinicalData, antibioticIds, issues);
+  const syndromeIds = validateSyndromes(clinicalData, pathogenIds, antibioticIds);
+  validateResistanceProfiles(clinicalData, pathogenIds, antibioticIds, syndromeIds);
 
-  printReport(clinicalData, issues);
-  if (issues.length > 0) process.exit(1);
+  printReport(clinicalData);
+
+  if (errors.length > 0) {
+    process.exit(1);
+  } else {
+    process.exit(0);
+  }
 }
 
 main();
