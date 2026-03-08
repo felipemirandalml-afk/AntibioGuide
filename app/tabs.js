@@ -36,6 +36,7 @@ window.ABG.tabs = (function () {
         }
 
         activeTabId = tabId;
+        window.ABG.state.currentTab = tabId;
 
         const { contentDisplay, searchInput } = window.ABG.state.dom;
 

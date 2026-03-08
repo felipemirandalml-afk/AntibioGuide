@@ -18,6 +18,10 @@ window.ABG.search = (function () {
         const queryRaw = searchInput?.value ?? "";
         const query = window.ABG.helpers.normalize(queryRaw);
 
+        // Update Logical State
+        window.ABG.state.searchQueryRaw = queryRaw;
+        window.ABG.state.searchQuery = query;
+
         if (typeof window.ABG.render.evaluateEpivigila === "function") {
             window.ABG.render.evaluateEpivigila(queryRaw);
         }

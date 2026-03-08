@@ -16,6 +16,11 @@ window.ABG.state = (function () {
 
     const welcomeHTML = dom.welcomeScreen ? dom.welcomeScreen.outerHTML : "";
 
+    // Logical State
+    let currentTab = "syndrome";
+    let searchQuery = "";
+    let searchQueryRaw = "";
+
     function showWelcome() {
         if (dom.contentDisplay) {
             dom.contentDisplay.innerHTML = welcomeHTML || "";
@@ -25,6 +30,12 @@ window.ABG.state = (function () {
     return {
         dom,
         welcomeHTML,
-        showWelcome
+        showWelcome,
+        get currentTab() { return currentTab; },
+        set currentTab(val) { currentTab = val; },
+        get searchQuery() { return searchQuery; },
+        set searchQuery(val) { searchQuery = val; },
+        get searchQueryRaw() { return searchQueryRaw; },
+        set searchQueryRaw(val) { searchQueryRaw = val; }
     };
 })();
