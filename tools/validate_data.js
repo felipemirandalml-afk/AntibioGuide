@@ -66,6 +66,22 @@ function checkTopLevelStructure(data) {
   if (!data.resistanceProfiles || typeof data.resistanceProfiles !== "object" || Array.isArray(data.resistanceProfiles)) {
     addWarn("structure", "clinicalData.resistanceProfiles is not a valid object");
   }
+
+  // Validate Rules Layer presence
+  if (!data.rules || typeof data.rules !== "object") {
+    addError("structure", "clinicalData.rules is missing or not a valid object");
+  } else {
+    if (!data.rules.stewardship || typeof data.rules.stewardship !== "object") {
+      addError("structure", "clinicalData.rules.stewardship is missing");
+    }
+    if (!data.rules.regulatory || typeof data.rules.regulatory !== "object") {
+      addError("structure", "clinicalData.rules.regulatory is missing");
+    }
+    if (!data.rules.contextual || typeof data.rules.contextual !== "object") {
+      addError("structure", "clinicalData.rules.contextual is missing");
+    }
+  }
+
   return true;
 }
 

@@ -1,3 +1,20 @@
+/**
+ * @fileoverview PATHOGENS DATA
+ * 
+ * ARCHITECTURAL CONTRACT (Clinical vs Presentation):
+ * This file contains the root entities for clinical pathogens. 
+ * 
+ * [CLINICAL CORE] (Used for algorithmic rules/validation - do not change meaning arbitrarily)
+ * - id: string
+ * - taxonomy.gram: string
+ * - resistance: object (canonical resistance patterns)
+ * - clinical.usualSyndromes: string[] 
+ * 
+ * [PRESENTATION & CONTEXT] (Used primarily for UI display - safe to rephrase)
+ * - name, synonyms, clinical.summary
+ * - appMeta.order
+ */
+
 const pathogens = [
   {
     "id": "escherichia_coli",
