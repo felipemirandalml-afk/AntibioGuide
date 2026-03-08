@@ -130,7 +130,10 @@
     </div>
   </footer>
 
-  <!-- 1. Data Layer (Official Source) -->
+  <!-- ========================================== -->
+  <!-- 1. OFFICIAL DATA ARCHITECTURE              -->
+  <!-- ========================================== -->
+  <!-- The /data folder is the official source of truth for all clinical data. -->
   <script src="data/syndromes.js"></script>
   <script src="data/pathogens.js"></script>
   <script src="data/antibiotics.js"></script>
@@ -138,11 +141,18 @@
   <script src="data/resistanceProfiles.js"></script>
   <script src="data/meta.js"></script>
 
-  <!-- 2. Compatibility & External Modules -->
+  <!-- ========================================== -->
+  <!-- 2. EXTERNAL MODULES & BACKWARDS COMPAT     -->
+  <!-- ========================================== -->
+  <!-- These files exist for legacy compatibility or external integration only. -->
   <script src="data.js"></script> <!-- Legacy Adapter -->
-  <script src="epivigila.js"></script> <!-- Independent Module -->
+  <script src="epivigila.js"></script> <!-- Independent Regulatory Layer -->
+  <!-- Note: app.js is now an empty stub and only exists to stop 404s. -->
 
-  <!-- 3. App Core (Modular Architecture Entrypoint) -->
+  <!-- ========================================== -->
+  <!-- 3. OFFICIAL MODULAR APP ENTRYPOINT         -->
+  <!-- ========================================== -->
+  <!-- The /app folder contains the official modular application logic. -->
   <script src="app/helpers.js"></script>
   <script src="app/state.js"></script>
   <script src="app/modal.js"></script>

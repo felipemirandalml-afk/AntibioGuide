@@ -8,6 +8,7 @@
  * 
  * This file acts as a backwards compatibility adapter ensuring the data 
  * is correctly hoisted to `window.clinicalData` for external or legacy usage.
+ * It SHOULD NOT grow as a primary source of logic/data.
  * =========================================================================
  */
 let clinicalData;
