@@ -1,3 +1,18 @@
+/**
+ * @fileoverview ANTIBIOTICS DATA
+ * 
+ * ARCHITECTURAL CONTRACT (Clinical vs Presentation):
+ * This file contains the primary vocabulary for drugs and their properties.
+ * 
+ * [CLINICAL CORE] (Used for algorithmic rules/validation - do not change meaning arbitrarily)
+ * - id: string
+ * - mechanism, family: string
+ * 
+ * [PRESENTATION & CONTEXT] (Used primarily for UI display - safe to rephrase)
+ * - name, spectrum, dose, renal, contraindications, adverse, uses
+ * - clinical_metadata: object (deep presentation blocks)
+ */
+
 const antibiotics = [
   // --- Beta-lactámicos y afines ---
   {

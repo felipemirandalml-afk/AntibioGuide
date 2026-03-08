@@ -1,3 +1,19 @@
+/**
+ * @fileoverview RESISTANCE PROFILES DATA
+ * 
+ * ARCHITECTURAL CONTRACT (Clinical vs Presentation):
+ * This file contains regional or contextual matrices reflecting susceptibility models.
+ * 
+ * [CLINICAL CORE] (Used for algorithmic rules/validation - do not change meaning arbitrarily)
+ * - id: string
+ * - data: object matrix matching pathogenIds -> antibioticIds 
+ * - modifiers: array of rules matching syndrome_id/pathogen_id/antibiotic_id thresholds
+ * 
+ * [PRESENTATION & CONTEXT] (Used primarily for UI display - safe to rephrase)
+ * - label: string
+ * - modifiers[].message: string
+ */
+
 const resistanceProfiles = {
   general: {
     id: "general",
