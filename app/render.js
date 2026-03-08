@@ -317,12 +317,45 @@ window.ABG.render = (function () {
         const adverse = escapeHTML(a?.adverse || "");
         const uses = escapeHTML(a?.uses || "");
 
+        let metadataChips = "";
+        if (a?.clinical_metadata) {
+            const md = a.clinical_metadata;
+            const chips = [];
+
+            if (md.aware) {
+                const colors = {
+                    "Access": "bg-green-100 text-green-800 border-green-200 dark:bg-green-900/40 dark:text-green-300 dark:border-green-800/50",
+                    "Watch": "bg-amber-100 text-amber-800 border-amber-200 dark:bg-amber-900/40 dark:text-amber-300 dark:border-amber-800/50",
+                    "Reserve": "bg-red-100 text-red-800 border-red-200 dark:bg-red-900/40 dark:text-red-300 dark:border-red-800/50"
+                };
+                const color = colors[md.aware] || "bg-gray-100 text-gray-800 border-gray-200";
+                chips.push(`<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold border ${color}">AWaRe: ${escapeHTML(md.aware)}</span>`);
+            }
+            if (md.spectrum === "broad") {
+                chips.push(`<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border bg-purple-100 text-purple-800 border-purple-200 dark:bg-purple-900/40 dark:text-purple-300 dark:border-purple-800/50">Amplio espectro</span>`);
+            }
+            if (md.anti_pseudomonas) {
+                chips.push(`<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border bg-blue-100 text-blue-800 border-blue-200 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800/50">Anti-Pseudomonas</span>`);
+            }
+            if (md.anaerobic_activity) {
+                chips.push(`<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border bg-stone-100 text-stone-800 border-stone-200 dark:bg-stone-800/60 dark:text-stone-300 dark:border-stone-700">Anaerobios</span>`);
+            }
+            if (md.oral_option) {
+                chips.push(`<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium border bg-teal-100 text-teal-800 border-teal-200 dark:bg-teal-900/40 dark:text-teal-300 dark:border-teal-800/50">Opción VO</span>`);
+            }
+
+            if (chips.length > 0) {
+                metadataChips = `<div class="flex flex-wrap gap-2 mt-2">${chips.join("")}</div>`;
+            }
+        }
+
         modalContent.innerHTML = `
       <div class="flex items-center mb-4">
         <i class="fas fa-pills text-3xl text-emerald-600 mr-3"></i>
         <div>
           <h2 class="text-3xl font-bold text-emerald-900 leading-tight">${name}</h2>
           <p class="text-emerald-700 font-semibold">${family}</p>
+          ${metadataChips}
         </div>
       </div>
 

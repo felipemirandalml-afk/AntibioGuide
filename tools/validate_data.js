@@ -76,6 +76,54 @@ function getIdSet(items) {
   return new Set((items || []).map((x) => x && x.id).filter(Boolean));
 }
 
+function validateAntibiotics(data) {
+  (data.antibiotics || []).forEach((abx, index) => {
+    if (!abx) return;
+
+    if (Object.prototype.hasOwnProperty.call(abx, "clinical_metadata")) {
+      const md = abx.clinical_metadata;
+      if (md === null || typeof md !== "object" || Array.isArray(md)) {
+        addError("invalid_clinical_metadata", `antibiotics[${index}] (${abx.id}) clinical_metadata must be an object`);
+        return;
+      }
+
+      const validAware = ["Access", "Watch", "Reserve", null];
+      if (md.aware !== undefined && !validAware.includes(md.aware)) {
+        addError("invalid_metadata_aware", `antibiotics[${index}] (${abx.id}) aware must be Access, Watch, Reserve or null`);
+      }
+
+      const validSpectrum = ["narrow", "moderate", "broad", null];
+      if (md.spectrum !== undefined && !validSpectrum.includes(md.spectrum)) {
+        addError("invalid_metadata_spectrum", `antibiotics[${index}] (${abx.id}) spectrum must be narrow, moderate, broad or null`);
+      }
+
+      const validRoute = ["vo", "ev", "both", null];
+      if (md.route_hint !== undefined && !validRoute.includes(md.route_hint)) {
+        addError("invalid_metadata_route", `antibiotics[${index}] (${abx.id}) route_hint must be vo, ev, both or null`);
+      }
+
+      const booleanFlags = ["anti_pseudomonas", "anaerobic_activity", "atypical_activity", "mrsa_activity", "oral_option"];
+      booleanFlags.forEach(flag => {
+        if (md[flag] !== undefined && typeof md[flag] !== "boolean") {
+          addError("invalid_metadata_boolean", `antibiotics[${index}] (${abx.id}) ${flag} must be boolean`);
+        }
+      });
+
+      if (md.stewardship_flags !== undefined) {
+        if (!Array.isArray(md.stewardship_flags)) {
+          addError("invalid_metadata_stewardship", `antibiotics[${index}] (${abx.id}) stewardship_flags must be an array`);
+        } else {
+          md.stewardship_flags.forEach((flag, fIdx) => {
+            if (typeof flag !== "string") {
+              addError("invalid_metadata_stewardship_item", `antibiotics[${index}] (${abx.id}) stewardship_flags[${fIdx}] must be a string`);
+            }
+          });
+        }
+      }
+    }
+  });
+}
+
 function validatePathogens(data, syndromeIds) {
   (data.pathogens || []).forEach((p, index) => {
     if (!p) return;
@@ -268,6 +316,7 @@ function main() {
   const antibioticIds = getIdSet(clinicalData.antibiotics);
 
   const syndromeIds = validateSyndromes(clinicalData, pathogenIds, antibioticIds);
+  validateAntibiotics(clinicalData);
   validatePathogens(clinicalData, syndromeIds);
   validateResistanceProfiles(clinicalData, pathogenIds, antibioticIds, syndromeIds);
 
