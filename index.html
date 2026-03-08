@@ -130,15 +130,19 @@
     </div>
   </footer>
 
+  <!-- 1. Data Layer (Official Source) -->
   <script src="data/syndromes.js"></script>
   <script src="data/pathogens.js"></script>
   <script src="data/antibiotics.js"></script>
   <script src="data/interpretation.js"></script>
   <script src="data/resistanceProfiles.js"></script>
   <script src="data/meta.js"></script>
-  <script src="data.js"></script>
-  <script src="epivigila.js"></script>
-  <!-- App Core -->
+
+  <!-- 2. Compatibility & External Modules -->
+  <script src="data.js"></script> <!-- Legacy Adapter -->
+  <script src="epivigila.js"></script> <!-- Independent Module -->
+
+  <!-- 3. App Core (Modular Architecture Entrypoint) -->
   <script src="app/helpers.js"></script>
   <script src="app/state.js"></script>
   <script src="app/modal.js"></script>

@@ -1,4 +1,15 @@
-// Adapter function for backwards compatibility
+/**
+ * =========================================================================
+ * COMPATIBILITY ADAPTER (data.js)
+ * =========================================================================
+ * 
+ * Notice: The official and structural source of data for AntibioGuide resides 
+ * strictly in the `/data` directory (e.g. /data/syndromes.js, etc).
+ * 
+ * This file acts as a backwards compatibility adapter ensuring the data 
+ * is correctly hoisted to `window.clinicalData` for external or legacy usage.
+ * =========================================================================
+ */
 let clinicalData;
 
 if (typeof module !== "undefined" && module.exports) {

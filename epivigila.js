@@ -1,3 +1,13 @@
+/**
+ * =========================================================================
+ * EPIVIGILA MODULE (epivigila.js)
+ * =========================================================================
+ * 
+ * Notice: This module handles the independent EPIVIGILA integration layer.
+ * It remains in the root directory for structural independence as it operates
+ * autonomously parsing the DB and checking for terms to render warnings.
+ * =========================================================================
+ */
 (function () {
   const state = {
     ready: false,
