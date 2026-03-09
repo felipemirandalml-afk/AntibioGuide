@@ -25,6 +25,7 @@ if (typeof module !== "undefined" && module.exports) {
     syndromes: window.abg_syndromes,
     pathogens: window.abg_pathogens,
     antibiotics: window.abg_antibiotics,
+    rules: window.abg_rules,
     interpretation: window.abg_interpretation,
     resistanceProfiles: window.abg_resistanceProfiles,
     meta: window.abg_meta
