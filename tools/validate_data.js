@@ -382,7 +382,36 @@ function printReport(data) {
   }
 
   if (warnings.length > 0) {
-    warnings.forEach((w) => console.log(`[WARN] ${w.type}: ${w.message}`));
+    const obsoleteKeyWarnings = warnings.filter(w => w.type === "obsolete_key");
+    const otherWarnings = warnings.filter(w => w.type !== "obsolete_key");
+
+    if (obsoleteKeyWarnings.length > 0) {
+      const keyCounts = {};
+      const affectedPathogens = new Set();
+
+      obsoleteKeyWarnings.forEach(w => {
+        const keyMatch = w.message.match(/legacy key '([^']+)'/);
+        if (keyMatch) {
+          const key = keyMatch[1];
+          keyCounts[key] = (keyCounts[key] || 0) + 1;
+        }
+
+        const pathogenMatch = w.message.match(/pathogens\[\d+\] \(([^)]+)\)/);
+        if (pathogenMatch) {
+          affectedPathogens.add(pathogenMatch[1]);
+        }
+      });
+
+      console.log(`[WARN] obsolete_key summary: pathogens contain legacy keys`);
+      for (const [key, count] of Object.entries(keyCounts)) {
+        console.log(`- ${key}: ${count}`);
+      }
+      if (affectedPathogens.size > 0) {
+        console.log(`Affected pathogens: ${affectedPathogens.size}`);
+      }
+    }
+
+    otherWarnings.forEach((w) => console.log(`[WARN] ${w.type}: ${w.message}`));
     console.log("");
   }
 
