@@ -214,6 +214,24 @@ function validatePathogens(data, syndromeIds) {
 
     assertObject(p, "resistance", ctx);
 
+    // Reject legacy keys to prevent drift
+    const obsoleteKeys = [
+      "summary",
+      "category",
+      "tags",
+      "intrinsic_resistance",
+      "typical_resistance",
+      "stewardship_note",
+      "common_syndromes"
+    ];
+
+    obsoleteKeys.forEach(key => {
+      if (p[key] !== undefined) {
+        // Warning only since the user deferred the cleanup task
+        addWarn("obsolete_key", `${ctx} contains legacy key '${key}'. This belongs in the nested schema (clinical.summary, taxonomy.group, etc).`);
+      }
+    });
+
     if (p.appMeta !== undefined) {
       if (assertObject(p, "appMeta", ctx)) {
         if (p.appMeta.order !== undefined && typeof p.appMeta.order !== "number") {
