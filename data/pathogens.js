@@ -4,6 +4,13 @@
  * ARCHITECTURAL CONTRACT (Clinical vs Presentation):
  * This file contains the root entities for clinical pathogens. 
  * 
+ * DATA SOURCE OF TRUTH:
+ * - data/pathogens.js: Runtime source of truth for the application.
+ * - data/pathogens.json: Source asset for intermediate refinement.
+ * - data-files/pathogens_base.json: Taxonomic extraction artifact.
+ * - data-files/microorganisms.csv: Raw source dataset.
+ * - tools/csv_to_pathogens.js: Extraction utility.
+ * 
  * [CLINICAL CORE] (Used for algorithmic rules/validation - do not change meaning arbitrarily)
  * - id: string
  * - taxonomy.gram: string
