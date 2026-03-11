@@ -1,16 +1,15 @@
 /**
  * =========================================================================
- * COMPATIBILITY ADAPTER (data.js)
+ * ARCHITECTURE GUARDRAIL: COMPATIBILITY ADAPTER (data.js)
  * =========================================================================
  * AUTOMATED PROXY / LEGACY ADAPTER — EDIT /data/ INSTEAD
  * =========================================================================
  * 
- * Notice: The official and structural source of data for AntibioGuide resides 
- * strictly in the `/data` directory (e.g. /data/syndromes.js, etc).
+ * Notice: This file exists ONLY for backwards compatibility with Node.js
+ * tools and legacy browser global state (window.clinicalData).
  * 
- * This file acts as a backwards compatibility adapter ensuring the data 
- * is correctly hoisted to `window.clinicalData` for external or legacy usage.
- * It SHOULD NOT grow as a primary source of logic/data.
+ * ⚠️ DO NOT ADD CLINICAL DATA OR LOGIC TO THIS FILE. 
+ * ⚠️ THE SOURCE OF TRUTH IS IN THE /data DIRECTORY.
  * =========================================================================
  */
 let clinicalData;

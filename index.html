@@ -133,9 +133,9 @@
   </footer>
 
   <!-- ========================================== -->
-  <!-- 1. OFFICIAL DATA ARCHITECTURE              -->
+  <!-- 1. OFFICIAL DATA ARCHITECTURE (SSOT)       -->
   <!-- ========================================== -->
-  <!-- The /data folder is the official source of truth for all clinical data. -->
+  <!-- ARCHITECTURE GUARDRAIL: The /data folder is the official source of truth. -->
   <script src="data/syndromes.js"></script>
   <script src="data/pathogens.js"></script>
   <script src="data/antibiotics.js"></script>
@@ -145,16 +145,16 @@
   <script src="data/meta.js"></script>
 
   <!-- ========================================== -->
-  <!-- 2. EXTERNAL MODULES & BACKWARDS COMPAT     -->
+  <!-- 2. EXTERNAL MODULES & LEGACY ADAPTERS      -->
   <!-- ========================================== -->
-  <!-- These files exist for legacy compatibility or external integration only. -->
-  <script src="data.js"></script> <!-- Legacy Adapter -->
+  <!-- ARCHITECTURE GUARDRAIL: These files exist for legacy/compatibility only. DO NOT EDIT. -->
+  <script src="data.js"></script> <!-- Legacy Adapter Proxy -->
   <script src="epivigila.js"></script> <!-- Independent Regulatory Layer -->
 
   <!-- ========================================== -->
-  <!-- 3. OFFICIAL MODULAR APP ENTRYPOINT         -->
+  <!-- 3. OFFICIAL MODULAR APP (LOGIC)            -->
   <!-- ========================================== -->
-  <!-- The /app folder contains the official modular application logic. -->
+  <!-- ARCHITECTURE GUARDRAIL: Official application logic. Keep modular. -->
   <script src="app/helpers.js"></script>
   <script src="app/state.js"></script>
   <script src="app/clinicalEngine.js"></script>
@@ -164,7 +164,7 @@
   <script src="app/localContext.js"></script>
   <script src="app/render.js"></script>
   <script src="app/search.js"></script>
-  <script src="app/bootstrap.js"></script>
+  <script src="app/bootstrap.js"></script> <!-- Final Bootstrap -->
 </body>
 
 </html>
