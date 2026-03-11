@@ -10,9 +10,11 @@ Para mantener la consistencia clínica y técnica del proyecto, se debe respetar
 *   **Source of Truth Code**: Toda la lógica modular (motor clínico, renderizado, búsqueda) reside en esta carpeta.
 *   **Entry Point**: El inicio real de la app ocurre en `app/bootstrap.js`.
 
-### 2. Datos de Runtime (`/data`)
-*   **Source of Truth Data**: Los archivos `.js` dentro de `/data` (ej: `pathogens.js`, `syndromes.js`) son la única fuente de verdad activa.
-*   **Edición**: Cualquier corrección clínica o técnica de datos debe hacerse directamente en estos archivos.
+### 2. Capa de Reglas y Datos (`/data`)
+*   **Rules Layer (`data/rules.js`)**: Ubicación oficial de reglas clínicas estructuradas (ej: alertas de resistencia, criterios PROA). Toda lógica condicional reutilizable debe definirse aquí.
+*   **Source of Truth Data**: Los archivos `.js` dentro de `/data` (ej: `pathogens.js`, `syndromes.js`) son la única fuente de verdad activa para entidades.
+*   **Contexto Local (`data/resistanceProfiles.js`)**: Contiene matrices de susceptibilidad local. Consume las reglas globales para disparar alertas contextuales.
+*   **Edición**: Cualquier corrección clínica o técnica de datos/reglas debe hacerse directamente en estos archivos.
 
 ### 3. Insumos e Ingestión (`/data-files/seeds`)
 *   **Inputs**: Contiene los archivos CSV o JSON crudos que sirven como insumo para las herramientas de ingestión.

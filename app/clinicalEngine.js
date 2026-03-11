@@ -70,16 +70,45 @@ window.ABG.clinicalEngine = (function () {
     }
 
     /**
-     * Determines the local contextual warnings for a specific regimen based on active profile modifiers.
+     * Determines the local contextual warnings for a specific regimen based on 
+     * both global rules and active profile modifiers.
      * Returns an array of structured objects for the UI layer to format.
      */
     function getRegimenWarnings(syndromeId, regimenDrugIds = []) {
         const profile = window.ABG.localContext.getActiveProfile();
-        if (!profile || !Array.isArray(profile.modifiers)) return [];
+        if (!profile) return [];
 
         const warnings = [];
 
-        profile.modifiers.forEach(mod => {
+        // 1. Process Global High Resistance Alerts (from rules.js)
+        const globalRules = window.clinicalData?.rules?.clinical?.highResistanceAlerts || [];
+        globalRules.forEach(rule => {
+            if (rule.syndrome_id !== syndromeId) return;
+
+            const abxIds = rule.antibiotic_ids || (rule.antibiotic_id ? [rule.antibiotic_id] : []);
+            const matchingAbx = regimenDrugIds.filter(id => abxIds.includes(id));
+
+            if (matchingAbx.length === 0) return;
+
+            // Check if profile has resistance data for this pathogen
+            const rMatrix = profile.data?.[rule.pathogen_id];
+            if (!rMatrix) return;
+
+            matchingAbx.forEach(abxId => {
+                const rData = rMatrix[abxId];
+                if (rData && typeof rData.r_pct === "number" && rData.r_pct >= rule.threshold_r_pct) {
+                    warnings.push({
+                        message: rule.message,
+                        r_pct: rData.r_pct,
+                        profileLabel: profile.label
+                    });
+                }
+            });
+        });
+
+        // 2. Process Local Profile Modifiers (legacy/custom)
+        const localModifiers = Array.isArray(profile.modifiers) ? profile.modifiers : [];
+        localModifiers.forEach(mod => {
             if (mod.action !== "show_warning") return;
             if (mod.syndrome_id !== syndromeId) return;
 
@@ -91,12 +120,15 @@ window.ABG.clinicalEngine = (function () {
             if (!rData || typeof rData.r_pct !== "number") return;
 
             if (rData.r_pct >= mod.threshold_r_pct) {
-                // Return structured data, no UI strings here.
-                warnings.push({
-                    message: mod.message,
-                    r_pct: rData.r_pct,
-                    profileLabel: profile.label
-                });
+                // Ensure we don't duplicate warnings if already added by global rules
+                const isDuplicate = warnings.some(w => w.message === mod.message && w.r_pct === rData.r_pct);
+                if (!isDuplicate) {
+                    warnings.push({
+                        message: mod.message,
+                        r_pct: rData.r_pct,
+                        profileLabel: profile.label
+                    });
+                }
             }
         });
 

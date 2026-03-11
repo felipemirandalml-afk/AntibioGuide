@@ -36,6 +36,39 @@ const rules = {
      */
     contextual: {
         strictThresholds: true,
+    },
+
+    /**
+     * Clinical decision support rules.
+     * Defines logical triggers that the engine should evaluate.
+     */
+    clinical: {
+        highResistanceAlerts: [
+            {
+                id: "rule_fq_itu_cistitis",
+                syndrome_id: "itu_cistitis",
+                pathogen_id: "escherichia_coli",
+                antibiotic_id: "ciprofloxacino",
+                threshold_r_pct: 20,
+                message: "Resistencia local elevada a fluoroquinolonas en E. coli: evitar uso empírico si es posible."
+            },
+            {
+                id: "rule_fq_itu_pielonefritis",
+                syndrome_id: "itu_pielonefritis",
+                pathogen_id: "escherichia_coli",
+                antibiotic_ids: ["ciprofloxacino", "levofloxacino"],
+                threshold_r_pct: 10,
+                message: "Resistencia local elevada a fluoroquinolonas en E. coli: evitar uso empírico si es posible."
+            },
+            {
+                id: "rule_macrolide_nac",
+                syndrome_id: "nac",
+                pathogen_id: "streptococcus_pneumoniae",
+                antibiotic_id: "azitromicina",
+                threshold_r_pct: 25,
+                message: "Resistencia local elevada a macrólidos en neumococo: evitar monoterapia con macrólidos."
+            }
+        ]
     }
 };
 

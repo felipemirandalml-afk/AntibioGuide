@@ -32,40 +32,7 @@ const resistanceProfiles = {
       escherichia_coli: { ciprofloxacino: { r_pct: 32 } },
       streptococcus_pneumoniae: { azitromicina: { r_pct: 28 } }
     },
-    modifiers: [
-      {
-        id: "itu_cistitis_fq_warning",
-        action: "show_warning",
-        syndrome_id: "itu_cistitis",
-        match: { pathogen_id: "escherichia_coli", antibiotic_id: "ciprofloxacino" },
-        threshold_r_pct: 20,
-        message: "Resistencia local elevada a fluoroquinolonas en E. coli: evitar uso empírico si es posible."
-      },
-      {
-        id: "itu_pielonefritis_fq_warning_cipro",
-        action: "show_warning",
-        syndrome_id: "itu_pielonefritis",
-        match: { pathogen_id: "escherichia_coli", antibiotic_id: "ciprofloxacino" },
-        threshold_r_pct: 10,
-        message: "Resistencia local elevada a fluoroquinolonas en E. coli: evitar uso empírico si es posible."
-      },
-      {
-        id: "itu_pielonefritis_fq_warning_levo",
-        action: "show_warning",
-        syndrome_id: "itu_pielonefritis",
-        match: { pathogen_id: "escherichia_coli", antibiotic_id: "levofloxacino" },
-        threshold_r_pct: 10,
-        message: "Resistencia local elevada a fluoroquinolonas en E. coli: evitar uso empírico si es posible."
-      },
-      {
-        id: "nac_macrolide_warning",
-        action: "show_warning",
-        syndrome_id: "nac",
-        match: { pathogen_id: "streptococcus_pneumoniae", antibiotic_id: "azitromicina" },
-        threshold_r_pct: 25,
-        message: "Resistencia local elevada a macrólidos en neumococo: evitar monoterapia con macrólidos."
-      }
-    ]
+    modifiers: []
   },
   hra_hosp_adulto_2024: {
     id: "hra_hosp_adulto_2024",
