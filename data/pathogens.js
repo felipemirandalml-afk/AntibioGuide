@@ -406,29 +406,39 @@ const pathogens = [
     "id": "staphylococcus_saprophyticus",
     "name": "Staphylococcus saprophyticus",
     "shortName": "S. saprophyticus",
-    "aliases": [],
+    "aliases": [
+      "CoNS urinario"
+    ],
     "taxonomy": {
       "gram": "positive",
-      "morphology": "coco",
-      "group": "Staphylococcus (CoNS)"
+      "morphology": "coco en racimos (coagulasa negativo)",
+      "group": "Staphylococcaceae"
     },
     "clinical": {
-      "summary": "Segunda causa más común de cistitis no complicada en mujeres jóvenes.",
+      "summary": "Segunda causa más común de cistitis no complicada en mujeres jóvenes sexualmente activas (después de E. coli).",
       "usualSyndromes": [
-        "itu_cistitis"
+        "itu_baja",
+        "cistitis_aguda"
       ],
       "context": "Comunitario",
-      "pearls": []
+      "pearls": [
+        "Clásico agente de la 'cistitis de la luna de miel'.",
+        "A diferencia de E. coli, no reduce los nitratos a nitritos, por lo que el test de nitritos en la tira reactiva de orina será característicamente negativo.",
+        "Excepcionalmente causa pielonefritis o infecciones sistémicas/nosocomiales, a diferencia de otros estafilococos coagulasa negativos (como S. epidermidis)."
+      ]
     },
     "resistance": {
       "intrinsic": [
-        "fosfomicina_trometamol"
+        "novobiocina (clave para su identificación en laboratorio)",
+        "fosfomicina (resistencia in vitro, pero el MINSAL/IDSA igual la avala por altísima concentración urinaria)"
       ],
-      "typicalAcquired": [],
-      "stewardshipNote": "Tratamiento estándar de cistitis no complicada funciona bien (excepto precaución local sugerida con fosfomicina en este agente particular)."
+      "typicalAcquired": [
+        "ampicilina"
+      ],
+      "stewardshipNote": "Altamente sensible en la práctica a Nitrofurantoína y Cotrimoxazol. Aunque in vitro muestra resistencia natural a Fosfomicina y Ácido Nalidíxico, la cistitis a menudo responde a esquemas estándar de primera línea."
     },
     "appMeta": {
-      "relevance": "medium",
+      "relevance": "moderada",
       "status": "active"
     }
   },
@@ -553,30 +563,37 @@ const pathogens = [
     ],
     "taxonomy": {
       "gram": "negative",
-      "morphology": "diplococos",
-      "group": "diplococci"
+      "morphology": "diplococo (en grano de café)",
+      "group": "Neisseriaceae"
     },
     "clinical": {
-      "summary": "Diplococo causante de ITS.",
+      "summary": "Agente etiológico de la gonorrea, causante de uretritis/cervicitis, enfermedad pélvica inflamatoria (EPI) e infección gonocócica diseminada.",
       "usualSyndromes": [
-        "epi"
+        "uretritis",
+        "cervicitis",
+        "enfermedad_pelvica_inflamatoria",
+        "artritis_septica",
+        "conjuntivitis_neonatal"
       ],
-      "context": "Comunitario",
+      "context": "Comunitario (ITS)",
       "pearls": [
-        "Tratamiento dual frecuente (Ceftriaxona + Azitromicina)"
+        "Clásicamente se observa como diplococos intracelulares dentro de polimorfonucleares en el Gram de secreción uretral.",
+        "Alta tasa de coinfección con Chlamydia trachomatis; tratar empíricamente para ambas si no se dispone de panel molecular (NAAT).",
+        "La infección gonocócica diseminada cursa clásicamente con la tríada: tenosinovitis, dermatitis (lesiones pustulosas) y poliartralgias asimétricas."
       ]
     },
     "resistance": {
       "intrinsic": [
+        "lincosamidas",
         "vancomicina"
       ],
       "typicalAcquired": [
-        "ciprofloxacino",
-        "bencilpenicilina_sodica",
-        "ciprofloxacino",
-        "bencilpenicilina_sodica"
+        "penicilina_g (producción de penicilinasa)",
+        "ciprofloxacino (mutaciones gyrA)",
+        "tetraciclinas",
+        "azitromicina (resistencia en aumento global)"
       ],
-      "stewardshipNote": "Ceftriaxona es estándar."
+      "stewardshipNote": "Las guías actuales (CDC) recomiendan monoterapia con altas dosis de Ceftriaxona (500 mg IM dosis única) para infecciones no complicadas, abandonando la adición rutinaria de Azitromicina empírica para el gonococo (por aumento de resistencia a macrólidos), salvo que no se haya descartado Chlamydia."
     },
     "appMeta": {
       "relevance": "alta",
@@ -720,31 +737,42 @@ const pathogens = [
     "id": "listeria_monocytogenes",
     "name": "Listeria monocytogenes",
     "shortName": "L. monocytogenes",
-    "aliases": [],
+    "aliases": [
+      "Bacilo de Lister"
+    ],
     "taxonomy": {
       "gram": "positive",
-      "morphology": "bacilos cortos",
-      "group": "bacilli"
+      "morphology": "bacilo corto (pleomórfico)",
+      "group": "Listeriaceae"
     },
     "clinical": {
-      "summary": "Bacilo causante de meningitis en inmunosuprimidos.",
+      "summary": "Patógeno transmitido por alimentos que causa meningoencefalitis y sepsis severa en recién nacidos, embarazadas, ancianos e inmunocomprometidos.",
       "usualSyndromes": [
-        "meningitis"
+        "meningitis_bacteriana",
+        "romboencefalitis",
+        "sepsis_neonatal",
+        "infeccion_asociada_embarazo"
       ],
-      "context": "Embarazo;inmunocompromiso;ancianos",
+      "context": "Comunitario / Zoonosis",
       "pearls": [
-        "Cefalosporinas son ineficaces (resistencia intrínseca)"
+        "Capaz de crecer a temperaturas de refrigeración (4°C), lo que explica su asociación con fiambres, patés, salmón ahumado y quesos no pasteurizados.",
+        "Posee motilidad característica en 'voltereta' (tumbling motility) a temperatura ambiente.",
+        "Tiene especial tropismo por el tronco encefálico (romboencefalitis), pudiendo presentar clínica de pares craneales y ataxia."
       ]
     },
     "resistance": {
       "intrinsic": [
-        "Cefalosporinas"
+        "todas_las_cefalosporinas (incluyendo cefotaxima, ceftriaxona y cefepime)",
+        "fosfomicina"
       ],
-      "typicalAcquired": [],
-      "stewardshipNote": "Usar ampicilina."
+      "typicalAcquired": [
+        "macrolidos",
+        "fluoroquinolonas (raro)"
+      ],
+      "stewardshipNote": "REGLA DE ORO: Ninguna cefalosporina cubre Listeria. Es el motivo por el cual se añade Ampicilina empírica al esquema de meningitis en >50 años, embarazadas o inmunocomprometidos. En alergia severa a penicilina, el Cotrimoxazol es la alternativa de elección."
     },
     "appMeta": {
-      "relevance": "moderada",
+      "relevance": "critica",
       "status": "active"
     }
   },
@@ -1080,75 +1108,49 @@ const pathogens = [
     }
   },
   {
-    "id": "culture_negative_endocarditis_zoonotic",
-    "name": "Coxiella burnetii / Bartonella / Brucella",
-    "shortName": "Cultivos Negativos / Zoonóticas",
-    "aliases": [
-      "Fiebre Q",
-      "Zoonosis"
-    ],
-    "taxonomy": {
-      "gram": "variable",
-      "morphology": "intracelular",
-      "group": "Zoonoses"
-    },
-    "clinical": {
-      "summary": "Causas etiológicas clave en Endocarditis con hemocultivos negativos repetidos (CNE).",
-      "usualSyndromes": [
-        "endocarditis_infecciosa"
-      ],
-      "context": "Exposición zoonótica / Exudados estériles",
-      "pearls": []
-    },
-    "resistance": {
-      "intrinsic": [
-        "Patógenos difíciles de testear in-vitro."
-      ],
-      "typicalAcquired": [],
-      "stewardshipNote": "El empirismo frente a CNE sin otra explicación suele requerir Doxiciclina asociada en discusión en comité de endocarditis."
-    },
-    "appMeta": {
-      "relevance": "low",
-      "status": "active"
-    }
-  },
-  {
     "id": "acinetobacter_baumannii",
     "name": "Acinetobacter baumannii",
     "shortName": "A. baumannii",
-    "aliases": [],
+    "aliases": [
+      "Acinetobacter baumannii-calcoaceticus complex"
+    ],
     "taxonomy": {
       "gram": "negative",
-      "morphology": "cocobacilos/bacilos",
-      "group": "non_fermenter"
+      "morphology": "cocobacilo pleomórfico",
+      "group": "Moraxellaceae"
     },
     "clinical": {
-      "summary": "Bacilo hospitalario multirresistente.",
+      "summary": "Patógeno oportunista intrahospitalario clásico, causante de brotes en UCI debido a su extrema persistencia en superficies secas e instrumental.",
       "usualSyndromes": [
-        "nih",
-        "sepsis_urinaria",
-        "pie_diabetico"
+        "neumonia_asociada_ventilacion",
+        "bacteriemia_asociada_cateter",
+        "infeccion_herida_operatoria"
       ],
       "context": "Hospitalario",
       "pearls": [
-        "Capacidad extrema de sobrevivir en superficies secas"
+        "Tiene baja virulencia intrínseca pero una extraordinaria capacidad para adquirir mecanismos de resistencia (fenotipo XDR/PDR).",
+        "En tinciones de Gram puede retener cristal violeta y confundirse erróneamente con cocos Gram positivos.",
+        "Múltiples brotes en Chile asociados a cepas productoras de carbapenemasas tipo OXA (OXA-23, OXA-58)."
       ]
     },
     "resistance": {
       "intrinsic": [
         "ampicilina",
         "amoxicilina_clavulanico",
-        "Cefalosporinas 1ª/2ª",
-        "ertapenem"
+        "cefalosporinas_primera_segunda_generacion",
+        "ertapenem",
+        "cloranfenicol"
       ],
       "typicalAcquired": [
-        "Carbapenémicos",
-        "Carbapenémicos"
+        "carbapenemicos (meropenem/imipenem)",
+        "aminoglucosidos",
+        "fluoroquinolonas",
+        "colistin"
       ],
-      "stewardshipNote": "Alta vigilancia PROA."
+      "stewardshipNote": "El componente Sulbactam (en Ampicilina-Sulbactam) tiene actividad bactericida intrínseca contra A. baumannii y es de primera línea. En cepas XDR, se recurre a esquemas combinados con Cefiderocol, Tigeciclina o Polimixinas."
     },
     "appMeta": {
-      "relevance": "alta",
+      "relevance": "critica",
       "status": "active"
     }
   },
@@ -1182,35 +1184,46 @@ const pathogens = [
     "id": "enterococcus_faecium",
     "name": "Enterococcus faecium",
     "shortName": "E. faecium",
-    "aliases": [],
+    "aliases": [
+      "ERV (cuando es resistente a vancomicina)"
+    ],
     "taxonomy": {
       "gram": "positive",
-      "morphology": "cocos en cadenas/pares",
-      "group": "cocci"
+      "morphology": "coco en cadenas cortas o pares",
+      "group": "Enterococcaceae"
     },
     "clinical": {
-      "summary": "Coco entérico frecuentemente resistente.",
+      "summary": "Enterococo menos prevalente pero altamente resistente, causante de infecciones nosocomiales, frecuentemente portador de genes de resistencia a vancomicina (vanA/vanB).",
       "usualSyndromes": [
-        "nih",
-        "endocarditis_infecciosa",
-        "itu_complicada"
+        "infeccion_intraabdominal",
+        "itu_asociada_cateter",
+        "bacteriemia",
+        "endocarditis_infecciosa"
       ],
-      "context": "Hospitalario (UCI)",
+      "context": "Hospitalario",
       "pearls": [
-        "Frecuente colonizador tras uso de cefalosporinas de amplio espectro"
+        "Regla del 80/20: E. faecalis causa el 80% de las infecciones (y suele ser sensible a ampicilina), mientras que E. faecium causa el 20% pero concentra casi toda la multirresistencia.",
+        "Su aparición suele estar precedida por el uso empírico de cefalosporinas de 3ª generación (que barren la flora pero no lo cubren).",
+        "En hemocultivos positivos para 'cocos gram positivos en cadenas', si el paciente tiene exposición previa a ATB o está en UCI, asumir E. faecium empíricamente hasta tener especie."
       ]
     },
     "resistance": {
       "intrinsic": [
-        "Cefalosporinas"
+        "todas_las_cefalosporinas",
+        "clindamicina",
+        "cloxacilina",
+        "aminoglucosidos_bajo_nivel",
+        "cotrimoxazol (in vivo)"
       ],
       "typicalAcquired": [
-        "vancomicina"
+        "ampicilina (casi 100% en cepas nosocomiales chilenas)",
+        "vancomicina (VRE/ERV)",
+        "gentamicina_alto_nivel"
       ],
-      "stewardshipNote": "Considerar linezolid o daptomicina."
+      "stewardshipNote": "Si se aísla E. faecium en un hospital chileno, se asume resistencia a Ampicilina. Si es sensible a Vancomicina, es de elección; si es ERV, Linezolid o Daptomicina son los estándares de cuidado. Las cefalosporinas NUNCA cubren enterococos."
     },
     "appMeta": {
-      "relevance": "alta",
+      "relevance": "critica",
       "status": "active"
     }
   },
@@ -1306,32 +1319,43 @@ const pathogens = [
     "id": "serratia_marcescens",
     "name": "Serratia marcescens",
     "shortName": "S. marcescens",
-    "aliases": [
-      "Serratia"
-    ],
+    "aliases": [],
     "taxonomy": {
       "gram": "negative",
       "morphology": "bacilo",
-      "group": "enterobacterales"
+      "group": "Yersiniaceae (orden Enterobacterales)"
     },
     "clinical": {
-      "summary": "Bacilo hospitalario oportunista.",
-      "usualSyndromes": [],
-      "context": "Nosocomial/Insumos contaminados",
-      "pearls": []
+      "summary": "Enterobacteria nosocomial productora de AmpC inducible, frecuentemente asociada a infecciones del tracto urinario, bacteriemias y contaminación de soluciones/dispositivos médicos.",
+      "usualSyndromes": [
+        "itu_asociada_cateter",
+        "neumonia_asociada_cuidados_salud",
+        "bacteriemia"
+      ],
+      "context": "Hospitalario",
+      "pearls": [
+        "Algunas cepas (especialmente las no clínicas/ambientales) producen un pigmento rojo característico llamado prodigiosina.",
+        "Pertenece al grupo 'SPACE' (Serratia, Pseudomonas, Acinetobacter, Citrobacter, Enterobacter), clásicos productores de betalactamasas tipo AmpC cromosómicas inducibles.",
+        "Históricamente asociada a brotes nosocomiales por contaminación de jabones líquidos, antisépticos y propofol."
+      ]
     },
     "resistance": {
       "intrinsic": [
+        "colistin",
+        "polimixina_b",
         "ampicilina",
-        "Cefalosporinas 1ª"
+        "amoxicilina_clavulanico",
+        "cefuroxima",
+        "nitrofurantoina"
       ],
       "typicalAcquired": [
-        "Cefalosporinas 3ª (por AmpC)"
+        "cefalosporinas_tercera_generacion (por desrepresión AmpC o BLEE)",
+        "carbapenemicos"
       ],
-      "stewardshipNote": "Considerar perfil local."
+      "stewardshipNote": "Evitar Cefotaxima/Ceftriaxona incluso si el antibiograma reporta sensibilidad inicial, por alto riesgo de falla terapéutica (inducción de AmpC). Preferir Cefepime o Carbapenémicos para infecciones moderadas a severas. Su resistencia intrínseca a Colistín es clave para diferenciarla de otras enterobacterias en fenotipos MDR."
     },
     "appMeta": {
-      "relevance": "high",
+      "relevance": "alta",
       "status": "active"
     }
   },
@@ -1369,31 +1393,42 @@ const pathogens = [
     "id": "stenotrophomonas_maltophilia",
     "name": "Stenotrophomonas maltophilia",
     "shortName": "S. maltophilia",
-    "aliases": [],
+    "aliases": [
+      "Pseudomonas maltophilia",
+      "Xanthomonas maltophilia"
+    ],
     "taxonomy": {
       "gram": "negative",
-      "morphology": "bacilos",
+      "morphology": "bacilo no fermentador",
       "group": "Xanthomonadaceae"
     },
     "clinical": {
-      "summary": "Bacilo no fermentador asociado a uso previo de carbapenémicos",
+      "summary": "Patógeno oportunista intrahospitalario clásico que emerge tras esquemas prolongados con carbapenémicos en pacientes de UCI o inmunocomprometidos.",
       "usualSyndromes": [
-        "nih"
+        "neumonia_asociada_ventilacion",
+        "bacteriemia_asociada_cateter",
+        "infeccion_tracto_respiratorio_fq"
       ],
       "context": "Hospitalario",
       "pearls": [
-        "Baja virulencia pero alta resistencia antibiótica"
+        "Clásicamente coloniza e infecta la vía aérea de pacientes con fibrosis quística o en ventilación mecánica invasiva prolongada.",
+        "Tiene alta afinidad por superficies sintéticas (catéteres venosos centrales, tubos endotraqueales).",
+        "Diferenciar colonización de infección es el mayor desafío clínico; aislamientos en secreción bronquial sin infiltrados nuevos o deterioro gasométrico a menudo no requieren tratamiento."
       ]
     },
     "resistance": {
       "intrinsic": [
-        "Carbapenémicos (L1 metalo-betalactamasa)"
+        "todos_los_carbapenemicos",
+        "aminoglucosidos (frecuente, por bombas de eflujo)"
       ],
-      "typicalAcquired": [],
-      "stewardshipNote": "Tratamiento de elección: TMP-SMX"
+      "typicalAcquired": [
+        "fluoroquinolonas",
+        "cotrimoxazol (emergente)"
+      ],
+      "stewardshipNote": "Es intrínsecamente resistente a los carbapenémicos debido a la producción de una metalo-beta-lactamasa (L1). Cotrimoxazol (TMP-SMX) a dosis altas es el gold standard absoluto. Minociclina, Levofloxacino o Cefiderocol son terapias de rescate."
     },
     "appMeta": {
-      "relevance": "moderada",
+      "relevance": "alta",
       "status": "active"
     }
   },
@@ -1506,32 +1541,43 @@ const pathogens = [
     "id": "moraxella_catarrhalis",
     "name": "Moraxella catarrhalis",
     "shortName": "M. catarrhalis",
-    "aliases": [],
+    "aliases": [
+      "Branhamella catarrhalis"
+    ],
     "taxonomy": {
       "gram": "negative",
-      "morphology": "diplococos",
-      "group": "diplococci"
+      "morphology": "diplococo",
+      "group": "Moraxellaceae"
     },
     "clinical": {
-      "summary": "Diplococo respiratorio en EPOC.",
-      "usualSyndromes": [],
-      "context": "Exacerbación de EPOC;otitis media;sinusitis",
+      "summary": "Patógeno respiratorio estrictamente humano, fundamental en exacerbaciones de EPOC, otitis media aguda y sinusitis en pediatría.",
+      "usualSyndromes": [
+        "exacerbacion_epoc",
+        "otitis_media_aguda",
+        "sinusitis_aguda",
+        "neumonia_adquirida_comunidad"
+      ],
+      "context": "Comunitario",
       "pearls": [
-        "Comunitario"
+        "En microbiología, sus colonias tienen el 'signo del disco de hockey' (se pueden empujar enteras sobre el agar sin romperse).",
+        "Suele conformar la tríada clásica de patógenos respiratorios altos junto al S. pneumoniae y H. influenzae.",
+        "Afecta primariamente a fumadores o pacientes con daño estructural de la vía aérea (EPOC, bronquiectasias)."
       ]
     },
     "resistance": {
       "intrinsic": [
-        "vancomicina"
+        "ampicilina",
+        "amoxicilina",
+        "trimetoprima (como monoterapia)",
+        "clindamicina"
       ],
       "typicalAcquired": [
-        "bencilpenicilina_sodica",
-        "bencilpenicilina_sodica"
+        "macrolidos (raro pero descrito)"
       ],
-      "stewardshipNote": "Amoxicilina-clavulánico alternativa."
+      "stewardshipNote": "La perla clínica crítica: cerca del 100% de las cepas producen betalactamasas (tipo BRO). Por lo tanto, a diferencia del neumococo, NUNCA se debe tratar con Amoxicilina sola; siempre requiere un inhibidor (Amoxicilina-Clavulánico), Cefalosporinas de 2ª/3ª generación o Macrólidos."
     },
     "appMeta": {
-      "relevance": "aware: acceso (amoxicilina/clavulánico)",
+      "relevance": "alta",
       "status": "active"
     }
   },
@@ -1695,29 +1741,38 @@ const pathogens = [
     "id": "legionella_pneumophila",
     "name": "Legionella pneumophila",
     "shortName": "L. pneumophila",
-    "aliases": [],
+    "aliases": [
+      "Enfermedad del legionario",
+      "Fiebre de Pontiac"
+    ],
     "taxonomy": {
       "gram": "atypical",
-      "morphology": "bacilos (tinción difícil)",
-      "group": "atypical"
+      "morphology": "bacilo pleomórfico (no tiñe bien con Gram)",
+      "group": "Legionellaceae"
     },
     "clinical": {
-      "summary": "Bacilo asociado a neumonía grave.",
-      "usualSyndromes": [],
-      "context": "Comunitario/Institucional (Hoteles/Hospitales)",
+      "summary": "Agente etiológico de neumonía atípica severa, a menudo asociada a brotes epidémicos por sistemas de agua contaminados o aires acondicionados.",
+      "usualSyndromes": [
+        "neumonia_adquirida_comunidad_grave",
+        "neumonia_intrahospitalaria"
+      ],
+      "context": "Comunitario / Brotes intrahospitalarios",
       "pearls": [
-        "Antígeno urinario es la prueba diagnóstica de elección"
+        "Sospechar clásicamente ante una neumonía severa acompañada de síntomas gastrointestinales (diarrea acuosa), hiponatremia (<130 mEq/L), elevación de transaminasas y bradicardia relativa.",
+        "El antígeno urinario para Legionella es muy específico, pero solo detecta el serogrupo 1 (responsable del 70-80% de los casos clínicos).",
+        "No se transmite de persona a persona; la exposición es siempre ambiental (aerosoles de duchas, torres de refrigeración)."
       ]
     },
     "resistance": {
       "intrinsic": [
-        "Beta-lactámicos"
+        "todos_los_betalactamicos",
+        "aminoglucosidos"
       ],
       "typicalAcquired": [],
-      "stewardshipNote": "Usar macrólido o fluoroquinolona."
+      "stewardshipNote": "Al ser intracelular, requiere antibióticos con alta penetración tisular y macrófaga. Azitromicina (o Claritromicina) y Fluoroquinolonas respiratorias (Levofloxacino) son las terapias de primera línea exclusivas."
     },
     "appMeta": {
-      "relevance": "moderada",
+      "relevance": "alta",
       "status": "active"
     }
   },
@@ -1854,31 +1909,40 @@ const pathogens = [
     "id": "candida_auris",
     "name": "Candida auris",
     "shortName": "C. auris",
-    "aliases": [],
+    "aliases": [
+      "C. auris"
+    ],
     "taxonomy": {
-      "gram": "hongo",
+      "gram": "positive",
       "morphology": "levadura",
       "group": "Saccharomycetaceae"
     },
     "clinical": {
-      "summary": "Hongo emergente multirresistente con alto potencial de brotes",
-      "usualSyndromes": [],
+      "summary": "Hongo emergente de notificación obligatoria, altamente transmisible en entornos de salud y con elevadas tasas de multirresistencia.",
+      "usualSyndromes": [
+        "candidemia",
+        "infeccion_invasora",
+        "colonizacion_cutanea_persistente"
+      ],
       "context": "Hospitalario",
       "pearls": [
-        "Persiste en el ambiente y coloniza piel de pacientes y personal"
+        "A diferencia de otras Candidas, coloniza persistentemente la piel (axilas, ingles) y sobrevive semanas en superficies hospitalarias, comportándose como una bacteria tipo MRSA/VRE.",
+        "Los métodos fenotípicos tradicionales (ej. Vitek 2 antiguo) suelen identificarla erróneamente como C. haemulonii o C. famata; requiere MALDI-TOF o PCR para confirmación.",
+        "Alerta permanente de vigilancia epidemiológica (ISP/MINSAL) ante cualquier aislamiento."
       ]
     },
     "resistance": {
       "intrinsic": [
-        "Fluconazol (frecuente)"
+        "fluconazol (alta prevalencia de resistencia natural o rápida adquisición)"
       ],
       "typicalAcquired": [
-        "Multirresistente a azoles y anfotericina"
+        "anfotericina_b",
+        "equinocandinas (emergente, cepas panresistentes descritas)"
       ],
-      "stewardshipNote": "Notificación obligatoria ante hallazgo"
+      "stewardshipNote": "Las equinocandinas (Caspofungina, Anidulafungina, Micafungina) son la terapia empírica de elección, pero la prueba de susceptibilidad es obligatoria. Medidas de aislamiento de contacto estricto son prioritarias."
     },
     "appMeta": {
-      "relevance": "crítica",
+      "relevance": "critica",
       "status": "active"
     }
   },
@@ -2121,6 +2185,331 @@ const pathogens = [
     },
     "appMeta": {
       "relevance": "moderada",
+      "status": "active"
+    }
+  },
+  {
+    "id": "salmonella_no_tifoidea",
+    "name": "Salmonella enterica (no tifoidea)",
+    "shortName": "Salmonella spp.",
+    "aliases": [
+      "Salmonella enteritidis",
+      "Salmonella typhimurium"
+    ],
+    "taxonomy": {
+      "gram": "negative",
+      "morphology": "bacilo",
+      "group": "Enterobacteriaceae"
+    },
+    "clinical": {
+      "summary": "Causa frecuente de gastroenteritis aguda transmitida por alimentos; riesgo de bacteriemia en extremos de edad e inmunocomprometidos.",
+      "usualSyndromes": [
+        "gastroenteritis_aguda",
+        "bacteriemia",
+        "infeccion_endovascular"
+      ],
+      "context": "Comunitario",
+      "pearls": [
+        "En adultos inmunocompetentes con gastroenteritis, el tratamiento antibiótico no acorta el cuadro y prolonga la excreción fecal (estado de portador).",
+        "Alta sospecha de aortitis o siembra endovascular en pacientes mayores de 50 años con bacteriemia.",
+        "Se asocia clásicamente al consumo de huevos crudos, mayonesa casera y carnes de ave mal cocidas."
+      ]
+    },
+    "resistance": {
+      "intrinsic": [
+        "penicilina_g",
+        "macrolidos_clasicos"
+      ],
+      "typicalAcquired": [
+        "ampicilina",
+        "cotrimoxazol",
+        "ciprofloxacino (resistencia creciente en Chile)"
+      ],
+      "stewardshipNote": "Solo tratar formas severas, bacteriemias o pacientes de alto riesgo. Ceftriaxona es de elección empírica en cuadros sistémicos."
+    },
+    "appMeta": {
+      "relevance": "alta",
+      "status": "active"
+    }
+  },
+  {
+    "id": "shigella_spp",
+    "name": "Shigella spp.",
+    "shortName": "Shigella spp.",
+    "aliases": [
+      "Shigella sonnei",
+      "Shigella flexneri"
+    ],
+    "taxonomy": {
+      "gram": "negative",
+      "morphology": "bacilo",
+      "group": "Enterobacteriaceae"
+    },
+    "clinical": {
+      "summary": "Agente clásico de la disentería bacilar, altamente contagioso debido a su bajísimo inóculo infectante (10-100 bacterias).",
+      "usualSyndromes": [
+        "diarrea_disenterica",
+        "gastroenteritis_aguda"
+      ],
+      "context": "Comunitario",
+      "pearls": [
+        "Causa diarrea inflamatoria con fiebre alta, pujo, tenesmo y deposiciones con sangre/mucus.",
+        "Puede desencadenar Síndrome Hemolítico Urémico (SHU), especialmente S. dysenteriae tipo 1 (productora de toxina Shiga).",
+        "Brote constante en guarderías y transmisión fecal-oral estrecha."
+      ]
+    },
+    "resistance": {
+      "intrinsic": [
+        "penicilina_g"
+      ],
+      "typicalAcquired": [
+        "ampicilina",
+        "cotrimoxazol",
+        "ciprofloxacino"
+      ],
+      "stewardshipNote": "A diferencia de Salmonella, Shigella siempre debe tratarse para acortar la clínica y reducir la transmisibilidad. Azitromicina o Ceftriaxona son de elección en Chile dada la resistencia a fluoroquinolonas."
+    },
+    "appMeta": {
+      "relevance": "alta",
+      "status": "active"
+    }
+  },
+  {
+    "id": "clostridium_perfringens",
+    "name": "Clostridium perfringens",
+    "shortName": "C. perfringens",
+    "aliases": [
+      "Bacilo de Welch"
+    ],
+    "taxonomy": {
+      "gram": "positive",
+      "morphology": "bacilo esporulado grueso",
+      "group": "Clostridiaceae"
+    },
+    "clinical": {
+      "summary": "Agente causal de la gangrena gaseosa (mionecrosis) y toxiinfecciones alimentarias autolimitadas.",
+      "usualSyndromes": [
+        "infeccion_necrotizante_tejidos_blandos",
+        "mionecrosis",
+        "intoxicacion_alimentaria"
+      ],
+      "context": "Comunitario / Trauma",
+      "pearls": [
+        "En mionecrosis, el dolor desproporcionado al examen físico es el signo clínico cardinal.",
+        "Produce la toxina alfa (lecitinasa), responsable de la necrosis tisular profunda, hemólisis intravascular severa y shock.",
+        "El diagnóstico de la gangrena es inminentemente clínico; no retrasar la cirugía por esperar imágenes o cultivos."
+      ]
+    },
+    "resistance": {
+      "intrinsic": [
+        "aminoglucosidos",
+        "aztreonam"
+      ],
+      "typicalAcquired": [
+        "clindamicina (infrecuente pero descrita)"
+      ],
+      "stewardshipNote": "Emergencia infectológica y quirúrgica. El pilar es Penicilina G en altas dosis asociada a Clindamicina (por su efecto de inhibición en la síntesis de toxinas bacterianas)."
+    },
+    "appMeta": {
+      "relevance": "critica",
+      "status": "active"
+    }
+  },
+  {
+    "id": "actinomyces_spp",
+    "name": "Actinomyces spp.",
+    "shortName": "Actinomyces spp.",
+    "aliases": [
+      "Actinomyces israelii"
+    ],
+    "taxonomy": {
+      "gram": "positive",
+      "morphology": "bacilo filamentoso ramificado",
+      "group": "Actinomycetaceae"
+    },
+    "clinical": {
+      "summary": "Bacteria anaerobia/microaerófila de la flora oral y gastrointestinal normal, causante de infecciones granulomatosas crónicas.",
+      "usualSyndromes": [
+        "infeccion_cervicofacial",
+        "enfermedad_pelvica_inflamatoria",
+        "absceso_pulmonar"
+      ],
+      "context": "Comunitario",
+      "pearls": [
+        "Típicamente ignora los planos tisulares y forma trayectos fistulosos crónicos que drenan material purulento con 'gránulos de azufre'.",
+        "La presentación cervicofacial (lumpy jaw) suele seguir a una extracción dental o trauma maxilofacial.",
+        "Fuerte asociación con enfermedad pélvica inflamatoria en usuarias de DIU (Dispositivo Intrauterino) de larga data."
+      ]
+    },
+    "resistance": {
+      "intrinsic": [
+        "metronidazol",
+        "aminoglucosidos"
+      ],
+      "typicalAcquired": [],
+      "stewardshipNote": "Requiere tratamientos muy prolongados (meses). Amoxicilina o Penicilina G EV inicial son de elección. Curiosamente, a pesar de ser anaerobio, es intrínsecamente resistente al Metronidazol."
+    },
+    "appMeta": {
+      "relevance": "moderada",
+      "status": "active"
+    }
+  },
+  {
+    "id": "nocardia_spp",
+    "name": "Nocardia spp.",
+    "shortName": "Nocardia spp.",
+    "aliases": [
+      "Nocardia asteroides",
+      "Nocardia farcinica"
+    ],
+    "taxonomy": {
+      "gram": "positive",
+      "morphology": "bacilo filamentoso ramificado (BAAR débil)",
+      "group": "Nocardiaceae"
+    },
+    "clinical": {
+      "summary": "Patógeno oportunista ambiental que afecta primariamente a pacientes con inmunidad celular comprometida (trasplantados, uso crónico de corticoides).",
+      "usualSyndromes": [
+        "neumonia_cavitada",
+        "absceso_cerebral",
+        "infeccion_cutanea_primaria"
+      ],
+      "context": "Comunitario / Oportunista",
+      "pearls": [
+        "Sospechar ante todo paciente inmunocomprometido con nódulos pulmonares cavitados que desarrolla clínica neurológica focal (tropismo por el SNC).",
+        "A diferencia de Actinomyces, Nocardia es estrictamente aerobia y ácido-alcohol resistente (BAAR) parcial/débil (se tiñe con Ziehl-Neelsen modificado o Kinyoun).",
+        "En inmunocompetentes puede causar enfermedad cutánea primaria (micetoma) tras inoculación traumática."
+      ]
+    },
+    "resistance": {
+      "intrinsic": [
+        "penicilina_g",
+        "macrolidos (depende de la especie)"
+      ],
+      "typicalAcquired": [
+        "ceftriaxona",
+        "imipenem (especie-dependiente)"
+      ],
+      "stewardshipNote": "Cotrimoxazol (TMP-SMX) es la piedra angular del tratamiento. En enfermedad grave o compromiso del SNC, se inicia terapia combinada (ej. TMP-SMX + Imipenem o Amikacina) hasta tener el antibiograma."
+    },
+    "appMeta": {
+      "relevance": "alta",
+      "status": "active"
+    }
+  },
+  {
+    "id": "coxiella_burnetii",
+    "name": "Coxiella burnetii",
+    "shortName": "C. burnetii",
+    "aliases": [
+      "Fiebre Q"
+    ],
+    "taxonomy": {
+      "gram": "atypical",
+      "morphology": "pleomórfico intracelular obligado",
+      "group": "Coxiellaceae"
+    },
+    "clinical": {
+      "summary": "Agente de la Fiebre Q, zoonosis altamente infectante transmitida principalmente por aerosoles de ganado ovino/caprino/bovino.",
+      "usualSyndromes": [
+        "sindrome_febril_agudo",
+        "neumonia_atipica",
+        "hepatitis_granulomatosa",
+        "endocarditis_cultivo_negativo"
+      ],
+      "context": "Zoonosis",
+      "pearls": [
+        "Clásica tríada aguda: fiebre alta, neumonía atípica y hepatitis granulomatosa con elevación de transaminasas.",
+        "Forma crónica principal: endocarditis con hemocultivos negativos, a menudo en pacientes con valvulopatía previa, meses o años tras la primoinfección.",
+        "No causa exantema cutáneo, lo que la diferencia de las rickettsiosis clásicas."
+      ]
+    },
+    "resistance": {
+      "intrinsic": [
+        "betalactamicos",
+        "aminoglucosidos"
+      ],
+      "typicalAcquired": [],
+      "stewardshipNote": "Doxiciclina es el tratamiento de primera línea para cuadros agudos. La endocarditis (crónica) requiere terapia prolongada (18-24 meses) con Doxiciclina + Hidroxicloroquina (para alcalinizar el fagolisosoma)."
+    },
+    "appMeta": {
+      "relevance": "moderada",
+      "status": "active"
+    }
+  },
+  {
+    "id": "brucella_spp",
+    "name": "Brucella spp.",
+    "shortName": "Brucella spp.",
+    "aliases": [
+      "Brucella melitensis",
+      "Brucella abortus",
+      "Fiebre de Malta"
+    ],
+    "taxonomy": {
+      "gram": "negative",
+      "morphology": "cocobacilo intracelular facultativo",
+      "group": "Brucellaceae"
+    },
+    "clinical": {
+      "summary": "Zoonosis que causa enfermedad febril sistémica (fiebre ondulante) con fuerte tropismo osteoarticular y hepatoesplénico.",
+      "usualSyndromes": [
+        "sindrome_febril_prolongado",
+        "osteoartritis",
+        "espondilodiscitis"
+      ],
+      "context": "Zoonosis",
+      "pearls": [
+        "El antecedente epidemiológico clásico es el consumo de quesos frescos o leche no pasteurizada, o riesgo ocupacional (veterinarios, mataderos).",
+        "La complicación focal más frecuente es la osteoarticular (sacroiliitis y espondilodiscitis lumbar).",
+        "Los hemocultivos pueden requerir incubación prolongada (hasta 21 días) si no se usan sistemas automatizados modernos, y el laboratorio debe ser avisado por riesgo de infección del personal."
+      ]
+    },
+    "resistance": {
+      "intrinsic": [
+        "cefalosporinas_primera_generacion",
+        "penicilina_g"
+      ],
+      "typicalAcquired": [],
+      "stewardshipNote": "La monoterapia está proscrita por altas tasas de recaída. Esquemas estándar: Doxiciclina + Rifampicina (OMS) por 6 semanas, o Doxiciclina + Gentamicina/Estreptomicina. En neurobrucelosis o endocarditis se prefiere terapia triple."
+    },
+    "appMeta": {
+      "relevance": "alta",
+      "status": "active"
+    }
+  },
+  {
+    "id": "bartonella_henselae",
+    "name": "Bartonella henselae",
+    "shortName": "B. henselae",
+    "aliases": [
+      "Enfermedad por arañazo de gato"
+    ],
+    "taxonomy": {
+      "gram": "negative",
+      "morphology": "bacilo pequeño fastidioso",
+      "group": "Bartonellaceae"
+    },
+    "clinical": {
+      "summary": "Causa principal de la linfadenitis regional tras contacto con gatos.",
+      "usualSyndromes": [
+        "linfadenitis_regional",
+        "endocarditis_cultivo_negativo"
+      ],
+      "context": "Zoonosis",
+      "pearls": [
+        "Antecedente de arañazo o mordedura de gato (especialmente cachorros) en las 1-3 semanas previas.",
+        "En inmunocomprometidos (VIH) puede causar angiomatosis bacilar y peliosis hepática.",
+        "Diagnóstico suele ser serológico o por PCR de tejido ganglionar."
+      ]
+    },
+    "resistance": {
+      "intrinsic": [],
+      "typicalAcquired": [],
+      "stewardshipNote": "Tratamiento de elección en Chile: Azitromicina (reduce el volumen ganglionar). Alternativa: Doxiciclina."
+    },
+    "appMeta": {
+      "relevance": "alta",
       "status": "active"
     }
   }

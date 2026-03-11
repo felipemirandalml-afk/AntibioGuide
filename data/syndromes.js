@@ -1028,7 +1028,7 @@ const syndromes = [
       "hacek_group",
       "gram_negative_bacilli_non_hacek",
       "candida_spp",
-      "culture_negative_endocarditis_zoonotic"
+      "coxiella_burnetii", "bartonella_henselae", "brucella_spp"
     ]
   },
   {
