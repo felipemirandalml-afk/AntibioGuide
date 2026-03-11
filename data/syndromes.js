@@ -181,7 +181,7 @@ const syndromes = [
       "Proteus mirabilis",
       "Staphylococcus saprophyticus"
     ],
-    pathogenIds: ["escherichia_coli", "klebsiella_spp", "proteus_mirabilis", "staphylococcus_saprophyticus"]
+    pathogenIds: ["escherichia_coli", "klebsiella_pneumoniae", "proteus_mirabilis", "staphylococcus_saprophyticus"]
   },
   {
     id: "itu_pielonefritis",
@@ -256,7 +256,7 @@ const syndromes = [
       "Proteus mirabilis",
       "Enterobacter spp."
     ],
-    pathogenIds: ["escherichia_coli", "klebsiella_spp", "proteus_mirabilis", "enterobacter_spp"]
+    pathogenIds: ["escherichia_coli", "klebsiella_pneumoniae", "proteus_mirabilis", "enterobacter_spp"]
   },
   {
     id: "itu_complicada",
@@ -307,7 +307,7 @@ const syndromes = [
       "Pseudomonas aeruginosa",
       "Enterococcus spp."
     ],
-    pathogenIds: ["escherichia_coli", "klebsiella_spp", "proteus_mirabilis", "enterobacter_spp", "pseudomonas_aeruginosa", "enterococcus_spp"]
+    pathogenIds: ["escherichia_coli", "klebsiella_pneumoniae", "proteus_mirabilis", "enterobacter_spp", "pseudomonas_aeruginosa", "enterococcus_spp"]
   },
   {
     id: "itu_cauti",
@@ -355,7 +355,7 @@ const syndromes = [
       "Pseudomonas aeruginosa",
       "Enterococcus spp."
     ],
-    pathogenIds: ["escherichia_coli", "klebsiella_spp", "proteus_mirabilis", "pseudomonas_aeruginosa", "enterococcus_spp"]
+    pathogenIds: ["escherichia_coli", "klebsiella_pneumoniae", "proteus_mirabilis", "pseudomonas_aeruginosa", "enterococcus_spp"]
   },
 
   {
@@ -666,7 +666,7 @@ const syndromes = [
       }
     ],
     pathogens: ["E. coli", "Bacteroides fragilis", "Klebsiella spp.", "Enterococcus spp."],
-    pathogenIds: ["escherichia_coli", "bacteroides_fragilis", "klebsiella_spp", "enterococcus_spp"],
+    pathogenIds: ["escherichia_coli", "bacteroides_fragilis", "klebsiella_pneumoniae", "enterococcus_spp"],
   },
 
   {
@@ -792,7 +792,7 @@ const syndromes = [
       }
     ],
     pathogens: ["E. coli (MDR/ESBL)", "Klebsiella spp.", "Pseudomonas aeruginosa", "Enterococcus spp."],
-    pathogenIds: ["escherichia_coli", "klebsiella_spp", "pseudomonas_aeruginosa", "enterococcus_spp"],
+    pathogenIds: ["escherichia_coli", "klebsiella_pneumoniae", "pseudomonas_aeruginosa", "enterococcus_spp"],
   },
 
   // Endocarditis: mantenemos 1 entrada (compatibilidad), pero ya con escenarios + type
