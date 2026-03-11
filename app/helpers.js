@@ -56,6 +56,10 @@ window.ABG.helpers = (function () {
         });
     }
 
+    function humanizeId(id) {
+        return String(id || "").replace(/_/g, " ").trim();
+    }
+
     function normalize(text = "") {
         return String(text)
             .toLowerCase()
@@ -134,6 +138,7 @@ window.ABG.helpers = (function () {
         getPreferredTheme,
         setTheme,
         escapeHTML,
+        humanizeId,
         normalize,
         escapeRegExp,
         scoreTextMatch,

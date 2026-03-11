@@ -21,10 +21,19 @@ window.ABG.templates = (function () {
         ? `<span class="inline-flex items-center gap-1 rounded-full border border-slate-300 bg-white px-2 py-1 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200">BLEE ${escapeHTML(viewModel.blee_pct)}%</span>`
         : "";
 
+    let subtitle = `Perfil local · Empírico ≥${viewModel.threshold}%`;
+    const source = viewModel.sourceInfo;
+    if (source?.profileId === "hra_hosp_adulto_2024") {
+      subtitle = `HRA PROA 2024 · Hospitalizados adultos · Empírico ≥${viewModel.threshold}%`;
+    } else if (source?.profileLabel) {
+      const shortLabel = String(source.profileLabel).split("(")[0].trim() || "Perfil local";
+      subtitle = `${shortLabel} · Empírico ≥${viewModel.threshold}%`;
+    }
+
     return `
         <div class="mt-2 rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200">
           <div class="font-semibold">Susceptibilidad local</div>
-          <div class="text-slate-600 dark:text-slate-300">${escapeHTML(viewModel.subtitle)}</div>
+          <div class="text-slate-600 dark:text-slate-300">${escapeHTML(subtitle)}</div>
           <div class="mt-1 flex flex-wrap gap-2">${chips}${bleeChip}</div>
         </div>
       `;
@@ -106,7 +115,10 @@ window.ABG.templates = (function () {
                     <div class="mt-3 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">
                       <div class="font-semibold">⚠️ Contexto local</div>
                       <ul class="list-disc pl-5 mt-1">
-                        ${regimenWarnings.map(w => `<li>${escapeHTML(w)}</li>`).join("")}
+                        ${regimenWarnings.map(w => {
+            const warningText = `${w.message} (R local: ${w.r_pct}%, perfil: ${w.profileLabel})`;
+            return `<li>${escapeHTML(warningText)}</li>`;
+          }).join("")}
                       </ul>
                     </div>
                     `

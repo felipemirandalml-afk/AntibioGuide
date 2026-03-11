@@ -1,3 +1,14 @@
+/**
+ * =========================================================================
+ * CLINICAL ENGINE (clinicalEngine.js)
+ * =========================================================================
+ * ARCHITECTURE GUARDRAIL:
+ * This file implements PURE CLINICAL LOGIC.
+ * - It must NOT contain HTML or UI-specific formatting strings.
+ * - It returns structured data that the UI layer (render.js/templates.js)
+ *   will then use to build the interface.
+ * =========================================================================
+ */
 window.ABG = window.ABG || {};
 
 window.ABG.clinicalEngine = (function () {
@@ -28,10 +39,6 @@ window.ABG.clinicalEngine = (function () {
 
             if (!sourceData || typeof sourceData !== "object") return null;
 
-            function humanizeId(id) {
-                return String(id || "").replace(/_/g, " ").trim();
-            }
-
             const items = [];
             let bleePct;
 
@@ -43,7 +50,7 @@ window.ABG.clinicalEngine = (function () {
 
                 if (!value || typeof value !== "object") return;
 
-                const abxName = window.clinicalData?.antibiotics?.find((a) => a?.id === abxId)?.name || humanizeId(abxId);
+                const abxName = window.clinicalData?.antibiotics?.find((a) => a?.id === abxId)?.name || window.ABG.helpers.humanizeId(abxId);
 
                 if (value.ri === true) {
                     items.push({ label: abxName, ri: true });
@@ -64,6 +71,7 @@ window.ABG.clinicalEngine = (function () {
 
     /**
      * Determines the local contextual warnings for a specific regimen based on active profile modifiers.
+     * Returns an array of structured objects for the UI layer to format.
      */
     function getRegimenWarnings(syndromeId, regimenDrugIds = []) {
         const profile = window.ABG.localContext.getActiveProfile();
@@ -83,9 +91,12 @@ window.ABG.clinicalEngine = (function () {
             if (!rData || typeof rData.r_pct !== "number") return;
 
             if (rData.r_pct >= mod.threshold_r_pct) {
-                warnings.push(
-                    `${mod.message} (R local: ${rData.r_pct}%, perfil: ${profile.label})`
-                );
+                // Return structured data, no UI strings here.
+                warnings.push({
+                    message: mod.message,
+                    r_pct: rData.r_pct,
+                    profileLabel: profile.label
+                });
             }
         });
 
@@ -122,19 +133,16 @@ window.ABG.clinicalEngine = (function () {
 
         const shown = sortedItems.slice(0, maxItems);
 
-        let subtitle = `Perfil local · Empírico ≥${threshold}%`;
-        if (profile?.id === "hra_hosp_adulto_2024") {
-            subtitle = `HRA PROA 2024 · Hospitalizados adultos · Empírico ≥${threshold}%`;
-        } else if (profile?.label) {
-            const shortLabel = String(profile.label).split("(")[0].trim() || "Perfil local";
-            subtitle = `${shortLabel} · Empírico ≥${threshold}%`;
-        }
-
+        // Move subtitle source logic here, but UI formatting belongs in render/templates.
+        // We provide the source info for the renderer.
         return {
             items: shown,
             blee_pct: localResult.blee_pct,
-            subtitle,
-            threshold
+            threshold,
+            sourceInfo: {
+                profileId: profile?.id,
+                profileLabel: profile?.label
+            }
         };
     }
 

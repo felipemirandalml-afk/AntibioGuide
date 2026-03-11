@@ -22,7 +22,8 @@ try {
             getActiveProfile: () => null
         },
         helpers: {
-            getAntibioticById: (id) => data.antibiotics.find(a => a.id === id)
+            getAntibioticById: (id) => data.antibiotics.find(a => a.id === id),
+            humanizeId: (id) => String(id || "").replace(/_/g, " ").trim()
         }
     };
 
