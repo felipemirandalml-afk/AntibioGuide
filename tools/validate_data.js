@@ -157,7 +157,7 @@ function validateAntibiotics(data) {
         addError("invalid_metadata_spectrum", `antibiotics[${index}] (${abx.id}) spectrum must be narrow, moderate, broad or null`);
       }
 
-      const validRoute = ["vo", "ev", "both", null];
+      const validRoute = ["vo", "ev", "both", "im", null];
       if (md.route_hint !== undefined && !validRoute.includes(md.route_hint)) {
         addError("invalid_metadata_route", `antibiotics[${index}] (${abx.id}) route_hint must be vo, ev, both or null`);
       }
