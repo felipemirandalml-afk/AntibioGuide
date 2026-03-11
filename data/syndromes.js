@@ -91,6 +91,20 @@ const syndromes = [
         durationRefsShort: ["Uranga 2016 JAMA Intern Med", "PTC trial Lancet"],
         comments: "Fluoroquinolona respiratoria. Evitar si hay sospecha de tuberculosis.",
         reference: "IDSA/ATS 2019/2024",
+      },
+      {
+        name: "Alternativa: Doxiciclina (Ambulatorio)",
+        type: "alternative",
+        scenario: "outpatient",
+        targets: ["típicos + atípicos"],
+        drug: "Doxiciclina",
+        drugIds: ["doxiciclina"],
+        dose: "100 mg",
+        route: "PO",
+        interval: "cada 12 horas",
+        duration: "5-7 días",
+        comments: "Buena opción para patógenos atípicos y S. pneumoniae sensible. Útil en alergia a beta-lactámicos si no se desea usar quinolonas.",
+        reference: "IDSA/ATS 2019/2024",
       }
     ],
     pathogens: ["S. pneumoniae", "H. influenzae", "Mycoplasma pneumoniae", "Chlamydia pneumoniae"],
@@ -177,7 +191,7 @@ const syndromes = [
     ],
     pathogens: [
       "Escherichia coli",
-      "Klebsiella spp.",
+      "Klebsiella pneumoniae",
       "Proteus mirabilis",
       "Staphylococcus saprophyticus"
     ],
@@ -207,18 +221,16 @@ const syndromes = [
         reference: "IDSA UTI guideline (2011) + updates"
       },
       {
-        name: "Ambulatorio Alternativa",
-        type: "empiric",
+        name: "Ambulatorio Alternativa (Beta-lactámicos)",
+        type: "alternative",
         scenario: "outpatient",
-        drug: "Levofloxacino",
-        drugIds: ["levofloxacino"],
-        dose: "750 mg",
-        route: "PO",
-        interval: "cada 24 horas",
-        duration: "5 días",
-        durationInfo: "Esquema corto (5 días) aceptado en pacientes estables con buena evolución.",
-        durationRefsShort: ["IDSA/EAU (UTI/Pyelo)"],
-        comments: "Fluoroquinolona de alta penetración renal.",
+        drug: "Ceftriaxona (dosis única) seguido de Amoxicilina-Clavulánico",
+        drugIds: ["ceftriaxona", "amoxicilina_clavulanico"],
+        dose: "1 g IM/IV dosis única, luego 875/125 mg PO c/12h",
+        route: "IM/IV luego PO",
+        interval: "Ver dosis",
+        duration: "10-14 días",
+        comments: "Usar si las fluoroquinolonas están contraindicadas o no son deseadas. Requiere dosis inicial de ceftriaxona IV/IM.",
         reference: "IDSA UTI guideline (2011) + updates"
       },
       {
@@ -297,6 +309,20 @@ const syndromes = [
         durationRefsShort: ["IDSA cUTI", "PROA ITU (deck)"],
         comments: "Considerar en sospecha de patógenos resistentes o Pseudomonas.",
         reference: "IDSA UTI guideline (2011) + updates"
+      },
+      {
+        name: "Sospecha de ESBL",
+        type: "empiric",
+        scenario: "inpatient_esbl_risk",
+        targets: ["BLEE"],
+        drug: "Ertapenem",
+        drugIds: ["ertapenem"],
+        dose: "1 g",
+        route: "IV",
+        interval: "cada 24 horas",
+        duration: "7-10 días",
+        comments: "Indicado en pacientes con factores de riesgo para BLEE (colonización previa, uso previo de quinolonas/cefalosporinas).",
+        reference: "IDSA/ESCMID 2024"
       }
     ],
     pathogens: [
@@ -604,7 +630,7 @@ const syndromes = [
       }
     ],
     pathogens: ["S. aureus (MSSA/MRSA)", "Streptococcus spp.", "Enterobacteriaceae", "Anaerobios"],
-    pathogenIds: ["staphylococcus_aureus", "streptococcus_spp", "enterobacterales", "anaerobes"],
+    pathogenIds: ["staphylococcus_aureus", "methicillin_resistant_staphylococcus_aureus", "streptococcus_spp", "enterobacterales", "anaerobes"],
   },
 
   {
@@ -665,8 +691,8 @@ const syndromes = [
         reference: "IDSA 2010 / 2024",
       }
     ],
-    pathogens: ["E. coli", "Bacteroides fragilis", "Klebsiella spp.", "Enterococcus spp."],
-    pathogenIds: ["escherichia_coli", "bacteroides_fragilis", "klebsiella_pneumoniae", "enterococcus_spp"],
+    pathogens: ["E. coli", "Bacteroides fragilis", "Klebsiella pneumoniae", "Pseudomonas aeruginosa", "Enterococcus spp."],
+    pathogenIds: ["escherichia_coli", "bacteroides_fragilis", "klebsiella_pneumoniae", "pseudomonas_aeruginosa", "enterococcus_spp"],
   },
 
   {
@@ -1090,7 +1116,8 @@ const syndromes = [
       "Pseudomonas aeruginosa",
       "Klebsiella pneumoniae",
       "Escherichia coli",
-      "Acinetobacter baumannii"
+      "Acinetobacter baumannii",
+      "Stenotrophomonas maltophilia"
     ],
     pathogenIds: [
       "staphylococcus_aureus",
@@ -1098,7 +1125,8 @@ const syndromes = [
       "pseudomonas_aeruginosa",
       "klebsiella_pneumoniae",
       "escherichia_coli",
-      "acinetobacter_baumannii"
+      "acinetobacter_baumannii",
+      "stenotrophomonas_maltophilia"
     ]
   }
 ];
