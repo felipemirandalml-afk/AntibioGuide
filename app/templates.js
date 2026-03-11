@@ -23,8 +23,8 @@ window.ABG.templates = (function () {
 
     let subtitle = `Perfil local · Empírico ≥${viewModel.threshold}%`;
     const source = viewModel.sourceInfo;
-    if (source?.profileId === "hra_hosp_adulto_2024") {
-      subtitle = `HRA PROA 2024 · Hospitalizados adultos · Empírico ≥${viewModel.threshold}%`;
+    if (source?.branding) {
+      subtitle = `${source.branding} · Empírico ≥${viewModel.threshold}%`;
     } else if (source?.profileLabel) {
       const shortLabel = String(source.profileLabel).split("(")[0].trim() || "Perfil local";
       subtitle = `${shortLabel} · Empírico ≥${viewModel.threshold}%`;

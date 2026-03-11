@@ -36,6 +36,7 @@ const rules = {
      */
     contextual: {
         strictThresholds: true,
+        defaultSusceptibilityThreshold: 75,
     },
 
     /**
@@ -68,7 +69,10 @@ const rules = {
                 threshold_r_pct: 25,
                 message: "Resistencia local elevada a macrólidos en neumococo: evitar monoterapia con macrólidos."
             }
-        ]
+        ],
+        profileBranding: {
+            "hra_hosp_adulto_2024": "HRA PROA 2024 · Hospitalizados adultos"
+        }
     }
 };
 

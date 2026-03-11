@@ -141,7 +141,8 @@ window.ABG.clinicalEngine = (function () {
     function buildSusceptibilityViewModel(localResult, profile) {
         if (!localResult) return null;
 
-        const threshold = Number(profile?.threshold_s_pct ?? profile?.threshold ?? 75);
+        const defaultThreshold = window.clinicalData?.rules?.contextual?.defaultSusceptibilityThreshold || 75;
+        const threshold = Number(profile?.threshold_s_pct ?? profile?.threshold ?? defaultThreshold);
         const items = Array.isArray(localResult.items) ? localResult.items : [];
         const maxItems = 6;
 
@@ -165,15 +166,18 @@ window.ABG.clinicalEngine = (function () {
 
         const shown = sortedItems.slice(0, maxItems);
 
-        // Move subtitle source logic here, but UI formatting belongs in render/templates.
-        // We provide the source info for the renderer.
+        // Resolve branding via rules layer if possible
+        const brandingMap = window.clinicalData?.rules?.clinical?.profileBranding || {};
+        const customBranding = brandingMap[profile?.id] || null;
+
         return {
             items: shown,
             blee_pct: localResult.blee_pct,
             threshold,
             sourceInfo: {
                 profileId: profile?.id,
-                profileLabel: profile?.label
+                profileLabel: profile?.label,
+                branding: customBranding
             }
         };
     }
