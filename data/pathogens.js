@@ -47,37 +47,19 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Vancomicina"
+        "vancomicina"
       ],
       "typicalAcquired": [
-        "Ampicilina",
-        "TMP-SMX",
-        "Fluoroquinolonas (variable)"
+        "ampicilina",
+        "tmp_smx",
+        "ciprofloxacino"
       ],
       "stewardshipNote": "Evitar FQ empíricas si R% local >20%."
     },
     "appMeta": {
       "relevance": "extrema",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Bacilo entérico frecuente en ITU y bacteriemia.",
-    "common_syndromes": [
-      "itu_complicada",
-      "intraabdominal",
-      "meningitis"
-    ],
-    "intrinsic_resistance": [
-      "Vancomicina"
-    ],
-    "typical_resistance": [
-      "Ampicilina",
-      "TMP-SMX",
-      "Fluoroquinolonas (variable)"
-    ],
-    "stewardship_note": "Evitar FQ empíricas si R% local >20%."
+    }
   },
   {
     "id": "streptococcus_pneumoniae",
@@ -107,30 +89,15 @@ const pathogens = [
     "resistance": {
       "intrinsic": [],
       "typicalAcquired": [
-        "Macrólidos",
-        "Penicilina (variable)"
+        "azitromicina",
+        "bencilpenicilina_sodica"
       ],
       "stewardshipNote": "Evitar macrólido en monoterapia si R% alto."
     },
     "appMeta": {
       "relevance": "crítica",
       "status": "active"
-    },
-    "tags": [
-      "gram_positive"
-    ],
-    "summary": "Coco Gram positivo frecuente en NAC y meningitis.",
-    "common_syndromes": [
-      "nac",
-      "meningitis",
-      "sepsis_urinaria"
-    ],
-    "intrinsic_resistance": [],
-    "typical_resistance": [
-      "Macrólidos",
-      "Penicilina (variable)"
-    ],
-    "stewardship_note": "Evitar macrólido en monoterapia si R% alto."
+    }
   },
   {
     "id": "streptococcus_pyogenes",
@@ -159,32 +126,17 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Aminoglucósidos"
+        "gentamicina"
       ],
       "typicalAcquired": [
-        "Macrólidos (variable)"
+        "azitromicina"
       ],
       "stewardshipNote": "Sensible universal a penicilina."
     },
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_positive"
-    ],
-    "summary": "Coco causante de faringitis y celulitis.",
-    "common_syndromes": [
-      "faringitis",
-      "celulitis"
-    ],
-    "intrinsic_resistance": [
-      "Aminoglucósidos"
-    ],
-    "typical_resistance": [
-      "Macrólidos (variable)"
-    ],
-    "stewardship_note": "Sensible universal a penicilina."
+    }
   },
   {
     "id": "staphylococcus_aureus",
@@ -219,31 +171,14 @@ const pathogens = [
       "intrinsic": [],
       "typicalAcquired": [
         "Meticilina (MRSA)",
-        "Penicilina"
+        "bencilpenicilina_sodica"
       ],
       "stewardshipNote": "Evaluar riesgo MRSA."
     },
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_positive"
-    ],
-    "summary": "Coco frecuente en infecciones cutáneas y bacteriemia.",
-    "common_syndromes": [
-      "celulitis",
-      "nac",
-      "endocarditis_infecciosa",
-      "pie_diabetico",
-      "sepsis_urinaria"
-    ],
-    "intrinsic_resistance": [],
-    "typical_resistance": [
-      "Meticilina (MRSA)",
-      "Penicilina"
-    ],
-    "stewardship_note": "Evaluar riesgo MRSA."
+    }
   },
   {
     "id": "pseudomonas_aeruginosa",
@@ -269,47 +204,22 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "TMP-SMX",
-        "Ampicilina",
-        "Amoxicilina-clavulánico",
-        "Ceftriaxona",
-        "Ertapenem"
+        "tmp_smx",
+        "ampicilina",
+        "amoxicilina_clavulanico",
+        "ceftriaxona",
+        "ertapenem"
       ],
       "typicalAcquired": [
         "Carbapenémicos",
-        "Fluoroquinolonas",
-        "Carbapenémicos",
-        "Fluoroquinolonas"
+        "ciprofloxacino"
       ],
       "stewardshipNote": "Evitar subdosificación."
     },
     "appMeta": {
       "relevance": "extrema",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Bacilo no fermentador asociado a infecciones graves.",
-    "common_syndromes": [
-      "nih",
-      "itu_complicada",
-      "sepsis_urinaria"
-    ],
-    "intrinsic_resistance": [
-      "TMP-SMX",
-      "Ampicilina",
-      "Amoxicilina-clavulánico",
-      "Ceftriaxona",
-      "Ertapenem"
-    ],
-    "typical_resistance": [
-      "Carbapenémicos",
-      "Fluoroquinolonas",
-      "Carbapenémicos",
-      "Fluoroquinolonas"
-    ],
-    "stewardship_note": "Evitar subdosificación."
+    }
   },
   {
     "id": "haemophilus_influenzae",
@@ -336,7 +246,7 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Vancomicina"
+        "vancomicina"
       ],
       "typicalAcquired": [
         "Beta-lactamasa (algunas cepas)"
@@ -346,22 +256,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Coccobacilo respiratorio frecuente en NAC.",
-    "common_syndromes": [
-      "faringitis",
-      "meningitis"
-    ],
-    "intrinsic_resistance": [
-      "Vancomicina"
-    ],
-    "typical_resistance": [
-      "Beta-lactamasa (algunas cepas)"
-    ],
-    "stewardship_note": "Preferir amoxicilina-clavulánico si productor."
+    }
   },
   {
     "id": "mycoplasma_pneumoniae",
@@ -388,28 +283,14 @@ const pathogens = [
         "Beta-lactámicos"
       ],
       "typicalAcquired": [
-        "Macrólidos (algunas regiones)"
+        "azitromicina"
       ],
       "stewardshipNote": "Usar macrólido o doxiciclina."
     },
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "atypical"
-    ],
-    "summary": "Agente atípico en neumonía.",
-    "common_syndromes": [
-      "nac"
-    ],
-    "intrinsic_resistance": [
-      "Beta-lactámicos"
-    ],
-    "typical_resistance": [
-      "Macrólidos (algunas regiones)"
-    ],
-    "stewardship_note": "Usar macrólido o doxiciclina."
+    }
   },
   {
     "id": "chlamydia_pneumoniae",
@@ -439,124 +320,49 @@ const pathogens = [
     "appMeta": {
       "relevance": "low",
       "status": "active"
-    },
-    "tags": [
-      "atypical"
-    ],
-    "summary": "Agente atípico respiratorio.",
-    "common_syndromes": [
-      "nac"
-    ],
-    "intrinsic_resistance": [
-      "Beta-lactámicos"
-    ],
-    "typical_resistance": [],
-    "stewardship_note": "Doxiciclina alternativa."
-  },
-  {
-    "id": "klebsiella_spp",
-    "name": "Klebsiella spp.",
-    "shortName": "Klebsiella spp.",
-    "aliases": [],
-    "taxonomy": {
-      "gram": "negativo",
-      "morphology": "bacilo",
-      "group": "Enterobacterales"
-    },
-    "clinical": {
-      "summary": "Grupo de bacilos entéricos implicados en infecciones urinarias e intraabdominales comunitarias y nosocomiales.",
-      "usualSyndromes": [
-        "itu_complicada",
-        "intraabdominal",
-        "nih"
-      ],
-      "context": "Mixto",
-      "pearls": []
-    },
-    "resistance": {
-      "intrinsic": [
-        "Amoxicilina/Ampicilina (K. pneumoniae)."
-      ],
-      "typicalAcquired": [
-        "Productores frecuentes de BLEE/KPC."
-      ],
-      "stewardshipNote": "Importante revisar epidemiología local si K. pneumoniae domina."
-    },
-    "appMeta": {
-      "relevance": "high",
-      "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative",
-      "bacilli",
-      "enterobacterales"
-    ],
-    "summary": "Grupo de bacilos entéricos implicados en infecciones urinarias e intraabdominales comunitarias y nosocomiales.",
-    "common_syndromes": [
-      "itu_complicada",
-      "intraabdominal",
-      "nih"
-    ],
-    "intrinsic_resistance": [
-      "Amoxicilina/Ampicilina (K. pneumoniae)."
-    ],
-    "typical_resistance": [
-      "Productores frecuentes de BLEE/KPC."
-    ],
-    "stewardship_note": "Importante revisar epidemiología local si K. pneumoniae domina."
+    }
   },
   {
     "id": "klebsiella_pneumoniae",
     "name": "Klebsiella pneumoniae",
     "shortName": "K. pneumoniae",
-    "aliases": [],
+    "aliases": [
+      "Klebsiella spp.",
+      "K. oxytoca (similar)"
+    ],
     "taxonomy": {
       "gram": "negative",
       "morphology": "bacilos encapsulados",
       "group": "enterobacterales"
     },
     "clinical": {
-      "summary": "Bacilo entérico asociado a ITU y neumonía hospitalaria.",
+      "summary": "Bacilo entérico asociado a ITU, neumonía hospitalaria e infecciones intraabdominales.",
       "usualSyndromes": [
         "nac",
-        "itu_complicada"
+        "itu_complicada",
+        "intraabdominal",
+        "nih"
       ],
-      "context": "Hospitalario",
+      "context": "Comunitario y Hospitalario",
       "pearls": [
-        "Alta asociación con brotes en UCI por carbapenemasas"
+        "Alta asociación con brotes en UCI por carbapenemasas (KPC)",
+        "Las cepas hipervirulentas pueden causar abscesos hepáticos y endoftalmitis"
       ]
     },
     "resistance": {
       "intrinsic": [
-        "Ampicilina"
+        "ampicilina"
       ],
       "typicalAcquired": [
         "BLEE",
-        "Carbapenemasas (algunas cepas)"
+        "Carbapenemasas (KPC, NDM, OXA-48)"
       ],
-      "stewardshipNote": "Sospechar BLEE en infecciones nosocomiales."
+      "stewardshipNote": "Sospechar BLEE/KPC en infecciones nosocomiales. Revisar epidemiología local."
     },
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Bacilo entérico asociado a ITU y neumonía hospitalaria.",
-    "common_syndromes": [
-      "nac",
-      "itu_complicada"
-    ],
-    "intrinsic_resistance": [
-      "Ampicilina"
-    ],
-    "typical_resistance": [
-      "BLEE",
-      "Carbapenemasas (algunas cepas)"
-    ],
-    "stewardship_note": "Sospechar BLEE en infecciones nosocomiales."
+    }
   },
   {
     "id": "proteus_mirabilis",
@@ -583,36 +389,18 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Nitrofurantoína"
+        "nitrofurantoina"
       ],
       "typicalAcquired": [
-        "Ampicilina",
-        "TMP-SMX"
+        "ampicilina",
+        "tmp_smx"
       ],
       "stewardshipNote": "Evitar nitrofurantoína."
     },
     "appMeta": {
       "relevance": "high",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative",
-      "bacilli",
-      "enterobacterales"
-    ],
-    "summary": "Bacilo entérico asociado a ITU complicada.",
-    "common_syndromes": [
-      "itu_cistitis",
-      "itu_pielonefritis"
-    ],
-    "intrinsic_resistance": [
-      "Nitrofurantoína"
-    ],
-    "typical_resistance": [
-      "Ampicilina",
-      "TMP-SMX"
-    ],
-    "stewardship_note": "Evitar nitrofurantoína."
+    }
   },
   {
     "id": "staphylococcus_saprophyticus",
@@ -620,7 +408,7 @@ const pathogens = [
     "shortName": "S. saprophyticus",
     "aliases": [],
     "taxonomy": {
-      "gram": "positivo",
+      "gram": "positive",
       "morphology": "coco",
       "group": "Staphylococcus (CoNS)"
     },
@@ -634,7 +422,7 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Fosfomicina (algunas cepas presentan susceptibilidad clínica reducida in vivo frente a in vitro, debatido)."
+        "fosfomicina_trometamol"
       ],
       "typicalAcquired": [],
       "stewardshipNote": "Tratamiento estándar de cistitis no complicada funciona bien (excepto precaución local sugerida con fosfomicina en este agente particular)."
@@ -642,21 +430,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "medium",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_positive",
-      "cocci"
-    ],
-    "summary": "Segunda causa más común de cistitis no complicada en mujeres jóvenes.",
-    "common_syndromes": [
-      "itu_cistitis"
-    ],
-    "intrinsic_resistance": [
-      "Fosfomicina (algunas cepas presentan susceptibilidad clínica reducida in vivo frente a in vitro, debatido)."
-    ],
-    "typical_resistance": [],
-    "stewardship_note": "Tratamiento estándar de cistitis no complicada funciona bien (excepto precaución local sugerida con fosfomicina en este agente particular)."
+    }
   },
   {
     "id": "enterobacter_spp",
@@ -666,7 +440,7 @@ const pathogens = [
       "Enterobacter"
     ],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "bacilo",
       "group": "Enterobacterales"
     },
@@ -681,7 +455,7 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Amoxicilina-Clavulánico (AmpC cromosómico inducible)",
+        "amoxicilina_clavulanico",
         "Cefalosporinas de primera generación."
       ],
       "typicalAcquired": [
@@ -692,26 +466,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "high",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative",
-      "bacilli",
-      "enterobacterales"
-    ],
-    "summary": "Bacilos del grupo SPACE/ESPM (productores induccibles AmpC).",
-    "common_syndromes": [
-      "itu_pielonefritis",
-      "nih"
-    ],
-    "intrinsic_resistance": [
-      "Amoxicilina-Clavulánico (AmpC cromosómico inducible)",
-      "Cefalosporinas de primera generación."
-    ],
-    "typical_resistance": [
-      "Des-represión de AmpC durante tratamiento con cefalosporinas 3ra gen."
-    ],
-    "stewardship_note": "Evitar Ceftriaxona aunque indique sensible in vitro por riesgo de des-represión de AmpC in vivo."
+    }
   },
   {
     "id": "enterococcus_spp",
@@ -722,7 +477,7 @@ const pathogens = [
       "E. spp"
     ],
     "taxonomy": {
-      "gram": "positivo",
+      "gram": "positive",
       "morphology": "coco",
       "group": "Enterococcus"
     },
@@ -739,7 +494,7 @@ const pathogens = [
     "resistance": {
       "intrinsic": [
         "Cefalosporinas todas",
-        "Clindamicina"
+        "clindamicina"
       ],
       "typicalAcquired": [
         "Resistencia a Vanco (VRE) predominantemente en faecium."
@@ -749,26 +504,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "high",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_positive",
-      "cocci"
-    ],
-    "summary": "Cocos grampositivos asociados a ITU nosocomial y endocarditis.",
-    "common_syndromes": [
-      "itu_complicada",
-      "sepsis_urinaria",
-      "intraabdominal"
-    ],
-    "intrinsic_resistance": [
-      "Cefalosporinas todas",
-      "Clindamicina"
-    ],
-    "typical_resistance": [
-      "Resistencia a Vanco (VRE) predominantemente en faecium."
-    ],
-    "stewardship_note": "Tratamiento de elección generalmente Amoxicilina (faecalis). Cefalosporinas NO poseen actividad."
+    }
   },
   {
     "id": "methicillin_resistant_staphylococcus_aureus",
@@ -778,7 +514,7 @@ const pathogens = [
       "SAMR"
     ],
     "taxonomy": {
-      "gram": "positivo",
+      "gram": "positive",
       "morphology": "coco",
       "group": "Staphylococcus"
     },
@@ -797,8 +533,8 @@ const pathogens = [
         "Todos los betalactámicos, excepto ceftarolina (5ta gen)."
       ],
       "typicalAcquired": [
-        "Macrólidos",
-        "Clindamicina",
+        "azitromicina",
+        "clindamicina",
         "Quinolonas (frecuente)"
       ],
       "stewardshipNote": "Requiere vancomicina, linezolid o daptomicina (sepsis grave); clinda/TMP-SMX (piel leve)."
@@ -806,27 +542,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "high",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_positive",
-      "cocci"
-    ],
-    "summary": "Cepa de S. aureus con gen mecA (PBP2a), prevalente en abscesos cutáneos o foco invasivo nosocomial.",
-    "common_syndromes": [
-      "celulitis",
-      "pie_diabetico",
-      "nih"
-    ],
-    "intrinsic_resistance": [
-      "Todos los betalactámicos, excepto ceftarolina (5ta gen)."
-    ],
-    "typical_resistance": [
-      "Macrólidos",
-      "Clindamicina",
-      "Quinolonas (frecuente)"
-    ],
-    "stewardship_note": "Requiere vancomicina, linezolid o daptomicina (sepsis grave); clinda/TMP-SMX (piel leve)."
+    }
   },
   {
     "id": "neisseria_gonorrhoeae",
@@ -852,37 +568,20 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Vancomicina"
+        "vancomicina"
       ],
       "typicalAcquired": [
-        "Fluoroquinolonas",
-        "Penicilina",
-        "Fluoroquinolonas",
-        "Penicilina"
+        "ciprofloxacino",
+        "bencilpenicilina_sodica",
+        "ciprofloxacino",
+        "bencilpenicilina_sodica"
       ],
       "stewardshipNote": "Ceftriaxona es estándar."
     },
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Diplococo causante de ITS.",
-    "common_syndromes": [
-      "epi"
-    ],
-    "intrinsic_resistance": [
-      "Vancomicina"
-    ],
-    "typical_resistance": [
-      "Fluoroquinolonas",
-      "Penicilina",
-      "Fluoroquinolonas",
-      "Penicilina"
-    ],
-    "stewardship_note": "Ceftriaxona es estándar."
+    }
   },
   {
     "id": "chlamydia_trachomatis",
@@ -912,18 +611,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "atypical"
-    ],
-    "summary": "ITS bacteriana más frecuente en el mundo",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Betalactámicos"
-    ],
-    "typical_resistance": [],
-    "stewardship_note": "Tratamiento de elección: Doxiciclina o Azitromicina"
+    }
   },
   {
     "id": "anaerobes",
@@ -947,7 +635,7 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Aminoglucósidos (requieren oxígeno para entrar)."
+        "gentamicina"
       ],
       "typicalAcquired": [
         "Resistencia variable de B. fragilis a clindamicina."
@@ -957,24 +645,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "medium",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "anaerobic"
-    ],
-    "summary": "Flora mixta sinérgica en abscesos, infecciones abdominales y pie diabético.",
-    "common_syndromes": [
-      "intraabdominal",
-      "pie_diabetico",
-      "epi"
-    ],
-    "intrinsic_resistance": [
-      "Aminoglucósidos (requieren oxígeno para entrar)."
-    ],
-    "typical_resistance": [
-      "Resistencia variable de B. fragilis a clindamicina."
-    ],
-    "stewardship_note": "Metronidazol es pilar sub-diafragmático; Clinda sobre-diafragmático."
+    }
   },
   {
     "id": "mycoplasma_genitalium",
@@ -1006,22 +677,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "low",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "atypical"
-    ],
-    "summary": "Agente emergente de ETS, similar a uretritis clamidial y parte del espectro EPI.",
-    "common_syndromes": [
-      "epi"
-    ],
-    "intrinsic_resistance": [
-      "Beta-lactámicos"
-    ],
-    "typical_resistance": [
-      "Resistencia a macrólidos en muy rápido ascenso (>50%)."
-    ],
-    "stewardship_note": "Requiere pruebas de resistencia a macrólidos de ser posible o uso de fluoroquinolonas apropiadas."
+    }
   },
   {
     "id": "neisseria_meningitidis",
@@ -1048,32 +704,17 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Vancomicina"
+        "vancomicina"
       ],
       "typicalAcquired": [
-        "Penicilina (algunas cepas)"
+        "bencilpenicilina_sodica"
       ],
       "stewardshipNote": "Ceftriaxona empírica."
     },
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Diplococo causante de meningitis.",
-    "common_syndromes": [
-      "meningitis",
-      "sepsis_urinaria"
-    ],
-    "intrinsic_resistance": [
-      "Vancomicina"
-    ],
-    "typical_resistance": [
-      "Penicilina (algunas cepas)"
-    ],
-    "stewardship_note": "Ceftriaxona empírica."
+    }
   },
   {
     "id": "listeria_monocytogenes",
@@ -1105,19 +746,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "moderada",
       "status": "active"
-    },
-    "tags": [
-      "gram_positive"
-    ],
-    "summary": "Bacilo causante de meningitis en inmunosuprimidos.",
-    "common_syndromes": [
-      "meningitis"
-    ],
-    "intrinsic_resistance": [
-      "Cefalosporinas"
-    ],
-    "typical_resistance": [],
-    "stewardship_note": "Usar ampicilina."
+    }
   },
   {
     "id": "streptococcus_spp",
@@ -1127,7 +756,7 @@ const pathogens = [
       "Estreptococos"
     ],
     "taxonomy": {
-      "gram": "positivo",
+      "gram": "positive",
       "morphology": "coco",
       "group": "Streptococcus"
     },
@@ -1148,20 +777,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "medium",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_positive",
-      "cocci"
-    ],
-    "summary": "Cocos en cadenas asociados predominantemente a piel/tejidos blandos, y oro-faringe.",
-    "common_syndromes": [
-      "celulitis",
-      "pie_diabetico"
-    ],
-    "intrinsic_resistance": [],
-    "typical_resistance": [],
-    "stewardship_note": "Generalmente muy sensibles a b-lactámicos puros."
+    }
   },
   {
     "id": "enterobacterales",
@@ -1171,7 +787,7 @@ const pathogens = [
       "Enterobacterias"
     ],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "bacilo",
       "group": "Enterobacterales"
     },
@@ -1195,24 +811,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "high",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative",
-      "bacilli",
-      "enterobacterales"
-    ],
-    "summary": "Familia principal de bacilos gram negativos intestinales causantes de ITU y patología abdominal.",
-    "common_syndromes": [
-      "intraabdominal",
-      "pie_diabetico"
-    ],
-    "intrinsic_resistance": [],
-    "typical_resistance": [
-      "BLEE",
-      "Carbapenemasas"
-    ],
-    "stewardship_note": "Base empírica suele depender de ceftriaxona comunitaria vs P/T nosocomial."
+    }
   },
   {
     "id": "bacteroides_fragilis",
@@ -1236,7 +835,7 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Aminoglucósidos"
+        "gentamicina"
       ],
       "typicalAcquired": [
         "Resistencia creciente a clindamicina"
@@ -1246,21 +845,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Anaerobio frecuente en infecciones intraabdominales.",
-    "common_syndromes": [
-      "intraabdominal"
-    ],
-    "intrinsic_resistance": [
-      "Aminoglucósidos"
-    ],
-    "typical_resistance": [
-      "Resistencia creciente a clindamicina"
-    ],
-    "stewardship_note": "Metronidazol eficaz."
+    }
   },
   {
     "id": "staphylococcus_cons",
@@ -1271,7 +856,7 @@ const pathogens = [
       "Coag-neg staph"
     ],
     "taxonomy": {
-      "gram": "positivo",
+      "gram": "positive",
       "morphology": "coco",
       "group": "Staphylococcus"
     },
@@ -1293,21 +878,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "medium",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_positive",
-      "cocci"
-    ],
-    "summary": "Comensales de piel, frecuentemente causan bacteriemia transitoria o infección en cuerpos extraños/prótesis.",
-    "common_syndromes": [
-      "endocarditis_infecciosa"
-    ],
-    "intrinsic_resistance": [],
-    "typical_resistance": [
-      "Altas tasas de resistencia a meticilina (>70% en hospitales)."
-    ],
-    "stewardship_note": "Si causa infección protésica verdadera, asume resistencia a oxacilina."
+    }
   },
   {
     "id": "streptococcus_viridans_group",
@@ -1318,7 +889,7 @@ const pathogens = [
       "Streptococcus viridans"
     ],
     "taxonomy": {
-      "gram": "positivo",
+      "gram": "positive",
       "morphology": "coco",
       "group": "Streptococcus"
     },
@@ -1340,21 +911,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "medium",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_positive",
-      "cocci"
-    ],
-    "summary": "Comensales orales implicados fuertemente en Endocarditis Infecciosa nativa subaguda.",
-    "common_syndromes": [
-      "endocarditis_infecciosa"
-    ],
-    "intrinsic_resistance": [],
-    "typical_resistance": [
-      "Tasa de resistencia a penicilina baja pero ascendente."
-    ],
-    "stewardship_note": "Generalmente basta Penicilina/Ceftriaxona dirigida."
+    }
   },
   {
     "id": "streptococcus_gallolyticus",
@@ -1365,7 +922,7 @@ const pathogens = [
       "Estreptococo bovis"
     ],
     "taxonomy": {
-      "gram": "positivo",
+      "gram": "positive",
       "morphology": "coco",
       "group": "Streptococcus"
     },
@@ -1387,19 +944,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "low",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_positive",
-      "cocci"
-    ],
-    "summary": "Causa endocarditis clásicamente asociada a cáncer de colon concomitante.",
-    "common_syndromes": [
-      "endocarditis_infecciosa"
-    ],
-    "intrinsic_resistance": [],
-    "typical_resistance": [],
-    "stewardship_note": "El tratamiento recae en Penicilina o Ceftriaxona similar a los Viridans."
+    }
   },
   {
     "id": "enterococcus_faecalis",
@@ -1428,30 +973,14 @@ const pathogens = [
         "Cefalosporinas"
       ],
       "typicalAcquired": [
-        "Vancomicina (algunas cepas)"
+        "vancomicina"
       ],
       "stewardshipNote": "Evaluar susceptibilidad específica."
     },
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_positive"
-    ],
-    "summary": "Coco entérico asociado a ITU y bacteriemia.",
-    "common_syndromes": [
-      "itu_complicada",
-      "endocarditis_infecciosa",
-      "intraabdominal"
-    ],
-    "intrinsic_resistance": [
-      "Cefalosporinas"
-    ],
-    "typical_resistance": [
-      "Vancomicina (algunas cepas)"
-    ],
-    "stewardship_note": "Evaluar susceptibilidad específica."
+    }
   },
   {
     "id": "hacek_group",
@@ -1461,7 +990,7 @@ const pathogens = [
       "HACEK"
     ],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "fastidioso",
       "group": "HACEK"
     },
@@ -1483,20 +1012,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "medium",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Haemophilus, Aggregatibacter, Cardiobacterium, Eikenella, Kingella. Flora orofaríngea de lento crecimiento, causa de endocarditis indoloria.",
-    "common_syndromes": [
-      "endocarditis_infecciosa"
-    ],
-    "intrinsic_resistance": [],
-    "typical_resistance": [
-      "Eventual producción de beta-lactamasas contra Ampicilina."
-    ],
-    "stewardship_note": "Ceftriaxona empírica cubre rutinariamente al grupo HACEK de forma eficaz."
+    }
   },
   {
     "id": "gram_negative_bacilli_non_hacek",
@@ -1504,7 +1020,7 @@ const pathogens = [
     "shortName": "BGN no-HACEK",
     "aliases": [],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "bacilo",
       "group": "Mixto BGN"
     },
@@ -1526,21 +1042,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "low",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative",
-      "bacilli"
-    ],
-    "summary": "Casos más raros de endocarditis por enterobacterias asociadas a focos a distancia (urinario, abdominal, catéteres).",
-    "common_syndromes": [
-      "endocarditis_infecciosa"
-    ],
-    "intrinsic_resistance": [],
-    "typical_resistance": [
-      "Perfil de resistencia dependiente de la especie individual en hemocultivos."
-    ],
-    "stewardship_note": "Requiere terapia con antibióticos bactericidas de amplio espectro guiada in-vitro estrictamente."
+    }
   },
   {
     "id": "candida_spp",
@@ -1575,20 +1077,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "low",
       "status": "active"
-    },
-    "category": "fungi",
-    "tags": [],
-    "summary": "Infección fúngica invasora asentuada en nutrición parenteral, UDIV, y prótesis graves.",
-    "common_syndromes": [
-      "endocarditis_infecciosa"
-    ],
-    "intrinsic_resistance": [
-      "Antibacterianos en general."
-    ],
-    "typical_resistance": [
-      "Fluconazol para cepas C. glabrata o C. krusei."
-    ],
-    "stewardship_note": "Generalmente implica reemplazo valvular y terapia equinocandina inicial."
+    }
   },
   {
     "id": "culture_negative_endocarditis_zoonotic",
@@ -1621,18 +1110,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "low",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [],
-    "summary": "Causas etiológicas clave en Endocarditis con hemocultivos negativos repetidos (CNE).",
-    "common_syndromes": [
-      "endocarditis_infecciosa"
-    ],
-    "intrinsic_resistance": [
-      "Patógenos difíciles de testear in-vitro."
-    ],
-    "typical_resistance": [],
-    "stewardship_note": "El empirismo frente a CNE sin otra explicación suele requerir Doxiciclina asociada en discusión en comité de endocarditis."
+    }
   },
   {
     "id": "acinetobacter_baumannii",
@@ -1658,10 +1136,10 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Ampicilina",
-        "Amoxicilina-clavulánico",
+        "ampicilina",
+        "amoxicilina_clavulanico",
         "Cefalosporinas 1ª/2ª",
-        "Ertapenem"
+        "ertapenem"
       ],
       "typicalAcquired": [
         "Carbapenémicos",
@@ -1672,27 +1150,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Bacilo hospitalario multirresistente.",
-    "common_syndromes": [
-      "nih",
-      "sepsis_urinaria",
-      "pie_diabetico"
-    ],
-    "intrinsic_resistance": [
-      "Ampicilina",
-      "Amoxicilina-clavulánico",
-      "Cefalosporinas 1ª/2ª",
-      "Ertapenem"
-    ],
-    "typical_resistance": [
-      "Carbapenémicos",
-      "Carbapenémicos"
-    ],
-    "stewardship_note": "Alta vigilancia PROA."
+    }
   },
   {
     "id": "staphylococcus_sp",
@@ -1700,7 +1158,7 @@ const pathogens = [
     "shortName": "Staph spp (no tipificado)",
     "aliases": [],
     "taxonomy": {
-      "gram": "positivo",
+      "gram": "positive",
       "morphology": "coco",
       "group": "Staphylococcus"
     },
@@ -1718,17 +1176,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "low",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_positive",
-      "cocci"
-    ],
-    "summary": "Dato crudo que engloba especies sin diferenciación exacta en tablas de susceptibilidad.",
-    "common_syndromes": [],
-    "intrinsic_resistance": [],
-    "typical_resistance": [],
-    "stewardship_note": "Se debe precisar si es Aureus o CoNS de ser posible."
+    }
   },
   {
     "id": "enterococcus_faecium",
@@ -1757,30 +1205,14 @@ const pathogens = [
         "Cefalosporinas"
       ],
       "typicalAcquired": [
-        "Vancomicina (VRE frecuente)"
+        "vancomicina"
       ],
       "stewardshipNote": "Considerar linezolid o daptomicina."
     },
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_positive"
-    ],
-    "summary": "Coco entérico frecuentemente resistente.",
-    "common_syndromes": [
-      "nih",
-      "endocarditis_infecciosa",
-      "itu_complicada"
-    ],
-    "intrinsic_resistance": [
-      "Cefalosporinas"
-    ],
-    "typical_resistance": [
-      "Vancomicina (VRE frecuente)"
-    ],
-    "stewardship_note": "Considerar linezolid o daptomicina."
+    }
   },
   {
     "id": "klebsiella_oxytoca",
@@ -1788,7 +1220,7 @@ const pathogens = [
     "shortName": "K. oxytoca",
     "aliases": [],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "bacilo",
       "group": "Enterobacterales"
     },
@@ -1810,22 +1242,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "medium",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative",
-      "bacilli",
-      "enterobacterales"
-    ],
-    "summary": "Segunda especie de Klebsiella de importancia clínica.",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Suele tener resistencia intrínseca o de muy bajo umbral a b-lactamicos básicos."
-    ],
-    "typical_resistance": [
-      "Alta producción natural de beta-lactamasas del tipo OXY y BLEE adquirido."
-    ],
-    "stewardship_note": "El tratamiento con amoxicilina-clavulanico suele presentar barreras."
+    }
   },
   {
     "id": "enterobacter_cloacae_complex",
@@ -1833,7 +1250,7 @@ const pathogens = [
     "shortName": "E. cloacae complex",
     "aliases": [],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "bacilo",
       "group": "Enterobacterales"
     },
@@ -1855,22 +1272,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "high",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative",
-      "bacilli",
-      "enterobacterales"
-    ],
-    "summary": "Complejo bacteriano oportunista prototipo del grupo AmpC.",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "AmpC inducible de genotipo agresivo."
-    ],
-    "typical_resistance": [
-      "Altamente propenso a des-represión in-vivo durante terapia con Ceftriaxona o Ceftazidima."
-    ],
-    "stewardship_note": "Evitar cefalosporinas de espectro expandido para infecciones graves confirmadas; usar Cefepime o carbapenémicos."
+    }
   },
   {
     "id": "citrobacter_freundii",
@@ -1878,7 +1280,7 @@ const pathogens = [
     "shortName": "C. freundii",
     "aliases": [],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "bacilo",
       "group": "Enterobacterales"
     },
@@ -1898,20 +1300,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "medium",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative",
-      "bacilli",
-      "enterobacterales"
-    ],
-    "summary": "Agente bacteriano entérico que puede portar el gen de AmpC intra-cromosomal.",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Como parte del grupo ESPM, producción inducible de AmpC."
-    ],
-    "typical_resistance": [],
-    "stewardship_note": "Se recomiendan Cefepime o Ertapenem si la infección es grave, en evitación a desrepresiones de la cefalosporinasa."
+    }
   },
   {
     "id": "serratia_marcescens",
@@ -1933,7 +1322,7 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Ampicilina",
+        "ampicilina",
         "Cefalosporinas 1ª"
       ],
       "typicalAcquired": [
@@ -1944,22 +1333,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "high",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative",
-      "bacilli",
-      "enterobacterales"
-    ],
-    "summary": "Bacilo hospitalario oportunista.",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Ampicilina",
-      "Cefalosporinas 1ª"
-    ],
-    "typical_resistance": [
-      "Cefalosporinas 3ª (por AmpC)"
-    ],
-    "stewardship_note": "Considerar perfil local."
+    }
   },
   {
     "id": "morganella_morganii",
@@ -1967,7 +1341,7 @@ const pathogens = [
     "shortName": "M. morganii",
     "aliases": [],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "bacilo",
       "group": "Enterobacterales"
     },
@@ -1989,22 +1363,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "medium",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative",
-      "bacilli",
-      "enterobacterales"
-    ],
-    "summary": "Pertenece al antiguo grupo Proteeae y con comportamiento de productor AmpC natural.",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Colistín/Polimixina, Nitrofurantoína, Ampicilina, Cefazolina."
-    ],
-    "typical_resistance": [
-      "AmpC inducible y desrepresión."
-    ],
-    "stewardship_note": "Posee gran cantidad de resistencias intrínsecas a antibióticos de 'rescate' (polimixinas) o de rutina ambulatoria (nitrofurantoína)."
+    }
   },
   {
     "id": "stenotrophomonas_maltophilia",
@@ -2012,7 +1371,7 @@ const pathogens = [
     "shortName": "S. maltophilia",
     "aliases": [],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "bacilos",
       "group": "Xanthomonadaceae"
     },
@@ -2036,20 +1395,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "moderada",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Bacilo no fermentador asociado a uso previo de carbapenémicos",
-    "common_syndromes": [
-      "nih"
-    ],
-    "intrinsic_resistance": [
-      "Carbapenémicos (L1 metalo-betalactamasa)"
-    ],
-    "typical_resistance": [],
-    "stewardship_note": "Tratamiento de elección: TMP-SMX"
+    }
   },
   {
     "id": "streptococcus_agalactiae",
@@ -2077,32 +1423,17 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Aminoglucósidos"
+        "gentamicina"
       ],
       "typicalAcquired": [
-        "Macrólidos (variable)"
+        "azitromicina"
       ],
       "stewardshipNote": "Penicilina es tratamiento de elección."
     },
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_positive"
-    ],
-    "summary": "Coco asociado a bacteriemia en adultos vulnerables.",
-    "common_syndromes": [
-      "meningitis",
-      "itu_cistitis"
-    ],
-    "intrinsic_resistance": [
-      "Aminoglucósidos"
-    ],
-    "typical_resistance": [
-      "Macrólidos (variable)"
-    ],
-    "stewardship_note": "Penicilina es tratamiento de elección."
+    }
   },
   {
     "id": "clostridioides_difficile",
@@ -2128,33 +1459,18 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Aminoglucósidos",
+        "gentamicina",
         "Cefalosporinas"
       ],
       "typicalAcquired": [
-        "Fluoroquinolonas"
+        "ciprofloxacino"
       ],
       "stewardshipNote": "Evitar antibióticos innecesarios."
     },
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_positive"
-    ],
-    "summary": "Anaerobio productor de toxina en diarrea asociada a antibióticos.",
-    "common_syndromes": [
-      "intraabdominal"
-    ],
-    "intrinsic_resistance": [
-      "Aminoglucósidos",
-      "Cefalosporinas"
-    ],
-    "typical_resistance": [
-      "Fluoroquinolonas"
-    ],
-    "stewardship_note": "Evitar antibióticos innecesarios."
+    }
   },
   {
     "id": "corynebacterium_diphtheriae",
@@ -2164,7 +1480,7 @@ const pathogens = [
       "Bacilo de Klebs-Löffler"
     ],
     "taxonomy": {
-      "gram": "positivo",
+      "gram": "positive",
       "morphology": "bacilos pleomórficos (letras chinas)",
       "group": "Corynebacteriaceae"
     },
@@ -2184,16 +1500,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "baja/moderada",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_positive"
-    ],
-    "summary": "Productor de exotoxina causante de membranas faríngeas",
-    "common_syndromes": [],
-    "intrinsic_resistance": [],
-    "typical_resistance": [],
-    "stewardship_note": "Vacunación sistemática (DTaP/Td)"
+    }
   },
   {
     "id": "moraxella_catarrhalis",
@@ -2215,31 +1522,18 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Vancomicina"
+        "vancomicina"
       ],
       "typicalAcquired": [
-        "Penicilina (por beta-lactamasa)",
-        "Penicilina (por beta-lactamasa)"
+        "bencilpenicilina_sodica",
+        "bencilpenicilina_sodica"
       ],
       "stewardshipNote": "Amoxicilina-clavulánico alternativa."
     },
     "appMeta": {
       "relevance": "aware: acceso (amoxicilina/clavulánico)",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Diplococo respiratorio en EPOC.",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Vancomicina"
-    ],
-    "typical_resistance": [
-      "Penicilina (por beta-lactamasa)",
-      "Penicilina (por beta-lactamasa)"
-    ],
-    "stewardship_note": "Amoxicilina-clavulánico alternativa."
+    }
   },
   {
     "id": "salmonella_enterica_typhi",
@@ -2249,7 +1543,7 @@ const pathogens = [
       "Bacilo de Eberth"
     ],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "bacilos",
       "group": "Enterobacteriaceae"
     },
@@ -2273,20 +1567,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Agente de la fiebre tifoidea transmitido por vía fecal-oral",
-    "common_syndromes": [
-      "sepsis_urinaria"
-    ],
-    "intrinsic_resistance": [],
-    "typical_resistance": [
-      "Resistencia a quinolonas (NAL-R)"
-    ],
-    "stewardship_note": "AWaRe: Vigilancia (Ceftriaxona)"
+    }
   },
   {
     "id": "bordetella_pertussis",
@@ -2294,7 +1575,7 @@ const pathogens = [
     "shortName": "B. pertussis",
     "aliases": [],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "cocobacilos",
       "group": "Alcaligenaceae"
     },
@@ -2315,16 +1596,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Causa la tos ferina o coqueluche",
-    "common_syndromes": [],
-    "intrinsic_resistance": [],
-    "typical_resistance": [],
-    "stewardship_note": "Vacunación (Penta/Hexavalente)"
+    }
   },
   {
     "id": "vibrio_cholerae",
@@ -2346,7 +1618,7 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Vancomicina"
+        "vancomicina"
       ],
       "typicalAcquired": [
         "Tetraciclinas (variable)"
@@ -2356,19 +1628,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "moderada",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Bacilo acuático causante de cólera.",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Vancomicina"
-    ],
-    "typical_resistance": [
-      "Tetraciclinas (variable)"
-    ],
-    "stewardship_note": "Rehidratación es clave."
+    }
   },
   {
     "id": "campylobacter_jejuni",
@@ -2390,31 +1650,18 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Vancomicina"
+        "vancomicina"
       ],
       "typicalAcquired": [
-        "Fluoroquinolonas",
-        "Fluoroquinolonas"
+        "ciprofloxacino",
+        "ciprofloxacino"
       ],
       "stewardshipNote": "Macrólido preferido."
     },
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Bacilo curvo causante de diarrea.",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Vancomicina"
-    ],
-    "typical_resistance": [
-      "Fluoroquinolonas",
-      "Fluoroquinolonas"
-    ],
-    "stewardship_note": "Macrólido preferido."
+    }
   },
   {
     "id": "helicobacter_pylori",
@@ -2422,7 +1669,7 @@ const pathogens = [
     "shortName": "H. pylori",
     "aliases": [],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "bacilos curvos",
       "group": "Helicobacteraceae"
     },
@@ -2442,16 +1689,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Colonizador gástrico asociado a úlceras y cáncer",
-    "common_syndromes": [],
-    "intrinsic_resistance": [],
-    "typical_resistance": [],
-    "stewardship_note": "Requiere prueba de erradicación tras tratamiento"
+    }
   },
   {
     "id": "legionella_pneumophila",
@@ -2481,17 +1719,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "moderada",
       "status": "active"
-    },
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Bacilo asociado a neumonía grave.",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Beta-lactámicos"
-    ],
-    "typical_resistance": [],
-    "stewardship_note": "Usar macrólido o fluoroquinolona."
+    }
   },
   {
     "id": "treponema_pallidum",
@@ -2526,21 +1754,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "diagnóstico mediante pruebas no treponémicas (rpr/vdrl) y treponémicas",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "atypical"
-    ],
-    "summary": "Agente de la sífilis",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "latente"
-    ],
-    "typical_resistance": [
-      "terciaria)",
-      "neurosífilis"
-    ],
-    "stewardship_note": "Comunitario"
+    }
   },
   {
     "id": "mycobacterium_tuberculosis",
@@ -2572,18 +1786,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "uso restringido de rifampicina en programas nacionales",
       "status": "active"
-    },
-    "category": "Extrema",
-    "tags": [
-      "atypical"
-    ],
-    "summary": "Causa la tuberculosis",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Requiere tratamiento prolongado y multiasociado (TDO)"
-    ],
-    "typical_resistance": [],
-    "stewardship_note": "MDR;XDR (multirresistencia)"
+    }
   },
   {
     "id": "mycobacterium_leprae",
@@ -2615,18 +1818,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "tratamiento multidroga (rifampicina+dapsona+clofazimina)",
       "status": "active"
-    },
-    "category": "Moderada",
-    "tags": [
-      "atypical"
-    ],
-    "summary": "Agente de la lepra",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "No cultivable en medios artificiales"
-    ],
-    "typical_resistance": [],
-    "stewardship_note": ""
+    }
   },
   {
     "id": "candida_albicans",
@@ -2656,18 +1848,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "uso de equinocandinas en paciente inestable",
       "status": "active"
-    },
-    "category": "Alta",
-    "tags": [
-      "fungus"
-    ],
-    "summary": "Comensal humano",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Especie más sensible a fluconazol en general"
-    ],
-    "typical_resistance": [],
-    "stewardship_note": ""
+    }
   },
   {
     "id": "candida_auris",
@@ -2699,20 +1880,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "crítica",
       "status": "active"
-    },
-    "category": "hongo",
-    "tags": [
-      "fungus"
-    ],
-    "summary": "Hongo emergente multirresistente con alto potencial de brotes",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Fluconazol (frecuente)"
-    ],
-    "typical_resistance": [
-      "Multirresistente a azoles y anfotericina"
-    ],
-    "stewardship_note": "Notificación obligatoria ante hallazgo"
+    }
   },
   {
     "id": "cryptococcus_neoformans",
@@ -2742,18 +1910,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "category": "hongo",
-    "tags": [
-      "fungus"
-    ],
-    "summary": "Micosis sistémica oportunista definitoria de SIDA",
-    "common_syndromes": [
-      "nac"
-    ],
-    "intrinsic_resistance": [],
-    "typical_resistance": [],
-    "stewardship_note": "Inducción con Anfotericina B + Flucitosina"
+    }
   },
   {
     "id": "aspergillus_fumigatus",
@@ -2781,16 +1938,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "category": "hongo",
-    "tags": [
-      "fungus"
-    ],
-    "summary": "Principal causa de aspergillosis invasiva en inmunocomprometidos",
-    "common_syndromes": [],
-    "intrinsic_resistance": [],
-    "typical_resistance": [],
-    "stewardship_note": "Tratamiento de elección: Voriconazol"
+    }
   },
   {
     "id": "histoplasma_capsulatum",
@@ -2818,16 +1966,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "moderada",
       "status": "active"
-    },
-    "category": "hongo",
-    "tags": [
-      "fungus"
-    ],
-    "summary": "Micosis endémica adquirida por inhalación de guano",
-    "common_syndromes": [],
-    "intrinsic_resistance": [],
-    "typical_resistance": [],
-    "stewardship_note": "Itriaconazol para formas leves/moderadas"
+    }
   },
   {
     "id": "pneumocystis_jirovecii",
@@ -2860,19 +1999,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "alta",
       "status": "active"
-    },
-    "category": "hongo",
-    "tags": [
-      "fungus"
-    ],
-    "summary": "Hongo atípico causa de neumonía grave en SIDA",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Fluconazol",
-      "Anfotericina B"
-    ],
-    "typical_resistance": [],
-    "stewardship_note": "Profilaxis con TMP-SMX si CD4 < 200"
+    }
   },
   {
     "id": "leishmania_spp",
@@ -2900,16 +2027,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "moderada",
       "status": "active"
-    },
-    "category": "parásito",
-    "tags": [
-      "atypical"
-    ],
-    "summary": "Parásito transmitido por flebótomos causante de úlceras o daño visceral",
-    "common_syndromes": [],
-    "intrinsic_resistance": [],
-    "typical_resistance": [],
-    "stewardship_note": "Notificación epidemiológica obligatoria"
+    }
   },
   {
     "id": "borrelia_burgdorferi",
@@ -2939,18 +2057,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "medium",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "atypical"
-    ],
-    "summary": "Spirochaetaceae",
-    "common_syndromes": [],
-    "intrinsic_resistance": [
-      "Rash en ojo de buey patognomónico"
-    ],
-    "typical_resistance": [],
-    "stewardship_note": ""
+    }
   },
   {
     "id": "burkholderia_cepacia",
@@ -2960,7 +2067,7 @@ const pathogens = [
       "Complejo B. cepacia"
     ],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "bacilos",
       "group": "Burkholderiaceae"
     },
@@ -2976,8 +2083,8 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "Aminoglucósidos",
-        "Polimixinas"
+        "gentamicina",
+        "colistin"
       ],
       "typicalAcquired": [],
       "stewardshipNote": "Manejo requiere aislamiento de contacto estricto en FQ"
@@ -2985,21 +2092,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "moderada",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Grupo de especies con alta resistencia intrínseca y riesgo en fibrosis quística",
-    "common_syndromes": [
-      "nih"
-    ],
-    "intrinsic_resistance": [
-      "Aminoglucósidos",
-      "Polimixinas"
-    ],
-    "typical_resistance": [],
-    "stewardship_note": "Manejo requiere aislamiento de contacto estricto en FQ"
+    }
   },
   {
     "id": "haemophilus_ducreyi",
@@ -3009,7 +2102,7 @@ const pathogens = [
       "Agente del chancroide"
     ],
     "taxonomy": {
-      "gram": "negativo",
+      "gram": "negative",
       "morphology": "cocobacilos",
       "group": "Pasteurellaceae"
     },
@@ -3029,16 +2122,7 @@ const pathogens = [
     "appMeta": {
       "relevance": "moderada",
       "status": "active"
-    },
-    "category": "bacteria",
-    "tags": [
-      "gram_negative"
-    ],
-    "summary": "Causa úlceras genitales dolorosas (chancroide)",
-    "common_syndromes": [],
-    "intrinsic_resistance": [],
-    "typical_resistance": [],
-    "stewardship_note": "Tratamiento: Azitromicina o Ceftriaxona"
+    }
   }
 ];
 
