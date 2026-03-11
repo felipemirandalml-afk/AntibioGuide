@@ -118,8 +118,8 @@ const antibiotics = [
     }
   },
   {
-    "id": "penicilina_g",
-    "name": "Penicilina G (Sódica)",
+    "id": "bencilpenicilina_sodica",
+    "name": "Bencilpenicilina Sódica",
     "family": "Penicilina natural",
     "mechanism": "Bactericida. Bloquea la síntesis de la pared celular bacteriana.",
     "spectrum": "Streptococcus spp., Neisseria meningitidis, Treponema pallidum y Clostridium spp.",
@@ -129,7 +129,7 @@ const antibiotics = [
     "adverse": "Convulsiones (dosis altas o falla renal no ajustada), hipopotasemia.",
     "uses": "Meningitis meningocócica, endocarditis estreptocócica, sífilis neurológica, tétanos.",
     "synonyms": [
-      "bencilpenicilina"
+      "penicilina g"
     ],
     "clinical_metadata": {
       "aware": "Access",
@@ -160,26 +160,7 @@ const antibiotics = [
       "oral_option": true
     }
   },
-  {
-    "id": "penicilina_g_benzatinica",
-    "name": "Penicilina G Benzatínica",
-    "family": "Penicilina (IM depósito)",
-    "mechanism": "Inhibe síntesis de pared celular.",
-    "spectrum": "Estreptococos sensibles.",
-    "dose": "1.2 millones UI IM dosis única",
-    "renal": "Sin ajuste habitual.",
-    "contraindications": "Alergia a penicilinas.",
-    "adverse": "Dolor local, hipersensibilidad.",
-    "uses": "Faringitis estreptocócica (adherencia).",
-    "clinical_metadata": {
-      "aware": "Access",
-      "spectrum": "narrow",
-      "route_hint": "im",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": false,
-      "oral_option": false
-    }
-  },
+
   {
     "id": "piperacilina_tazobactam",
     "name": "Piperacilina-Tazobactam",
@@ -707,7 +688,7 @@ const antibiotics = [
   },
   {
     "id": "tmp_smx",
-    "name": "Trimetoprima-Sulfametoxazol",
+    "name": "Cotrimoxazol (TMP-SMX)",
     "family": "Antifolatos",
     "mechanism": "Inhibe síntesis de folato (dos pasos).",
     "spectrum": "MRSA comunitario, algunos Gram- urinarios.",
@@ -821,7 +802,8 @@ const antibiotics = [
       "route_hint": "ev",
       "anti_pseudomonas": true,
       "anaerobic_activity": false,
-      "oral_option": false
+      "oral_option": false,
+      "availability_note": "Preguntar disponibilidad en su centro"
     }
   },
   {
@@ -999,45 +981,8 @@ const antibiotics = [
       ]
     }
   },
-  {
-    "id": "ceftobiprol",
-    "name": "Ceftobiprol Medocarilo",
-    "family": "Cefalosporina de 5ta generación",
-    "mechanism": "Bactericida. Se une a PBPs incluyendo PBP2a del MRSA y PBP2x del neumococo resistente.",
-    "spectrum": "Grampositivos (MRSA, Neumococo resistente) y Gramnegativos (limitado contra Pseudomonas).",
-    "dose": "500 mg IV c/8 h en infusión de 2 h.",
-    "renal": "ClCr 30-50: 500 mg c/12 h; ClCr < 30: 250 mg c/12 h.",
-    "contraindications": "Hipersensibilidad a cefalosporinas.",
-    "adverse": "Disgeusia, náuseas, vómitos.",
-    "uses": "Neumonía intrahospitalaria (excluye NAVM), NAC grave.",
-    "clinical_metadata": {
-      "aware": "Reserve",
-      "spectrum": "broad",
-      "route_hint": "ev",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": false,
-      "oral_option": false
-    }
-  },
-  {
-    "id": "doripenem",
-    "name": "Doripenem",
-    "family": "Carbapenémicos",
-    "mechanism": "Bactericida. Inactiva PBPs esenciales, provocando inhibición de síntesis de pared celular",
-    "spectrum": "Amplio: Gram+, Enterobacterias, Pseudomonas aeruginosa y Anaerobios",
-    "dose": "500 mg c/8 h en infusión de 1-4 h (IV)",
-    "renal": "Clcr 30-50 ml/min: 250 mg c/8 h; Clcr < 30 ml/min: 250 mg c/12 h",
-    "contraindications": "Alergia a carbapenémicos o betalactámicos",
-    "adverse": "Náuseas, diarrea, riesgo de convulsiones",
-    "uses": "Neumonía nosocomial (incluyendo NAVM), infecciones intraabdominales y urinarias complicadas",
-    "clinical_metadata": {
-      "aware": "Reserve",
-      "spectrum": "broad",
-      "anti_pseudomonas": true,
-      "anaerobic_activity": true,
-      "oral_option": false
-    }
-  },
+
+
   {
     "id": "tobramicina",
     "name": "Tobramicina",
@@ -1134,44 +1079,6 @@ const antibiotics = [
     }
   },
   {
-    "id": "oxitetraciclina",
-    "name": "Oxitetraciclina",
-    "family": "Tetraciclinas",
-    "mechanism": "Bacteriostático. Inhibidor de la síntesis proteica bacteriana por unión a la subunidad 30S",
-    "spectrum": "Amplio espectro: Gram+, Gram-, atípicos y espiroquetas",
-    "dose": "250 mg c/6 h o 500 mg c/12 h (Oral)",
-    "renal": "",
-    "contraindications": "Hipersensibilidad a tetraciclinas. Evitar exposición solar (fotosensibilidad)",
-    "adverse": "Reacciones de fotosensibilidad, malestar gastrointestinal",
-    "uses": "Infecciones ORL, dentales, gastrointestinales, genitourinarias, de piel, brucelosis y tifus",
-    "clinical_metadata": {
-      "aware": "Access",
-      "spectrum": "broad",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": false,
-      "oral_option": true
-    }
-  },
-  {
-    "id": "fenoximetilpenicilina",
-    "name": "Fenoximetilpenicilina (Penicilina V)",
-    "family": "Penicilinas sensibles a beta-lactamasa",
-    "mechanism": "Bactericida. Bloquea la reparación y la síntesis de la pared bacteriana",
-    "spectrum": "Estreptococos (incluyendo S. pyogenes) y algunos anaerobios orales",
-    "dose": "500.000 - 1.000.000 UI c/12 h (Oral)",
-    "renal": "",
-    "contraindications": "Hipersensibilidad a penicilinas",
-    "adverse": "Reacciones alérgicas, exantema cutáneo, molestias gastrointestinales leves",
-    "uses": "Faringoamigdalitis estreptocócica, profilaxis de endocarditis y fiebre reumática",
-    "clinical_metadata": {
-      "aware": "Access",
-      "spectrum": "narrow",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": true,
-      "oral_option": true
-    }
-  },
-  {
     "id": "cefradina",
     "name": "Cefradina",
     "family": "Cefalosporina de 1ª generación",
@@ -1201,25 +1108,6 @@ const antibiotics = [
     "contraindications": "Hipersensibilidad a cefalosporinas",
     "adverse": "Riesgo de colitis pseudomembranosa, reacciones alérgicas",
     "uses": "Otitis media, infecciones respiratorias superiores e inferiores, ITU no complicada",
-    "clinical_metadata": {
-      "aware": "Watch",
-      "spectrum": "broad",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": false,
-      "oral_option": true
-    }
-  },
-  {
-    "id": "loracarbef",
-    "name": "Loracarbef",
-    "family": "Cefalosporina de 2ª generación (Carbacefem)",
-    "mechanism": "Bactericida. Inhibe la síntesis de la pared celular",
-    "spectrum": "Grampositivos (S. pyogenes, S. aureus) y Gramnegativos (E. coli, H. influenzae)",
-    "dose": "200-400 mg c/12 h (Oral)",
-    "renal": "Clcr 10-49 ml/min: 50% de la dosis c/12 h o dosis normal c/24 h; Clcr < 10: dosis c/3-5 días",
-    "contraindications": "Hipersensibilidad a cefalosporinas",
-    "adverse": "",
-    "uses": "Exacerbación de bronquitis, sinusitis, neumonía, ITU no complicada, infecciones de piel",
     "clinical_metadata": {
       "aware": "Watch",
       "spectrum": "broad",
@@ -1267,25 +1155,6 @@ const antibiotics = [
     }
   },
   {
-    "id": "cefdinir",
-    "name": "Cefdinir",
-    "family": "Cefalosporina de 3ª generación",
-    "mechanism": "Bactericida. Inhibe la síntesis de la pared celular bacteriana",
-    "spectrum": "Grampositivos (S. aureus MSSA, S. pyogenes) y Gramnegativos respiratorios",
-    "dose": "300 mg c/12 h o 600 mg c/24 h (Oral)",
-    "renal": "Clcr < 30 ml/min: máximo 300 mg/día",
-    "contraindications": "Alergia a cefalosporinas",
-    "adverse": "Heces rojizas, diarrea, molestias gastrointestinales",
-    "uses": "Neumonía comunitaria leve, exacerbación de bronquitis crónica, sinusitis aguda, infecciones de piel",
-    "clinical_metadata": {
-      "aware": "Watch",
-      "spectrum": "broad",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": false,
-      "oral_option": true
-    }
-  },
-  {
     "id": "ceftobiprol_medocarilo",
     "name": "Ceftobiprol Medocarilo",
     "family": "Cefalosporina de 5ª generación",
@@ -1301,28 +1170,11 @@ const antibiotics = [
       "spectrum": "broad",
       "anti_pseudomonas": false,
       "anaerobic_activity": false,
-      "oral_option": false
+      "oral_option": false,
+      "availability_note": "Preguntar disponibilidad en su centro"
     }
   },
-  {
-    "id": "ceftarolina_fosamilo",
-    "name": "Ceftarolina Fosamilo",
-    "family": "Cefalosporina de 5ª generación",
-    "mechanism": "Bactericida. Inhibe la pared celular uniéndose fuertemente a PBP2a y PBP2x",
-    "spectrum": "Amplia cobertura Grampositiva (SARM y Neumococo resistente) y algunos Gramnegativos",
-    "dose": "600 mg c/12 h en infusión de 60 min (IV)",
-    "renal": "Clcr 30-50: 400 mg c/12 h; Clcr 15-30: 300 mg c/12 h",
-    "contraindications": "Alergia a cefalosporinas o betalactámicos",
-    "adverse": "Diarrea, erupción cutánea, test de Coombs positivo",
-    "uses": "Infecciones complicadas de piel y tejidos blandos (SARM), Neumonía comunitaria grave",
-    "clinical_metadata": {
-      "aware": "Reserve",
-      "spectrum": "broad",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": false,
-      "oral_option": false
-    }
-  },
+
   {
     "id": "sulfametoxazol_trimetoprima",
     "name": "Sulfametoxazol-Trimetoprima (Cotrimoxazol)",
@@ -1361,25 +1213,7 @@ const antibiotics = [
       "oral_option": true
     }
   },
-  {
-    "id": "metampicilina",
-    "name": "Metampicilina",
-    "family": "Penicilinas de amplio espectro",
-    "mechanism": "Bactericida. Inhibe la síntesis y la reparación de la pared bacteriana",
-    "spectrum": "Amplio espectro frente a Grampositivos y Gramnegativos sensibles",
-    "dose": "250-500 mg c/6 h (Oral). Neumonía: 500 mg c/6 h",
-    "renal": "Clcr 10-50 ml/min: administrar 1/2 de la dosis habitual",
-    "contraindications": "Hipersensibilidad a penicilinas o betalactámicos",
-    "adverse": "",
-    "uses": "Faringitis, otitis media, neumonía, gonorrea, infecciones de piel y tejidos blandos, meningitis",
-    "clinical_metadata": {
-      "aware": "Access",
-      "spectrum": "broad",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": false,
-      "oral_option": true
-    }
-  },
+
   {
     "id": "bencilpenicilina_benzatina",
     "name": "Bencilpenicilina Benzatina (Penicilina G Benzatina)",
@@ -1399,82 +1233,10 @@ const antibiotics = [
       "oral_option": false
     }
   },
-  {
-    "id": "ticarcilina_acido_clavulanico",
-    "name": "Ticarcilina-Ácido Clavulánico",
-    "family": "Penicilina antipseudomónica + Inhibidor de beta-lactamasas",
-    "mechanism": "Inhibe la síntesis de pared bacteriana mientras el clavulanato bloquea las beta-lactamasas",
-    "spectrum": "Klebsiella spp, E. coli, S. aureus, P. aeruginosa y anaerobios como Bacteroides fragilis",
-    "dose": "Información no disponible",
-    "renal": "",
-    "contraindications": "Alergia a penicilinas o inhibidores de beta-lactamasas",
-    "adverse": "",
-    "uses": "Septicemias, infecciones respiratorias bajas, osteoarticulares, ginecológicas e intraabdominales (peritonitis)",
-    "clinical_metadata": {
-      "aware": "Watch",
-      "spectrum": "broad",
-      "anti_pseudomonas": true,
-      "anaerobic_activity": true,
-      "oral_option": false
-    }
-  },
-  {
-    "id": "cefprozilo",
-    "name": "Cefprozilo",
-    "family": "Cefalosporina de 2ª generación",
-    "mechanism": "Bactericida. Inhibe la síntesis de pared celular bacteriana",
-    "spectrum": "Grampositivos (S. pyogenes, S. pneumoniae, S. aureus) y respiratorios (H. influenzae, M. catarrhalis)",
-    "dose": "250-500 mg c/12-24 h (Oral)",
-    "renal": "",
-    "contraindications": "Hipersensibilidad a cefalosporinas",
-    "adverse": "",
-    "uses": "Faringitis, otitis media, sinusitis, exacerbación de bronquitis, neumonía, infecciones de piel",
-    "clinical_metadata": {
-      "aware": "Watch",
-      "spectrum": "broad",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": false,
-      "oral_option": true
-    }
-  },
-  {
-    "id": "cefminox",
-    "name": "Cefminox",
-    "family": "Cefalosporina de 2ª generación (Cefamicina)",
-    "mechanism": "Bactericida de amplio espectro. Inhibe la síntesis de pared celular",
-    "spectrum": "Bacilos Gramnegativos, Grampositivos y actividad destacada frente a anaerobios",
-    "dose": "2 g c/12 h (IV)",
-    "renal": "Ajuste necesario en insuficiencia renal grave según características del paciente",
-    "contraindications": "Hipersensibilidad a betalactámicos",
-    "adverse": "",
-    "uses": "Infecciones mixtas, peritonitis secundaria, profilaxis quirúrgica intraabdominal",
-    "clinical_metadata": {
-      "aware": "Watch",
-      "spectrum": "broad",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": true,
-      "oral_option": false
-    }
-  },
-  {
-    "id": "cefpiroma",
-    "name": "Cefpiroma",
-    "family": "Cefalosporina de 4ª generación",
-    "mechanism": "Bactericida. Altera síntesis de peptidoglicano. Alta estabilidad frente a beta-lactamasas",
-    "spectrum": "Amplio espectro: cocos Grampositivos y bacilos Gramnegativos resistentes",
-    "dose": "1-2 g c/12 h (IV en infusión de 20-30 min)",
-    "renal": "Clcr 20-50: 1-2 g de ataque, luego 0.5-1 g c/12 h; Clcr < 20: reducir dosis a c/24 h",
-    "contraindications": "Hipersensibilidad a cefalosporinas",
-    "adverse": "",
-    "uses": "Infección respiratoria baja grave, infección urinaria complicada, septicemia, bacteriemia",
-    "clinical_metadata": {
-      "aware": "Reserve",
-      "spectrum": "broad",
-      "anti_pseudomonas": true,
-      "anaerobic_activity": false,
-      "oral_option": false
-    }
-  },
+
+
+
+
   {
     "id": "meropenem_vaborbactam",
     "name": "Meropenem-Vaborbactam",
@@ -1491,7 +1253,8 @@ const antibiotics = [
       "spectrum": "broad",
       "anti_pseudomonas": true,
       "anaerobic_activity": true,
-      "oral_option": false
+      "oral_option": false,
+      "availability_note": "Preguntar disponibilidad en su centro"
     }
   },
   {
@@ -1586,28 +1349,11 @@ const antibiotics = [
       "spectrum": "broad",
       "anti_pseudomonas": false,
       "anaerobic_activity": false,
-      "oral_option": true
+      "oral_option": true,
+      "availability_note": "Preguntar disponibilidad en su centro"
     }
   },
-  {
-    "id": "quinupristina_dalfopristina",
-    "name": "Quinupristina / Dalfopristina",
-    "family": "Estreptograminas",
-    "mechanism": "Inhibición sinérgica de la síntesis proteica bacteriana",
-    "spectrum": "Grampositivos resistentes: Estafilococos, Estreptococos y E. faecium resistente a vancomicina (VRE)",
-    "dose": "Información no disponible",
-    "renal": "",
-    "contraindications": "Usar solo sin alternativas disponibles",
-    "adverse": "",
-    "uses": "Neumonía nosocomial por cepas resistentes, infecciones cutáneas por E. faecium VRE",
-    "clinical_metadata": {
-      "aware": "Reserve",
-      "spectrum": "narrow",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": false,
-      "oral_option": false
-    }
-  },
+
   {
     "id": "rifabutina",
     "name": "Rifabutina",
@@ -1662,7 +1408,8 @@ const antibiotics = [
       "spectrum": "narrow",
       "anti_pseudomonas": false,
       "anaerobic_activity": false,
-      "oral_option": true
+      "oral_option": true,
+      "availability_note": "Preguntar disponibilidad en su centro"
     }
   },
   {
