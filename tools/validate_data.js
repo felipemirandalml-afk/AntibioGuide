@@ -246,6 +246,31 @@ function validatePathogens(data, syndromeIds) {
 
 function validateSyndromes(data, pathogenIds, antibioticsIds) {
   const syndromeIds = getIdSet(data.syndromes);
+  const validScenarios = new Set([
+    "outpatient",
+    "outpatient_comorbid",
+    "outpatient_uncomplicated",
+    "outpatient_mild",
+    "outpatient_purulent_or_mrsa_risk",
+    "outpatient_nonpurulent",
+    "outpatient_or_inpatient",
+    "inpatient",
+    "inpatient_non_icu",
+    "inpatient_or_ed",
+    "inpatient_moderate_severe",
+    "inpatient_severe_nosocomial",
+    "inpatient_severe_or_risk_pseudomonas",
+    "inpatient_esbl_risk",
+    "inpatient_non_icu_low_risk",
+    "inpatient_non_icu_high_risk",
+    "inpatient_nonpurulent",
+    "nve_or_pve_late",
+    "pve_early_or_nosocomial",
+    "nve",
+    "nve_selected_short_course",
+    "pve",
+    "nve_or_pve"
+  ]);
 
   (data.syndromes || []).forEach((syndrome, sIndex) => {
     if (!syndrome) return;
@@ -280,9 +305,16 @@ function validateSyndromes(data, pathogenIds, antibioticsIds) {
             addWarn("missing_regimen_name", `${rCtx} missing name/title/regimen`);
           }
 
-          assertString(regimen, "type", rCtx, false); // type might be optional in very old data, better safe
+          assertString(regimen, "type", rCtx, true); 
+          assertString(regimen, "scenario", rCtx, true);
 
-          if (regimen.drugIds !== undefined) {
+          if (regimen.scenario && !validScenarios.has(regimen.scenario)) {
+            addWarn("unknown_scenario", `${rCtx} has non-standard scenario "${regimen.scenario}"`);
+          }
+
+          if (regimen.drugIds === undefined) {
+            addError("missing_drugIds", `${rCtx} is missing required drugIds array`);
+          } else {
             assertArray(regimen, "drugIds", rCtx);
             if (Array.isArray(regimen.drugIds)) {
               if (regimen.drugIds.length === 0) {

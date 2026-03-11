@@ -224,7 +224,7 @@ const syndromes = [
       {
         name: "Hospitalario Empírico",
         type: "empiric",
-        scenario: "hospital",
+        scenario: "inpatient",
         drug: "Ceftriaxona",
         drugIds: ["ceftriaxona"],
         dose: "1-2 g",
@@ -239,7 +239,7 @@ const syndromes = [
       {
         name: "Hospitalario Alternativa",
         type: "empiric",
-        scenario: "hospital",
+        scenario: "inpatient",
         drug: "Piperacilina-Tazobactam",
         drugIds: ["piperacilina_tazobactam"],
         dose: "4.5 g",
@@ -271,7 +271,7 @@ const syndromes = [
       {
         name: "Empírico Hospitalario",
         type: "empiric",
-        scenario: "hospital",
+        scenario: "inpatient",
         drug: "Ceftriaxona",
         drugIds: ["ceftriaxona"],
         dose: "1-2 g",
@@ -286,7 +286,7 @@ const syndromes = [
       {
         name: "Alternativa Amplio Espectro",
         type: "empiric",
-        scenario: "hospital",
+        scenario: "inpatient",
         drug: "Piperacilina-Tazobactam",
         drugIds: ["piperacilina_tazobactam"],
         dose: "4.5 g",
@@ -322,7 +322,7 @@ const syndromes = [
       {
         name: "Empírico Hospitalario",
         type: "empiric",
-        scenario: "hospital",
+        scenario: "inpatient",
         drug: "Ceftriaxona",
         drugIds: ["ceftriaxona"],
         dose: "1-2 g",
@@ -337,7 +337,7 @@ const syndromes = [
       {
         name: "Riesgo de Pseudomonas",
         type: "empiric",
-        scenario: "hospital",
+        scenario: "inpatient",
         drug: "Piperacilina-Tazobactam",
         drugIds: ["piperacilina_tazobactam"],
         dose: "4.5 g",
