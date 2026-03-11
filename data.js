@@ -2,6 +2,8 @@
  * =========================================================================
  * COMPATIBILITY ADAPTER (data.js)
  * =========================================================================
+ * AUTOMATED PROXY / LEGACY ADAPTER — EDIT /data/ INSTEAD
+ * =========================================================================
  * 
  * Notice: The official and structural source of data for AntibioGuide resides 
  * strictly in the `/data` directory (e.g. /data/syndromes.js, etc).

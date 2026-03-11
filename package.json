@@ -2,7 +2,7 @@
     "name": "antibio-guide",
     "version": "1.0.0",
     "description": "Clinical decision support web app",
-    "main": "data.js",
+    "main": "data/index.js",
     "scripts": {
         "test:engine": "node tools/test_clinical_engine.js"
     },

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const csvPath = path.join(__dirname, '..', 'data-files', 'pathogens.csv');
+const csvPath = path.join(__dirname, '..', 'data-files', 'seeds', 'pathogens.csv');
 const outPath = path.join(__dirname, '..', 'data', 'pathogens.js');
 
 // Load current pathogens to preserve those not in the CSV
