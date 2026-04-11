@@ -6,6 +6,55 @@ const clinicalData = require(path.join(__dirname, "..", "data.js"));
 
 const errors = [];
 const warnings = [];
+const expectedPendingSyndromeRefs = new Set([
+  "absceso_cerebral",
+  "absceso_pulmonar",
+  "artritis_septica",
+  "bacteriemia",
+  "bacteriemia_asociada_cateter",
+  "candidemia",
+  "cervicitis",
+  "cistitis_aguda",
+  "colonizacion_cutanea_persistente",
+  "conjuntivitis_neonatal",
+  "diarrea_disenterica",
+  "endocarditis_cultivo_negativo",
+  "enfermedad_pelvica_inflamatoria",
+  "espondilodiscitis",
+  "exacerbacion_epoc",
+  "gastroenteritis_aguda",
+  "hepatitis_granulomatosa",
+  "infeccion_asociada_embarazo",
+  "infeccion_cutanea_primaria",
+  "infeccion_cervicofacial",
+  "infeccion_endovascular",
+  "infeccion_herida_operatoria",
+  "infeccion_intraabdominal",
+  "infeccion_invasora",
+  "infeccion_necrotizante_tejidos_blandos",
+  "infeccion_tracto_respiratorio_fq",
+  "itu_asociada_cateter",
+  "itu_baja",
+  "linfadenitis_regional",
+  "meningitis_bacteriana",
+  "mionecrosis",
+  "neumonia_adquirida_comunidad",
+  "neumonia_adquirida_comunidad_grave",
+  "neumonia_asociada_cuidados_salud",
+  "neumonia_asociada_ventilacion",
+  "neumonia_atipica",
+  "neumonia_cavitada",
+  "neumonia_intrahospitalaria",
+  "osteoartritis",
+  "otitis_media_aguda",
+  "romboencefalitis",
+  "sepsis_neonatal",
+  "sindrome_febril_agudo",
+  "sindrome_febril_prolongado",
+  "sinusitis_aguda",
+  "uretritis",
+  "intoxicacion_alimentaria"
+]);
 
 function addError(type, message) {
   errors.push({ type, message });
@@ -205,7 +254,11 @@ function validatePathogens(data, syndromeIds) {
         if (Array.isArray(p.clinical.usualSyndromes)) {
           p.clinical.usualSyndromes.forEach(sId => {
             if (!syndromeIds.has(sId)) {
-              addWarn("missing_clinical_syndrome_ref", `${ctx} syndrome ref "${sId}" in usualSyndromes not found`);
+              if (expectedPendingSyndromeRefs.has(sId)) {
+                addWarn("planned_clinical_syndrome_ref", `${ctx} syndrome ref "${sId}" is pending by roadmap`);
+              } else {
+                addWarn("missing_clinical_syndrome_ref", `${ctx} syndrome ref "${sId}" in usualSyndromes not found`);
+              }
             }
           });
         }
@@ -414,8 +467,24 @@ function printReport(data) {
   }
 
   if (warnings.length > 0) {
+    const plannedRefWarnings = warnings.filter(w => w.type === "planned_clinical_syndrome_ref");
     const obsoleteKeyWarnings = warnings.filter(w => w.type === "obsolete_key");
-    const otherWarnings = warnings.filter(w => w.type !== "obsolete_key");
+    const otherWarnings = warnings.filter((w) => w.type !== "obsolete_key" && w.type !== "planned_clinical_syndrome_ref");
+
+    if (plannedRefWarnings.length > 0) {
+      const plannedIds = new Set();
+
+      plannedRefWarnings.forEach((w) => {
+        const syndromeMatch = w.message.match(/syndrome ref "([^"]+)"/);
+        if (syndromeMatch) {
+          plannedIds.add(syndromeMatch[1]);
+        }
+      });
+
+      console.log("[WARN] planned_clinical_syndrome_ref summary: backlog references kept intentionally");
+      console.log(`- occurrences: ${plannedRefWarnings.length}`);
+      console.log(`- unique syndrome ids: ${plannedIds.size}`);
+    }
 
     if (obsoleteKeyWarnings.length > 0) {
       const keyCounts = {};

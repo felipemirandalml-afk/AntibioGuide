@@ -4,6 +4,7 @@
     "description": "Clinical decision support web app",
     "main": "data/index.js",
     "scripts": {
+        "validate:data": "node tools/validate_data.js",
         "test:engine": "node tools/test_clinical_engine.js"
     },
     "keywords": [],

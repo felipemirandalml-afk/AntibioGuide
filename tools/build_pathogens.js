@@ -48,7 +48,7 @@ function build() {
             errors++;
         }
 
-        // 2. Derive legacy fields to maintain 100% app.js backwards-compatibility
+        // 2. Derive legacy fields to maintain backwards compatibility for legacy consumers
         const legacyCategory = p.taxonomy && p.taxonomy.group === 'Fungi' ? 'fungi' : 'bacteria';
         const legacyTags = [];
 
