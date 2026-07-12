@@ -377,6 +377,7 @@ function validateSyndromes(data, pathogenIds, antibioticsIds) {
     "outpatient_comorbid",
     "outpatient_uncomplicated",
     "outpatient_mild",
+    "outpatient_severe",   // contraparte de outpatient_mild: cuadro severo aún manejable de forma ambulatoria (p. ej. OMA del adulto con fiebre, hipoacusia marcada, dolor severo o eritema marcado)
     "outpatient_purulent_or_mrsa_risk",
     "outpatient_nonpurulent",
     "outpatient_or_inpatient",
