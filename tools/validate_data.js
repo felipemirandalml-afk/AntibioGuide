@@ -6,7 +6,26 @@ const clinicalData = require(path.join(__dirname, "..", "data.js"));
 
 const errors = [];
 const warnings = [];
+/**
+ * ROADMAP DE SÍNDROMES
+ *
+ * Referencias desde pathogens.clinical.usualSyndromes hacia síndromes que
+ * todavía no existen en syndromes.js. Se mantienen a propósito: la capa de
+ * patógenos declara la verdad clínica (qué causa cada germen) y va por delante
+ * de la capa de síndromes.
+ *
+ * NO incluir aquí alias de síndromes ya definidos. El vocabulario de ids debe
+ * ser único: si un patógeno referencia "neumonia_adquirida_comunidad" cuando
+ * ya existe "nac", eso NO es backlog — es deuda de vocabulario, y se corrige
+ * en pathogens.js.
+ *
+ * Alias normalizados (2026-07-12): neumonia_adquirida_comunidad→nac,
+ * neumonia_intrahospitalaria→nih, meningitis_bacteriana→meningitis,
+ * infeccion_intraabdominal→intraabdominal, enfermedad_pelvica_inflamatoria→epi,
+ * itu_asociada_cateter→itu_cauti, cistitis_aguda/itu_baja→itu_cistitis.
+ */
 const expectedPendingSyndromeRefs = new Set([
+  // --- Nuevos por escribir (30) ---
   "absceso_cerebral",
   "absceso_pulmonar",
   "artritis_septica",
@@ -14,46 +33,52 @@ const expectedPendingSyndromeRefs = new Set([
   "bacteriemia_asociada_cateter",
   "candidemia",
   "cervicitis",
-  "cistitis_aguda",
-  "colonizacion_cutanea_persistente",
-  "conjuntivitis_neonatal",
   "diarrea_disenterica",
-  "endocarditis_cultivo_negativo",
-  "enfermedad_pelvica_inflamatoria",
   "espondilodiscitis",
   "exacerbacion_epoc",
   "gastroenteritis_aguda",
   "hepatitis_granulomatosa",
   "infeccion_asociada_embarazo",
-  "infeccion_cutanea_primaria",
   "infeccion_cervicofacial",
-  "infeccion_endovascular",
   "infeccion_herida_operatoria",
-  "infeccion_intraabdominal",
-  "infeccion_invasora",
   "infeccion_necrotizante_tejidos_blandos",
   "infeccion_tracto_respiratorio_fq",
-  "itu_asociada_cateter",
-  "itu_baja",
+  "intoxicacion_alimentaria",
   "linfadenitis_regional",
-  "meningitis_bacteriana",
   "mionecrosis",
-  "neumonia_adquirida_comunidad",
-  "neumonia_adquirida_comunidad_grave",
   "neumonia_asociada_cuidados_salud",
   "neumonia_asociada_ventilacion",
-  "neumonia_atipica",
   "neumonia_cavitada",
-  "neumonia_intrahospitalaria",
   "osteoartritis",
   "otitis_media_aguda",
   "romboencefalitis",
-  "sepsis_neonatal",
   "sindrome_febril_agudo",
   "sindrome_febril_prolongado",
   "sinusitis_aguda",
   "uretritis",
-  "intoxicacion_alimentaria"
+
+  // --- Posibles VARIANTES de un síndrome existente (5) ---
+  // Decisión clínica pendiente: ¿síndrome propio, o `scenario` dentro del existente?
+  "neumonia_adquirida_comunidad_grave",   // ¿escenario grave/UCI de `nac`?
+  "neumonia_atipica",                     // ¿targets atípicos de `nac`?
+  "endocarditis_cultivo_negativo",        // ¿escenario de `endocarditis_infecciosa`?
+  "infeccion_cutanea_primaria",           // solapa con `celulitis`
+  "infeccion_endovascular",               // solapa con `endocarditis_infecciosa` / `bacteriemia`
+]);
+
+/**
+ * FUERA DE ALCANCE — no se implementarán como síndrome.
+ *
+ * La referencia se conserva en pathogens.js porque es CLÍNICAMENTE CIERTA
+ * (S. agalactiae sí causa sepsis neonatal), pero queda fuera del alcance de
+ * esta aplicación, que es de ADULTOS. Declararlo explícitamente evita que
+ * reaparezca como "pendiente" en cada validación.
+ */
+const outOfScopeSyndromeRefs = new Map([
+  ["sepsis_neonatal", "neonatal — la app es de adultos"],
+  ["conjuntivitis_neonatal", "neonatal — la app es de adultos"],
+  ["colonizacion_cutanea_persistente", "colonización, no infección tratable"],
+  ["infeccion_invasora", "término inespecífico, no es un síndrome accionable"],
 ]);
 
 function addError(type, message) {
@@ -254,10 +279,15 @@ function validatePathogens(data, syndromeIds) {
         if (Array.isArray(p.clinical.usualSyndromes)) {
           p.clinical.usualSyndromes.forEach(sId => {
             if (!syndromeIds.has(sId)) {
-              if (expectedPendingSyndromeRefs.has(sId)) {
+              if (outOfScopeSyndromeRefs.has(sId)) {
+                // Fuera de alcance a propósito: no es backlog ni error.
+                addWarn("out_of_scope_syndrome_ref", `${ctx} syndrome ref "${sId}" is out of scope (${outOfScopeSyndromeRefs.get(sId)})`);
+              } else if (expectedPendingSyndromeRefs.has(sId)) {
                 addWarn("planned_clinical_syndrome_ref", `${ctx} syndrome ref "${sId}" is pending by roadmap`);
               } else {
-                addWarn("missing_clinical_syndrome_ref", `${ctx} syndrome ref "${sId}" in usualSyndromes not found`);
+                // Ni definido, ni en el roadmap, ni fuera de alcance.
+                // Suele ser un ALIAS de un síndrome existente → deuda de vocabulario.
+                addWarn("missing_clinical_syndrome_ref", `${ctx} syndrome ref "${sId}" in usualSyndromes not found (¿alias de un síndrome ya definido?)`);
               }
             }
           });
@@ -468,8 +498,25 @@ function printReport(data) {
 
   if (warnings.length > 0) {
     const plannedRefWarnings = warnings.filter(w => w.type === "planned_clinical_syndrome_ref");
+    const outOfScopeWarnings = warnings.filter(w => w.type === "out_of_scope_syndrome_ref");
     const obsoleteKeyWarnings = warnings.filter(w => w.type === "obsolete_key");
-    const otherWarnings = warnings.filter((w) => w.type !== "obsolete_key" && w.type !== "planned_clinical_syndrome_ref");
+    const otherWarnings = warnings.filter((w) =>
+      w.type !== "obsolete_key" &&
+      w.type !== "planned_clinical_syndrome_ref" &&
+      w.type !== "out_of_scope_syndrome_ref"
+    );
+
+    if (outOfScopeWarnings.length > 0) {
+      const oosIds = new Set();
+      outOfScopeWarnings.forEach((w) => {
+        const m = w.message.match(/syndrome ref "([^"]+)"/);
+        if (m) oosIds.add(m[1]);
+      });
+      console.log("[INFO] out_of_scope_syndrome_ref: referencias clínicamente ciertas pero fuera del alcance de la app (adultos)");
+      console.log(`- occurrences: ${outOfScopeWarnings.length}`);
+      console.log(`- unique syndrome ids: ${oosIds.size}  (${[...oosIds].join(", ")})`);
+      console.log("");
+    }
 
     if (plannedRefWarnings.length > 0) {
       const plannedIds = new Set();

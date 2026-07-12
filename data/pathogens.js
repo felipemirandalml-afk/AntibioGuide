@@ -417,8 +417,7 @@ const pathogens = [
     "clinical": {
       "summary": "Segunda causa más común de cistitis no complicada en mujeres jóvenes sexualmente activas (después de E. coli).",
       "usualSyndromes": [
-        "itu_baja",
-        "cistitis_aguda"
+        "itu_cistitis"
       ],
       "context": "Comunitario",
       "pearls": [
@@ -571,7 +570,7 @@ const pathogens = [
       "usualSyndromes": [
         "uretritis",
         "cervicitis",
-        "enfermedad_pelvica_inflamatoria",
+        "epi",
         "artritis_septica",
         "conjuntivitis_neonatal"
       ],
@@ -748,7 +747,7 @@ const pathogens = [
     "clinical": {
       "summary": "Patógeno transmitido por alimentos que causa meningoencefalitis y sepsis severa en recién nacidos, embarazadas, ancianos e inmunocomprometidos.",
       "usualSyndromes": [
-        "meningitis_bacteriana",
+        "meningitis",
         "romboencefalitis",
         "sepsis_neonatal",
         "infeccion_asociada_embarazo"
@@ -1195,8 +1194,8 @@ const pathogens = [
     "clinical": {
       "summary": "Enterococo menos prevalente pero altamente resistente, causante de infecciones nosocomiales, frecuentemente portador de genes de resistencia a vancomicina (vanA/vanB).",
       "usualSyndromes": [
-        "infeccion_intraabdominal",
-        "itu_asociada_cateter",
+        "intraabdominal",
+        "itu_cauti",
         "bacteriemia",
         "endocarditis_infecciosa"
       ],
@@ -1328,7 +1327,7 @@ const pathogens = [
     "clinical": {
       "summary": "Enterobacteria nosocomial productora de AmpC inducible, frecuentemente asociada a infecciones del tracto urinario, bacteriemias y contaminación de soluciones/dispositivos médicos.",
       "usualSyndromes": [
-        "itu_asociada_cateter",
+        "itu_cauti",
         "neumonia_asociada_cuidados_salud",
         "bacteriemia"
       ],
@@ -1555,7 +1554,7 @@ const pathogens = [
         "exacerbacion_epoc",
         "otitis_media_aguda",
         "sinusitis_aguda",
-        "neumonia_adquirida_comunidad"
+        "nac"
       ],
       "context": "Comunitario",
       "pearls": [
@@ -1754,7 +1753,7 @@ const pathogens = [
       "summary": "Agente etiológico de neumonía atípica severa, a menudo asociada a brotes epidémicos por sistemas de agua contaminados o aires acondicionados.",
       "usualSyndromes": [
         "neumonia_adquirida_comunidad_grave",
-        "neumonia_intrahospitalaria"
+        "nih"
       ],
       "context": "Comunitario / Brotes intrahospitalarios",
       "pearls": [
@@ -2331,7 +2330,7 @@ const pathogens = [
       "summary": "Bacteria anaerobia/microaerófila de la flora oral y gastrointestinal normal, causante de infecciones granulomatosas crónicas.",
       "usualSyndromes": [
         "infeccion_cervicofacial",
-        "enfermedad_pelvica_inflamatoria",
+        "epi",
         "absceso_pulmonar"
       ],
       "context": "Comunitario",
