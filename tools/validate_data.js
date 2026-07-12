@@ -46,14 +46,10 @@ const expectedPendingSyndromeRefs = new Set([
   "intoxicacion_alimentaria",
   "linfadenitis_regional",
   "mionecrosis",
-  "neumonia_asociada_cuidados_salud",
   "neumonia_asociada_ventilacion",
   "neumonia_cavitada",
   "osteoartritis",
   "otitis_media_aguda",
-  "romboencefalitis",
-  "sindrome_febril_agudo",
-  "sindrome_febril_prolongado",
   "sinusitis_aguda",
   "uretritis",
 
@@ -80,6 +76,50 @@ const outOfScopeSyndromeRefs = new Map([
   ["colonizacion_cutanea_persistente", "colonización, no infección tratable"],
   ["infeccion_invasora", "término inespecífico, no es un síndrome accionable"],
 ]);
+
+/**
+ * NO SON SÍNDROMES DE TERAPIA EMPÍRICA.
+ *
+ * Estas referencias son CLÍNICAMENTE CIERTAS y se conservan en pathogens.js
+ * porque informan al clínico (la fiebre Q sí causa hepatitis granulomatosa).
+ * Pero NO son blancos de tratamiento antibiótico empírico: son presentaciones
+ * que se ESTUDIAN y se tratan de forma DIRIGIDA una vez identificado el agente.
+ *
+ * Darle un régimen empírico a un "síndrome febril prolongado" sería un
+ * antipatrón: la fiebre de origen desconocido se investiga, no se cubre a ciegas.
+ * Por eso no se implementarán como síndrome en el motor.
+ */
+const notEmpiricSyndromeRefs = new Map([
+  ["sindrome_febril_agudo", "presentación diagnóstica (fiebre Q), no blanco empírico — se estudia y se trata dirigido"],
+  ["sindrome_febril_prolongado", "FOD (brucelosis): se investiga, NO se cubre empíricamente a ciegas"],
+  ["hepatitis_granulomatosa", "manifestación de fiebre Q: diagnóstico serológico + terapia dirigida (doxiciclina)"],
+  ["romboencefalitis", "listeriosis del SNC: mismo tratamiento que la meningitis por Listeria (ampicilina). Evaluar como escenario de `meningitis`"],
+]);
+
+/**
+ * SÍNDROMES ELIMINADOS DEL ROADMAP POR EVIDENCIA.
+ *
+ * Documentado aquí para que la decisión no se pierda ni se revierta por olvido.
+ *
+ * - neumonia_asociada_cuidados_salud (HCAP)
+ *   La categoría fue ABANDONADA. Los criterios de HCAP rindieron mal para
+ *   predecir patógenos multirresistentes, y el tratamiento de amplio espectro
+ *   según guía NO redujo la mortalidad.
+ *     · Ewig S, Kolditz M, Pletz MW, Chalmers J. "Healthcare-associated
+ *       pneumonia: is there any reason to continue to utilize this label in
+ *       2019?" Clin Microbiol Infect. 2019;25(10):1173-9.
+ *       doi:10.1016/j.cmi.2019.02.022
+ *       → "HCAP should no longer be used to identify patients at risk of MDR pathogens."
+ *     · La guía IDSA/ATS 2016 de HAP/VAP eliminó la categoría:
+ *       Kalil AC, et al. Clin Infect Dis. 2016;63(5):e61-e111. doi:10.1093/cid/ciw353
+ *
+ *   Mantener HCAP en una app de OPTIMIZACIÓN de antimicrobianos sería
+ *   contraproducente: su efecto conocido es gatillar amplio espectro innecesario.
+ *
+ *   Acción tomada: `serratia_marcescens` se remapeó de
+ *   `neumonia_asociada_cuidados_salud` a `nih`, que es la categoría vigente y
+ *   clínicamente correcta (Serratia es un patógeno nosocomial clásico).
+ */
 
 function addError(type, message) {
   errors.push({ type, message });
@@ -282,6 +322,9 @@ function validatePathogens(data, syndromeIds) {
               if (outOfScopeSyndromeRefs.has(sId)) {
                 // Fuera de alcance a propósito: no es backlog ni error.
                 addWarn("out_of_scope_syndrome_ref", `${ctx} syndrome ref "${sId}" is out of scope (${outOfScopeSyndromeRefs.get(sId)})`);
+              } else if (notEmpiricSyndromeRefs.has(sId)) {
+                // Cierto clínicamente, pero no es blanco de terapia empírica.
+                addWarn("not_empiric_syndrome_ref", `${ctx} syndrome ref "${sId}" no es blanco empírico (${notEmpiricSyndromeRefs.get(sId)})`);
               } else if (expectedPendingSyndromeRefs.has(sId)) {
                 addWarn("planned_clinical_syndrome_ref", `${ctx} syndrome ref "${sId}" is pending by roadmap`);
               } else {
@@ -499,22 +542,37 @@ function printReport(data) {
   if (warnings.length > 0) {
     const plannedRefWarnings = warnings.filter(w => w.type === "planned_clinical_syndrome_ref");
     const outOfScopeWarnings = warnings.filter(w => w.type === "out_of_scope_syndrome_ref");
+    const notEmpiricWarnings = warnings.filter(w => w.type === "not_empiric_syndrome_ref");
     const obsoleteKeyWarnings = warnings.filter(w => w.type === "obsolete_key");
     const otherWarnings = warnings.filter((w) =>
       w.type !== "obsolete_key" &&
       w.type !== "planned_clinical_syndrome_ref" &&
-      w.type !== "out_of_scope_syndrome_ref"
+      w.type !== "out_of_scope_syndrome_ref" &&
+      w.type !== "not_empiric_syndrome_ref"
     );
 
-    if (outOfScopeWarnings.length > 0) {
-      const oosIds = new Set();
-      outOfScopeWarnings.forEach((w) => {
+    const summarizeIds = (list) => {
+      const s = new Set();
+      list.forEach((w) => {
         const m = w.message.match(/syndrome ref "([^"]+)"/);
-        if (m) oosIds.add(m[1]);
+        if (m) s.add(m[1]);
       });
-      console.log("[INFO] out_of_scope_syndrome_ref: referencias clínicamente ciertas pero fuera del alcance de la app (adultos)");
+      return s;
+    };
+
+    if (outOfScopeWarnings.length > 0) {
+      const oosIds = summarizeIds(outOfScopeWarnings);
+      console.log("[INFO] out_of_scope_syndrome_ref: clínicamente ciertas, pero fuera del alcance de la app (adultos)");
       console.log(`- occurrences: ${outOfScopeWarnings.length}`);
       console.log(`- unique syndrome ids: ${oosIds.size}  (${[...oosIds].join(", ")})`);
+      console.log("");
+    }
+
+    if (notEmpiricWarnings.length > 0) {
+      const neIds = summarizeIds(notEmpiricWarnings);
+      console.log("[INFO] not_empiric_syndrome_ref: presentaciones reales, pero NO son blanco de terapia empírica (se estudian y se tratan dirigido)");
+      console.log(`- occurrences: ${notEmpiricWarnings.length}`);
+      console.log(`- unique syndrome ids: ${neIds.size}  (${[...neIds].join(", ")})`);
       console.log("");
     }
 

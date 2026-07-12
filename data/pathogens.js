@@ -1328,7 +1328,7 @@ const pathogens = [
       "summary": "Enterobacteria nosocomial productora de AmpC inducible, frecuentemente asociada a infecciones del tracto urinario, bacteriemias y contaminación de soluciones/dispositivos médicos.",
       "usualSyndromes": [
         "itu_cauti",
-        "neumonia_asociada_cuidados_salud",
+        "nih",
         "bacteriemia"
       ],
       "context": "Hospitalario",
