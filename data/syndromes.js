@@ -2230,6 +2230,104 @@ const syndromes = [
       "acinetobacter_baumannii",
     ],
   },
+
+  // ===========================================================================
+  // DIARREA AGUDA — LA REGLA ES **NO** TRATAR
+  //
+  // Fuente: "Tratamiento de las enfermedades infecciosas 2024-2026", 9.ª ed.,
+  // p. 128 (OPS/OMS).
+  //
+  // ⚠ MENSAJE CENTRAL: la mayoría de las gastroenteritis agudas son
+  // AUTOLIMITADAS y NO requieren antibiótico. La hidratación es el tratamiento.
+  // El antibiótico se reserva para indicaciones específicas y acotadas.
+  // ===========================================================================
+
+  {
+    id: "gastroenteritis_aguda",
+    name: "Gastroenteritis Aguda / Diarrea Aguda",
+    synonyms: ["Gastroenteritis", "Gastroenteritis aguda", "Diarrea aguda", "Diarrea del viajero", "acute gastroenteritis"],
+    description: "⚠ LA MAYORÍA ES AUTOLIMITADA Y **NO REQUIERE ANTIBIÓTICO**. LA HIDRATACIÓN ES EL TRATAMIENTO. El antibiótico solo se indica en situaciones acotadas. Si hay diarrea con sangre y fiebre, ver el síndrome `diarrea_disenterica`.",
+    criteria: {
+      outpatient: "REGLA: NO TRATAR con antibiótico. Hidratación oral. TRATAR SOLO SI: inmunosupresión, portador de prótesis intravascular o cardíaca, hemoglobinopatía, brote de intoxicación alimentaria, diarrea sanguinolenta, o más de 8 deposiciones al día.",
+      hospital: "Deshidratación grave, intolerancia oral, bacteriemia o inmunosupresión.",
+    },
+    regimens: [
+      {
+        name: "Salmonella NO typhi — solo si hay indicación",
+        type: "directed",
+        scenario: "outpatient",
+        targets: ["Salmonella no tifoidea"],
+        drug: "Ciprofloxacino",
+        drugIds: ["ciprofloxacino"],
+        dose: "500 mg",
+        route: "PO",
+        interval: "cada 12 horas",
+        duration: "5 días (inmunocompetente). Inmunosupresión o bacteriemia: ≥ 14 días.",
+        durationInfo: "Inmunocompetente con infección grave sin bacteriemia: 3-7 días.",
+        comments: "⚠ NO REQUIERE TRATAMIENTO: es mayormente autolimitada. Tratar SOLO a pacientes con inmunosupresión, portadores de prótesis intravascular o cardíaca, hemoglobinopatía, o en brotes de intoxicación alimentaria. Alternativas: azitromicina 500 mg/día o cotrimoxazol 160/800 mg c/12h, ambos por 7 días. La selección depende de la SENSIBILIDAD LOCAL.",
+        reference: "Tratamiento de las Enfermedades Infecciosas 2024-2026 (OPS), 9.ª ed., p. 128",
+      },
+      {
+        name: "Campylobacter — solo si hay indicación",
+        type: "directed",
+        scenario: "outpatient",
+        targets: ["Campylobacter jejuni"],
+        drug: "Azitromicina",
+        drugIds: ["azitromicina"],
+        dose: "Leve-moderado: 1 g dosis única  |  Grave: 500 mg c/24h",
+        route: "PO",
+        interval: "Ver dosis",
+        duration: "Dosis única (leve-moderado)  |  3 días (grave)",
+        comments: "⚠ POR LO GENERAL ES AUTOLIMITADA. Tratar SOLO si hay compromiso inmunitario, diarrea sanguinolenta, o más de 8 deposiciones al día. Alternativas: doxiciclina 100 mg c/12h × 5 días o ciprofloxacino 500 mg c/12h × 5 días (considerar la resistencia local a fluoroquinolonas).",
+        reference: "Tratamiento de las Enfermedades Infecciosas 2024-2026 (OPS), 9.ª ed., p. 128",
+      },
+      {
+        name: "Diarrea del viajero",
+        type: "empiric",
+        scenario: "outpatient",
+        targets: ["E. coli enterotoxigénica", "Campylobacter", "Shigella"],
+        drug: "Ciprofloxacino o Levofloxacino",
+        drugIds: ["ciprofloxacino", "levofloxacino"],
+        dose: "Ciprofloxacino 500 mg c/12h  |  Levofloxacino 500 mg/día",
+        route: "PO",
+        interval: "Ver dosis",
+        duration: "3 días",
+        comments: "Alternativa: azitromicina 1 g en dosis única. Considerar los lugares visitados y la posibilidad de resistencia a los antibióticos comunes. La mejor protección son las medidas higiénicas.",
+        reference: "Tratamiento de las Enfermedades Infecciosas 2024-2026 (OPS), 9.ª ed., p. 128",
+      },
+    ],
+    pathogens: ["Salmonella no tifoidea", "Campylobacter jejuni", "Shigella spp.", "Escherichia coli"],
+    pathogenIds: ["salmonella_no_tifoidea", "campylobacter_jejuni", "shigella_spp", "escherichia_coli"],
+  },
+
+  {
+    id: "intoxicacion_alimentaria",
+    name: "Intoxicación Alimentaria / Toxiinfección Alimentaria",
+    synonyms: ["Intoxicación alimentaria", "Toxiinfección alimentaria", "food poisoning"],
+    description: "⚠ EN GENERAL **NO REQUIERE ANTIBIÓTICO**: es autolimitada y muchas formas son mediadas por TOXINA preformada (S. aureus, B. cereus), donde el antibiótico no aporta nada. La hidratación es el tratamiento. La excepción relevante es el BROTE por Salmonella no tifoidea.",
+    criteria: {
+      outpatient: "REGLA: hidratación, NO antibiótico. ⚠ LA FORMA TOXIGÉNICA (inicio precoz, vómitos predominantes; S. aureus, B. cereus) NO SE BENEFICIA DE NINGÚN ANTIBIÓTICO: la toxina ya está formada cuando el paciente consulta. Hidratación y observación. El único régimen listado abajo es para el BROTE por Salmonella; fuera de esa indicación, no prescribir.",
+      hospital: "Deshidratación grave, intolerancia oral o bacteriemia. ⚠ NOTIFICAR: los brotes de intoxicación alimentaria son de notificación obligatoria y exigen investigación epidemiológica.",
+    },
+    regimens: [
+      {
+        name: "Brote por Salmonella no tifoidea",
+        type: "directed",
+        scenario: "outpatient",
+        targets: ["Salmonella no tifoidea"],
+        drug: "Ciprofloxacino",
+        drugIds: ["ciprofloxacino"],
+        dose: "500 mg",
+        route: "PO",
+        interval: "cada 12 horas",
+        duration: "5 días",
+        comments: "La fuente indica tratar en BROTES DE INTOXICACIÓN ALIMENTARIA (además de inmunosupresión, prótesis intravascular/cardíaca o hemoglobinopatía). Alternativas: azitromicina 500 mg/día o cotrimoxazol 160/800 mg c/12h × 7 días. La selección depende de la sensibilidad local.",
+        reference: "Tratamiento de las Enfermedades Infecciosas 2024-2026 (OPS), 9.ª ed., p. 128",
+      },
+    ],
+    pathogens: ["Salmonella no tifoidea", "Staphylococcus aureus"],
+    pathogenIds: ["salmonella_no_tifoidea", "staphylococcus_aureus"],
+  },
 ];
 
 if (typeof module !== "undefined" && module.exports) {
