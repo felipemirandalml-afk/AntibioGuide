@@ -2061,14 +2061,14 @@ const syndromes = [
         type: "empiric",
         scenario: "inpatient",
         targets: ["S. coagulasa negativo", "Enterobacterales", "P. aeruginosa"],
-        drug: "Vancomicina + Imipenem (± Amikacina)",
-        drugIds: ["vancomicina", "imipenem", "amikacina"],
-        dose: "Vancomicina 25-30 mg/kg carga (máx 3 g), luego 15 mg/kg c/12h EV  +  Imipenem 500 mg c/6h EV  ±  Amikacina 25-30 mg/kg (1.ª dosis)",
+        drug: "Vancomicina + Imipenem (± Amikacina) (± Equinocandina)",
+        drugIds: ["vancomicina", "imipenem", "amikacina", "anidulafungina", "caspofungina"],
+        dose: "Vancomicina 25-30 mg/kg carga (máx 3 g), luego 15 mg/kg c/12h EV  +  Imipenem 500 mg c/6h EV  ±  Amikacina 25-30 mg/kg (1.ª dosis)  ±  Equinocandina",
         route: "EV",
         interval: "Ver dosis",
         duration: "Según agente identificado (ver regímenes dirigidos)",
-        comments: "⚠ El esquema empírico DEBE elegirse según los microorganismos prevalentes de las bacteriemias EN LA UNIDAD y su susceptibilidad. AMIKACINA: agregar en caso de SHOCK SÉPTICO, con ajuste posterior por niveles plasmáticos. Si hay contraindicación neurológica al imipenem, usar meropenem 1 g c/8h EV. ANTIFÚNGICO: ante shock séptico + factores de riesgo de candidiasis invasora, la fuente indica agregar una equinocandina (anidulafungina o caspofungina) — no disponible aún en el arsenal de la app.",
-        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 88",
+        comments: "⚠ El esquema empírico DEBE elegirse según los microorganismos prevalentes de las bacteriemias EN LA UNIDAD y su susceptibilidad. AMIKACINA: agregar en caso de SHOCK SÉPTICO, con ajuste posterior por niveles plasmáticos. Si hay contraindicación neurológica al imipenem, usar meropenem 1 g c/8h EV. EQUINOCANDINA (anidulafungina 200 mg carga → 100 mg/día, o caspofungina 70 mg carga → 50 mg/día): agregar ante SHOCK SÉPTICO con FACTORES DE RIESGO DE CANDIDIASIS INVASORA (ver síndrome `candidemia`).",
+        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 88 y p. 49",
       },
       {
         name: "Dirigido — S. aureus",
@@ -2327,6 +2327,70 @@ const syndromes = [
     ],
     pathogens: ["Salmonella no tifoidea", "Staphylococcus aureus"],
     pathogenIds: ["salmonella_no_tifoidea", "staphylococcus_aureus"],
+  },
+
+  // ===========================================================================
+  // CANDIDIASIS INVASORA / CANDIDEMIA
+  // Fuente: Manual de Antibioterapia UC CHRISTUS 2024, p. 49 (DOSIS DE ADULTO).
+  // ⚠ La tabla de antifúngicos de la p.55 es PEDIÁTRICA (mg/kg, mg/m2): NO usar.
+  // ===========================================================================
+
+  {
+    id: "candidemia",
+    name: "Candidemia / Candidiasis Invasora",
+    synonyms: ["Candidemia", "Candidiasis invasora", "Candidiasis sistémica", "candidemia", "invasive candidiasis"],
+    description: "Infección invasora por Candida spp. El tratamiento DE ELECCIÓN son las EQUINOCANDINAS. El fluconazol NO es tratamiento inicial de elección: se reserva para desescalar en el paciente estable con susceptibilidad demostrada.",
+    criteria: {
+      outpatient: "NO corresponde.",
+      hospital: "DIAGNÓSTICO: (1) uno o más hemocultivos positivos, o cultivo de punta de catéter positivo a Candida spp.; o (2) cultivo con desarrollo de Candida desde un SITIO ESTÉRIL. SOSPECHAR ante la coexistencia de: factores de riesgo + nueva infección sin foco preciso y/o falta de respuesta a antimicrobianos de amplio espectro + colonización por Candida en al menos 2 sitios alejados. El 1,3-β-D-glucano tiene alto VALOR PREDICTIVO NEGATIVO (más evidencia en neutropénicos que en unidades críticas); ⚠ NO se justifica su seguimiento como control terapéutico.",
+    },
+    regimens: [
+      {
+        name: "Empírico — Equinocandina (ELECCIÓN)",
+        type: "empiric",
+        scenario: "inpatient",
+        targets: ["Candida spp."],
+        drug: "Anidulafungina o Caspofungina",
+        drugIds: ["anidulafungina", "caspofungina", "micafungina"],
+        dose: "Anidulafungina: 200 mg carga, luego 100 mg/día IV  |  Caspofungina: 70 mg carga, luego 50 mg/día IV  |  Micafungina: 100 mg/día IV",
+        route: "EV",
+        interval: "cada 24 horas (tras la dosis de carga)",
+        duration: "14 días a contar del PRIMER HEMOCULTIVO DE CONTROL NEGATIVO",
+        durationInfo: "La duración se cuenta desde el hemocultivo de control negativo, NO desde el inicio del tratamiento.",
+        comments: "⚠ TRATAMIENTO DE ELECCIÓN. La anidulafungina NO requiere ajuste en disfunción renal ni hepática (metabolismo plasmático). Retirar el catéter venoso central si es la fuente probable.",
+        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 49",
+      },
+      {
+        name: "Alternativa — Anfotericina B (preferir liposomal)",
+        type: "alternative",
+        scenario: "inpatient",
+        targets: ["Candida spp."],
+        drug: "Anfotericina B liposomal",
+        drugIds: ["anfotericina_b_liposomal", "anfotericina_b_deoxicolato"],
+        dose: "Liposomal: 3-5 mg/kg/día IV  |  Deoxicolato: 0,5-1 mg/kg/día IV",
+        route: "EV",
+        interval: "cada 24 horas",
+        duration: "14 días a contar del hemocultivo de control negativo",
+        comments: "⚠ PREFERIR LA FORMULACIÓN LIPÍDICA (liposomal): menor riesgo de NEFROTOXICIDAD. Monitorizar función renal, potasio y magnesio.",
+        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 49",
+      },
+      {
+        name: "Desescalamiento — Fluconazol (NO es inicio de elección)",
+        type: "directed",
+        scenario: "inpatient",
+        targets: ["Candida spp. susceptible a fluconazol"],
+        drug: "Fluconazol",
+        drugIds: ["fluconazol"],
+        dose: "400-800 mg/día",
+        route: "EV",
+        interval: "cada 24 horas",
+        duration: "Completar 14 días a contar del hemocultivo de control negativo",
+        comments: "⚠ NO ES TRATAMIENTO INICIAL DE ELECCIÓN. Es una terapia alternativa razonable SOLO en paciente ESTABLE, con especie de Candida IDENTIFICADA y susceptibilidad DEMOSTRADA. Sirve para DESESCALAR desde la equinocandina. Recordar: C. krusei es intrínsecamente resistente y C. glabrata suele tener sensibilidad disminuida.",
+        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 49",
+      },
+    ],
+    pathogens: ["Candida spp.", "Candida albicans", "Candida auris"],
+    pathogenIds: ["candida_spp", "candida_albicans", "candida_auris"],
   },
 ];
 

@@ -1563,6 +1563,149 @@ const antibiotics = [
       "anaerobic_activity": false,
       "oral_option": true
     }
+  },
+
+  /* =========================================================================
+   * ANTIFÚNGICOS
+   *
+   * Fuente: Manual de Antibioterapia UC CHRISTUS 2024, p. 49
+   * (tabla "Candidiasis invasora", DOSIS DE ADULTO).
+   *
+   * ⚠ NOTA IMPORTANTE: la tabla de la p.55 del mismo manual es PEDIÁTRICA
+   * (mg/kg y mg/m2) y NO debe usarse en esta app, que es de ADULTOS.
+   * Las dosis de abajo provienen de la p.49, que sí es de adulto.
+   *
+   * ⚠ `aware: null` es INTENCIONAL: la clasificación AWaRe de la OMS aplica a
+   * ANTIBACTERIANOS. Los antifúngicos no están clasificados en AWaRe; asignarles
+   * una categoría sería inventarla. `null` es el valor honesto y el validador
+   * lo acepta.
+   * ========================================================================= */
+
+  {
+    "id": "anidulafungina",
+    "name": "Anidulafungina",
+    "family": "Equinocandina",
+    "mechanism": "Fungicida frente a Candida. Inhibe la síntesis de 1,3-beta-D-glucano de la pared fúngica.",
+    "spectrum": "Candida spp. (incluidas especies resistentes a fluconazol). Sin actividad frente a Cryptococcus.",
+    "dose": "200 mg IV dosis de carga, luego 100 mg IV cada 24 h.",
+    "renal": "SIN necesidad de ajuste en disfunción renal ni hepática (metabolismo plasmático por degradación química).",
+    "contraindications": "Hipersensibilidad a equinocandinas.",
+    "adverse": "Elevación de transaminasas, náuseas, cefalea, reacciones relacionadas con la infusión.",
+    "uses": "Tratamiento DE ELECCIÓN de la candidiasis invasora y la candidemia.",
+    "synonyms": ["anidulafungin"],
+    "clinical_metadata": {
+      "aware": null,
+      "spectrum": "narrow",
+      "route_hint": "ev",
+      "anti_pseudomonas": false,
+      "anaerobic_activity": false,
+      "oral_option": false
+    }
+  },
+  {
+    "id": "caspofungina",
+    "name": "Caspofungina",
+    "family": "Equinocandina",
+    "mechanism": "Fungicida frente a Candida. Inhibe la síntesis de 1,3-beta-D-glucano de la pared fúngica.",
+    "spectrum": "Candida spp. (incluidas especies resistentes a fluconazol) y Aspergillus spp. Sin actividad frente a Cryptococcus.",
+    "dose": "70 mg IV dosis de carga, luego 50 mg IV cada 24 h.",
+    "renal": "Sin ajuste en insuficiencia renal. Ajustar en insuficiencia hepática moderada (Child-Pugh 7-9): reducir la mantención a 35 mg/día.",
+    "contraindications": "Hipersensibilidad a equinocandinas.",
+    "adverse": "Elevación de transaminasas, fiebre, flebitis, reacciones relacionadas con la infusión.",
+    "uses": "Tratamiento DE ELECCIÓN de la candidiasis invasora y la candidemia.",
+    "synonyms": ["caspofungin"],
+    "clinical_metadata": {
+      "aware": null,
+      "spectrum": "narrow",
+      "route_hint": "ev",
+      "anti_pseudomonas": false,
+      "anaerobic_activity": false,
+      "oral_option": false
+    }
+  },
+  {
+    "id": "micafungina",
+    "name": "Micafungina",
+    "family": "Equinocandina",
+    "mechanism": "Fungicida frente a Candida. Inhibe la síntesis de 1,3-beta-D-glucano de la pared fúngica.",
+    "spectrum": "Candida spp. (incluidas especies resistentes a fluconazol). Sin actividad frente a Cryptococcus.",
+    "dose": "100 mg IV cada 24 h.",
+    "renal": "Sin necesidad de ajuste renal ni hepático.",
+    "contraindications": "Hipersensibilidad a equinocandinas.",
+    "adverse": "Elevación de transaminasas, náuseas, cefalea.",
+    "uses": "Candidiasis invasora y candidemia. DE ELECCIÓN en infecciones neonatales (fuera del alcance de esta app, que es de adultos).",
+    "synonyms": ["micafungin"],
+    "clinical_metadata": {
+      "aware": null,
+      "spectrum": "narrow",
+      "route_hint": "ev",
+      "anti_pseudomonas": false,
+      "anaerobic_activity": false,
+      "oral_option": false
+    }
+  },
+  {
+    "id": "fluconazol",
+    "name": "Fluconazol",
+    "family": "Azol (triazol)",
+    "mechanism": "Fungistático frente a Candida. Inhibe la 14-alfa-desmetilasa (CYP450), bloqueando la síntesis de ergosterol.",
+    "spectrum": "Candida albicans y otras especies susceptibles. ⚠ C. krusei es INTRÍNSECAMENTE RESISTENTE; C. glabrata suele tener sensibilidad disminuida. Sin actividad frente a Aspergillus.",
+    "dose": "Candidiasis invasora: 400-800 mg IV al día. Esofágica: 300 mg VO el primer día, luego 150 mg/día por 14 días. Vaginitis: 150 mg VO dosis única. Urinaria: 300 mg VO el primer día, luego 150 mg/día por 5 días.",
+    "renal": "Requiere ajuste por función renal (se elimina por vía renal de forma inalterada).",
+    "contraindications": "Hipersensibilidad a azoles. Precaución por prolongación del QT y por múltiples interacciones vía CYP450.",
+    "adverse": "Náuseas, cefalea, elevación de transaminasas, prolongación del QT, exantema.",
+    "uses": "Candidiasis local (esofágica, vaginal, urinaria). En candidiasis invasora: alternativa razonable SOLO en paciente ESTABLE y con susceptibilidad DEMOSTRADA. Fármaco de DESESCALAMIENTO desde equinocandina.",
+    "synonyms": ["fluconazole"],
+    "clinical_metadata": {
+      "aware": null,
+      "spectrum": "narrow",
+      "route_hint": "vo",
+      "anti_pseudomonas": false,
+      "anaerobic_activity": false,
+      "oral_option": true
+    }
+  },
+  {
+    "id": "anfotericina_b_liposomal",
+    "name": "Anfotericina B liposomal",
+    "family": "Polieno",
+    "mechanism": "Fungicida. Se une al ergosterol de la membrana fúngica y forma poros que alteran su permeabilidad.",
+    "spectrum": "Muy amplio: Candida spp., Aspergillus spp., Cryptococcus, mucorales, hongos endémicos.",
+    "dose": "3-5 mg/kg IV al día.",
+    "renal": "MENOR riesgo de nefrotoxicidad que la formulación deoxicolato. Igualmente, monitorizar la función renal y los electrolitos (potasio, magnesio).",
+    "contraindications": "Hipersensibilidad a la anfotericina B.",
+    "adverse": "Nefrotoxicidad (menor que el deoxicolato), hipokalemia, hipomagnesemia, reacciones relacionadas con la infusión.",
+    "uses": "Candidiasis invasora: alternativa a las equinocandinas, siendo la formulación LIPÍDICA la de preferencia. Micosis invasoras de amplio espectro.",
+    "synonyms": ["anfotericina liposomal", "liposomal amphotericin B", "L-AmB"],
+    "clinical_metadata": {
+      "aware": null,
+      "spectrum": "broad",
+      "route_hint": "ev",
+      "anti_pseudomonas": false,
+      "anaerobic_activity": false,
+      "oral_option": false
+    }
+  },
+  {
+    "id": "anfotericina_b_deoxicolato",
+    "name": "Anfotericina B deoxicolato",
+    "family": "Polieno",
+    "mechanism": "Fungicida. Se une al ergosterol de la membrana fúngica y forma poros que alteran su permeabilidad.",
+    "spectrum": "Muy amplio: Candida spp., Aspergillus spp., Cryptococcus, mucorales, hongos endémicos.",
+    "dose": "0,5-1 mg/kg IV al día.",
+    "renal": "⚠ NEFROTÓXICA. La fuente recomienda PREFERIR la formulación LIPÍDICA por su menor riesgo de nefrotoxicidad. Monitorizar función renal y electrolitos.",
+    "contraindications": "Hipersensibilidad a la anfotericina B. Precaución en insuficiencia renal.",
+    "adverse": "⚠ NEFROTOXICIDAD, hipokalemia, hipomagnesemia, fiebre y calofríos durante la infusión, flebitis.",
+    "uses": "Candidiasis invasora, cuando no se dispone de la formulación lipídica. La fuente indica PREFERIR la liposomal.",
+    "synonyms": ["anfotericina B", "amphotericin B deoxycholate"],
+    "clinical_metadata": {
+      "aware": null,
+      "spectrum": "broad",
+      "route_hint": "ev",
+      "anti_pseudomonas": false,
+      "anaerobic_activity": false,
+      "oral_option": false
+    }
   }
 ];
 
