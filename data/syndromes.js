@@ -2034,6 +2034,202 @@ const syndromes = [
     pathogens: ["Shigella spp.", "Campylobacter jejuni", "Salmonella no tifoidea", "Clostridioides difficile"],
     pathogenIds: ["shigella_spp", "campylobacter_jejuni", "salmonella_no_tifoidea", "clostridioides_difficile"],
   },
+
+  // ===========================================================================
+  // INFECCIÓN DEL TORRENTE SANGUÍNEO
+  // Fuente: Manual de Antibioterapia UC CHRISTUS 2024, p. 87-89.
+  //
+  // ⚠ NOTA DE ARSENAL: el esquema empírico de la fuente contempla agregar una
+  // EQUINOCANDINA (anidulafungina o caspofungina) ante shock séptico con
+  // factores de riesgo de candidiasis invasora. Los ANTIFÚNGICOS no existen aún
+  // en la capa `antibiotics`, por lo que se consignan en `comments` pero NO en
+  // `drugIds`. Por la misma razón el síndrome `candidemia` queda pendiente.
+  // ===========================================================================
+
+  {
+    id: "bacteriemia_asociada_cateter",
+    name: "Bacteriemia asociada a Catéter Venoso Central (ITS/CVC)",
+    synonyms: ["Bacteriemia asociada a catéter", "ITS/CVC", "Infección del torrente sanguíneo asociada a CVC", "CRBSI", "CLABSI"],
+    description: "Sospechar en TODO paciente con síndrome febril, portador de CVC y SIN otro foco de infección aparente. Agentes más frecuentes: Staphylococcus coagulasa negativo, Enterobacterales (E. coli, K. pneumoniae, E. cloacae), Pseudomonas aeruginosa y Candida spp.",
+    criteria: {
+      outpatient: "NO corresponde.",
+      hospital: "DIAGNÓSTICO: solicitar cultivos de CVC SOLO ante sospecha. Si no hay sospecha, NO indicar cultivo de la punta. Criterios: punta de CVC ≥15 UFC con el MISMO microorganismo en sangre periférica; o tiempo diferencial de crecimiento ≥2 h a favor de la sangre por catéter; o hemocultivos cuantitativos en razón ≥4:1 (CVC vs periférica).",
+    },
+    regimens: [
+      {
+        name: "Empírico — Elección",
+        type: "empiric",
+        scenario: "inpatient",
+        targets: ["S. coagulasa negativo", "Enterobacterales", "P. aeruginosa"],
+        drug: "Vancomicina + Imipenem (± Amikacina)",
+        drugIds: ["vancomicina", "imipenem", "amikacina"],
+        dose: "Vancomicina 25-30 mg/kg carga (máx 3 g), luego 15 mg/kg c/12h EV  +  Imipenem 500 mg c/6h EV  ±  Amikacina 25-30 mg/kg (1.ª dosis)",
+        route: "EV",
+        interval: "Ver dosis",
+        duration: "Según agente identificado (ver regímenes dirigidos)",
+        comments: "⚠ El esquema empírico DEBE elegirse según los microorganismos prevalentes de las bacteriemias EN LA UNIDAD y su susceptibilidad. AMIKACINA: agregar en caso de SHOCK SÉPTICO, con ajuste posterior por niveles plasmáticos. Si hay contraindicación neurológica al imipenem, usar meropenem 1 g c/8h EV. ANTIFÚNGICO: ante shock séptico + factores de riesgo de candidiasis invasora, la fuente indica agregar una equinocandina (anidulafungina o caspofungina) — no disponible aún en el arsenal de la app.",
+        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 88",
+      },
+      {
+        name: "Dirigido — S. aureus",
+        type: "directed",
+        scenario: "inpatient",
+        targets: ["S. aureus"],
+        drug: "Cloxacilina o Cefazolina (SAMS) / Vancomicina (SAMR)",
+        drugIds: ["cloxacilina", "cefazolina", "vancomicina"],
+        dose: "SAMS: Cloxacilina 2 g c/4h EV (o 12 g/día en BIC) o Cefazolina 2 g c/8h EV  |  SAMR: Vancomicina 15 mg/kg c/12h EV",
+        route: "EV",
+        interval: "Ver dosis",
+        duration: "No complicada: 2 semanas EV desde el primer hemocultivo NEGATIVO de control. Complicada: 4 semanas o más.",
+        comments: "⚠ DEBE RETIRARSE EL CATÉTER: no hacerlo AUMENTA LA MORTALIDAD. Estudio obligado de bacteriemia complicada: hemocultivos de control a las 48-72 h de terapia efectiva + ecocardiograma (idealmente transesofágico). Buscar embolías sépticas según evolución (espondilodiscitis, endocarditis).",
+        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 89",
+      },
+      {
+        name: "Dirigido — S. coagulasa negativo",
+        type: "directed",
+        scenario: "inpatient",
+        targets: ["Staphylococcus coagulasa negativo"],
+        drug: "Vancomicina (si meticilino-resistente)",
+        drugIds: ["vancomicina"],
+        dose: "15 mg/kg",
+        route: "EV",
+        interval: "cada 12 horas",
+        duration: "7 días",
+        comments: "Ajustar por niveles plasmáticos/AUC. Si es meticilino-SENSIBLE, usar los mismos antibióticos que para S. aureus sensible, también por 7 días. RETIRO DEL CATÉTER: si el CVC es PERMANENTE puede tratarse sin retirarlo; si es TEMPORAL se recomienda retirarlo (20 % de bacteriemia recurrente con el catéter in situ vs 3 % si se retira).",
+        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 89",
+      },
+      {
+        name: "Dirigido — Bacilos gram negativos",
+        type: "directed",
+        scenario: "inpatient",
+        targets: ["E. coli", "Klebsiella spp.", "Enterobacter spp.", "P. aeruginosa"],
+        drug: "Según antibiograma (carbapenémico si BLEE)",
+        drugIds: ["meropenem", "imipenem"],
+        dose: "Según antibiograma",
+        route: "EV",
+        interval: "Según antibiograma",
+        duration: "Según evolución",
+        comments: "⚠ SE RECOMIENDA EL RETIRO DEL CATÉTER. Para Enterobacterales productores de BLEE, continuar con un carbapenémico según antibiograma.",
+        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 89",
+      },
+    ],
+    pathogens: [
+      "Staphylococcus coagulasa negativo",
+      "Staphylococcus aureus",
+      "Escherichia coli",
+      "Klebsiella pneumoniae",
+      "Enterobacter cloacae",
+      "Pseudomonas aeruginosa",
+      "Candida spp.",
+    ],
+    pathogenIds: [
+      "staphylococcus_cons",
+      "staphylococcus_aureus",
+      "escherichia_coli",
+      "klebsiella_pneumoniae",
+      "enterobacter_cloacae_complex",
+      "pseudomonas_aeruginosa",
+      "candida_spp",
+    ],
+  },
+
+  {
+    id: "bacteriemia",
+    name: "Bacteriemia / Infección del Torrente Sanguíneo",
+    synonyms: ["Bacteriemia", "Bacteremia", "Infección del torrente sanguíneo", "ITS", "bloodstream infection"],
+    description: "Presencia de bacterias viables en sangre. NO es un diagnóstico final: SIEMPRE obliga a buscar el FOCO. El manejo se define por el agente aislado y por el foco identificado.",
+    criteria: {
+      outpatient: "NO corresponde el manejo empírico ambulatorio.",
+      hospital: "⚠ BUSCAR EL FOCO SIEMPRE. Tomar al menos DOS hemocultivos periféricos por punciones distintas ANTES del antibiótico. Si el paciente es portador de CVC y no hay otro foco aparente, ver síndrome `bacteriemia_asociada_cateter`. Si hay criterios de sepsis de origen urinario, ver `sepsis_urinaria`.",
+    },
+    regimens: [
+      {
+        name: "Empírico — según foco y epidemiología local",
+        type: "empiric",
+        scenario: "inpatient",
+        targets: ["Según foco sospechado"],
+        drug: "Depende del foco y de la epidemiología local",
+        drugIds: ["vancomicina", "imipenem", "amikacina"],
+        dose: "Ver esquema de bacteriemia asociada a CVC como referencia empírica de amplio espectro",
+        route: "EV",
+        interval: "Ver dosis",
+        duration: "Según agente y foco",
+        comments: "⚠ LA BACTERIEMIA NO ES UN DIAGNÓSTICO FINAL: obliga a identificar el FOCO. El esquema empírico debe elegirse según los microorganismos prevalentes EN LA UNIDAD y su susceptibilidad. Ajustar SIEMPRE al antimicrobiano de menor espectro una vez disponible la microbiología.",
+        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 12 (principio general) y p. 88",
+      },
+      {
+        name: "Dirigido — S. aureus (bacteriemia por S. aureus)",
+        type: "directed",
+        scenario: "inpatient",
+        targets: ["S. aureus"],
+        drug: "Cloxacilina o Cefazolina (SAMS) / Vancomicina (SAMR)",
+        drugIds: ["cloxacilina", "cefazolina", "vancomicina"],
+        dose: "SAMS: Cloxacilina 2 g c/4h EV (o 12 g/día en BIC) o Cefazolina 2 g c/8h EV  |  SAMR: Vancomicina 15 mg/kg c/12h EV",
+        route: "EV",
+        interval: "Ver dosis",
+        duration: "No complicada: 2 semanas EV desde el primer hemocultivo NEGATIVO. Complicada: 4 semanas o más.",
+        comments: "⚠ TODA bacteriemia por S. aureus obliga a definir si es COMPLICADA: hemocultivos de control a las 48-72 h + ecocardiograma (idealmente transesofágico). Buscar focos secundarios (endocarditis, espondilodiscitis, embolías sépticas). Retirar todo dispositivo intravascular.",
+        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 89",
+      },
+    ],
+    pathogens: [
+      "Staphylococcus aureus",
+      "Escherichia coli",
+      "Klebsiella pneumoniae",
+      "Pseudomonas aeruginosa",
+      "Staphylococcus coagulasa negativo",
+    ],
+    pathogenIds: [
+      "staphylococcus_aureus",
+      "escherichia_coli",
+      "klebsiella_pneumoniae",
+      "pseudomonas_aeruginosa",
+      "staphylococcus_cons",
+    ],
+  },
+
+  {
+    id: "neumonia_asociada_ventilacion",
+    name: "Neumonía Asociada a Ventilación Mecánica (NAVM)",
+    synonyms: ["NAVM", "NAV", "Neumonía asociada a ventilación", "VAP", "ventilator-associated pneumonia"],
+    description: "Neumonía que aparece 48 horas o más después del inicio de la ventilación mecánica, en un paciente con intubación traqueal o traqueostomía. Agentes: S. aureus, Enterobacterales (E. coli, K. pneumoniae, E. cloacae), P. aeruginosa y Acinetobacter baumannii. ⚠ DOS ADVERTENCIAS QUE EVITAN TRATAMIENTOS INNECESARIOS: (1) el hallazgo de CANDIDA en secreción traqueal representa COLONIZACIÓN y NO es la causa de la infección respiratoria baja — no la trate (aunque debe hacer plantear una candidiasis diseminada); (2) ENTEROCOCCUS spp. NO debe considerarse agente productor de neumonía.",
+    criteria: {
+      outpatient: "NO corresponde.",
+      hospital: "DIAGNÓSTICO DIFÍCIL: muchas condiciones NO infecciosas se presentan igual. Los 5 elementos clínicos clave son: (1) fiebre o hipotermia, (2) leucocitosis o leucopenia, (3) secreción bronquial mucopurulenta, (4) deterioro del intercambio gaseoso, (5) infiltrado radiológico NUEVO. ⚠ El cultivo simple de secreción traqueal SOLO informa COLONIZACIÓN. Usar cultivo CUANTITATIVO de aspirado traqueal: <10³ UFC hace poco probable la NAVM; >10⁶ es muy sugerente. Alternativas: LBA ≥10⁴ UFC/mL; cepillo protegido ≥10³ UFC/mL.",
+    },
+    regimens: [
+      {
+        name: "Empírico — Betalactámico antipseudomónico + Vancomicina",
+        type: "empiric",
+        scenario: "inpatient",
+        targets: ["P. aeruginosa", "Enterobacterales", "S. aureus (incl. SAMR)"],
+        drug: "Ceftazidima o Cefepime o Piperacilina/Tazobactam o Carbapenémico  +  Vancomicina",
+        drugIds: ["ceftazidima", "cefepime", "piperacilina_tazobactam", "meropenem", "imipenem", "vancomicina"],
+        dose: "Betalactámico antipseudomónico (ceftazidima, cefepime, piperacilina/tazobactam, imipenem o meropenem) + Vancomicina",
+        route: "EV",
+        interval: "Según fármaco elegido",
+        duration: "Ajustar según Gram y cultivos",
+        comments: "⚠ EL ESQUEMA NO SE PUEDE GENERALIZAR: depende de las bacterias más frecuentes EN LA UNIDAD. Las etiologías difieren de un hospital a otro, e incluso de una unidad a otra. Elegir según la epidemiología local y AJUSTAR según la tinción de Gram y los cultivos. Acinetobacter baumannii no es endémico en la institución de la fuente — verificar la epidemiología propia.",
+        reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 91",
+      },
+    ],
+    pathogens: [
+      "Staphylococcus aureus",
+      "Escherichia coli",
+      "Klebsiella pneumoniae",
+      "Enterobacter cloacae",
+      "Pseudomonas aeruginosa",
+      "Acinetobacter baumannii",
+    ],
+    pathogenIds: [
+      "staphylococcus_aureus",
+      "escherichia_coli",
+      "klebsiella_pneumoniae",
+      "enterobacter_cloacae_complex",
+      "pseudomonas_aeruginosa",
+      "acinetobacter_baumannii",
+    ],
+  },
 ];
 
 if (typeof module !== "undefined" && module.exports) {
