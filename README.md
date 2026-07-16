@@ -41,9 +41,23 @@ Material de soporte o trabajo interno:
 
 ## Herramientas y operacion
 
-- Validacion: `node tools/validate_data.js`
-- Tests del motor: `npm.cmd run test:engine`
+**Gate completo:** `npm test` corre validador + auditoria + tests unitarios (exit 1 si algo falla). Correr antes de cada merge.
+
+Scripts individuales:
+- Validacion estructural: `npm run validate:data` (integridad: refs, campos, enums, duplicados)
+- Auditoria de consistencia de sindromes: `npm run audit:syndromes` (`-- --verbose` para el detalle del grafo)
+- Tests de helpers/busqueda: `npm run test:helpers`
+- Tests del motor clinico: `npm run test:engine` (reglas de resistencia + susceptibilidad)
+- Smoke test del motor: `npm run test:smoke`
 - Ingesta CSV de patogenos: `node tools/csv_to_pathogens.js`
+
+Los tests cargan los modulos de navegador (IIFE `window.ABG`) en Node mediante `tools/test_lib.js` (mocks de window/document, sin dependencias externas).
+
+### validate vs audit
+
+Son complementarios:
+- **validate_data.js** = INTEGRIDAD estructural. Falla (exit 1) si un dato esta roto (ref que no resuelve, campo faltante, enum invalido).
+- **audit_syndromes.js** = CONSISTENCIA clinica y salud del grafo. Falla (exit 1) solo si un regimen no tiene `reference` (regla de oro). El resto (asimetrias del grafo sindrome-patogeno, `targets` faltantes, huerfanos) es informativo para revision editorial, no bloqueante.
 
 ## Criterio de validacion clinica
 

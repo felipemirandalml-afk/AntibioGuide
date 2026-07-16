@@ -5,7 +5,11 @@
     "main": "data/index.js",
     "scripts": {
         "validate:data": "node tools/validate_data.js",
-        "test:engine": "node tools/test_clinical_engine.js"
+        "audit:syndromes": "node tools/audit_syndromes.js",
+        "test:helpers": "node tools/test_helpers.js",
+        "test:engine": "node tools/test_engine.js",
+        "test:smoke": "node tools/test_clinical_engine.js",
+        "test": "node tools/validate_data.js && node tools/audit_syndromes.js && node tools/test_helpers.js && node tools/test_engine.js && node tools/test_clinical_engine.js"
     },
     "keywords": [],
     "author": "",
