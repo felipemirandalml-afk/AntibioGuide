@@ -1,0 +1,13 @@
+# Material fuente local (guías clínicas en PDF, datasets crudos) — NO versionar.
+# Son insumos de referencia, no runtime. ~100 MB de binarios.
+Material de IA/
+
+# Dependencias / build
+node_modules/
+dist/
+.cache/
+
+# Sistema operativo / editores
+.DS_Store
+Thumbs.db
+*.log

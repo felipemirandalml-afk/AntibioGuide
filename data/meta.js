@@ -1,7 +1,7 @@
 const meta = {
   appName: "AntibioGuide",
-  version: "0.3.0",
-  lastUpdated: "2026-03-02",
+  version: "0.4.0",
+  lastUpdated: "2026-07-15",
   scope: "Adultos. No incluye pediatria, embarazo ni lactancia.",
   disclaimer:
     "Uso educativo basado en guias internacionales. No reemplaza el juicio clinico.",

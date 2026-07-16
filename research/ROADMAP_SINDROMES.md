@@ -1,7 +1,24 @@
 # Roadmap de síndromes — estado y fuentes
 
-**Actualizado:** 12 de julio de 2026
+**Actualizado:** 15 de julio de 2026
 **Rama:** `chore/normalizar-vocabulario-sindromes`
+
+---
+
+## ESTADO AL 2026-07-15 (reconciliado con `data/syndromes.js`)
+
+**34 síndromes vivos** en runtime. Del backlog de 25 planificados:
+
+| Estado | N | Detalle |
+|---|:-:|---|
+| ✅ **Escritos** | **20** | absceso_cerebral, absceso_pulmonar, artritis_septica, bacteriemia, bacteriemia_asociada_cateter, candidemia, cervicitis, diarrea_disenterica, espondilodiscitis, exacerbacion_epoc, gastroenteritis_aguda, infeccion_cervicofacial, infeccion_necrotizante_tejidos_blandos, intoxicacion_alimentaria, neumonia_asociada_ventilacion, neumonia_cavitada, osteoartritis, otitis_media_aguda, sinusitis_aguda, uretritis |
+| ⏳ **Pendientes** | **4** | `infeccion_herida_operatoria`, `infeccion_tracto_respiratorio_fq`, `linfadenitis_regional`, `mionecrosis` — **todos con fuente ya identificada** (ver §6). Listos para redactar. |
+| ⚠️ **Conflicto de alcance** | **1** | `infeccion_asociada_embarazo` estaba en el backlog, pero `meta.js` declara *"no incluye embarazo ni lactancia"*. **Decisión pendiente:** o se retira del roadmap (coherente con el alcance actual), o se amplía el alcance. Por defecto: **fuera de alcance**. |
+| 🔀 **Variantes sin decidir** | **5** | ¿síndrome propio o `scenario`? Ver §5. Sin resolver. |
+
+**Próximo trabajo de contenido:** redactar los 4 pendientes (fuentes listas) y resolver las 5 variantes. No bloqueado por falta de bibliografía.
+
+> **Herramienta de QA planificada (fase tools/tests):** auditoría de consistencia que compara los 34 síndromes entre sí — estructura uniforme, `drugIds` que resuelven, `reference` presente en cada régimen, cobertura de escenarios, formato de dosis. Reemplaza la "revisión manual gigante" por un chequeo determinista y repetible.
 
 ---
 
