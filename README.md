@@ -41,9 +41,16 @@ Material de soporte o trabajo interno:
 
 ## Herramientas y operacion
 
-- Validacion: `node tools/validate_data.js`
-- Tests del motor: `npm.cmd run test:engine`
+- Validacion estructural: `npm run validate:data` (integridad: refs, campos, enums, duplicados)
+- Auditoria de consistencia de sindromes: `npm run audit:syndromes` (`-- --verbose` para el detalle del grafo)
+- Tests del motor: `npm run test:engine`
 - Ingesta CSV de patogenos: `node tools/csv_to_pathogens.js`
+
+### validate vs audit
+
+Son complementarios:
+- **validate_data.js** = INTEGRIDAD estructural. Falla (exit 1) si un dato esta roto (ref que no resuelve, campo faltante, enum invalido).
+- **audit_syndromes.js** = CONSISTENCIA clinica y salud del grafo. Falla (exit 1) solo si un regimen no tiene `reference` (regla de oro). El resto (asimetrias del grafo sindrome-patogeno, `targets` faltantes, huerfanos) es informativo para revision editorial, no bloqueante.
 
 ## Criterio de validacion clinica
 

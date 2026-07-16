@@ -5,6 +5,7 @@
     "main": "data/index.js",
     "scripts": {
         "validate:data": "node tools/validate_data.js",
+        "audit:syndromes": "node tools/audit_syndromes.js",
         "test:engine": "node tools/test_clinical_engine.js"
     },
     "keywords": [],
