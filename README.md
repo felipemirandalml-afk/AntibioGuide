@@ -41,10 +41,17 @@ Material de soporte o trabajo interno:
 
 ## Herramientas y operacion
 
+**Gate completo:** `npm test` corre validador + auditoria + tests unitarios (exit 1 si algo falla). Correr antes de cada merge.
+
+Scripts individuales:
 - Validacion estructural: `npm run validate:data` (integridad: refs, campos, enums, duplicados)
 - Auditoria de consistencia de sindromes: `npm run audit:syndromes` (`-- --verbose` para el detalle del grafo)
-- Tests del motor: `npm run test:engine`
+- Tests de helpers/busqueda: `npm run test:helpers`
+- Tests del motor clinico: `npm run test:engine` (reglas de resistencia + susceptibilidad)
+- Smoke test del motor: `npm run test:smoke`
 - Ingesta CSV de patogenos: `node tools/csv_to_pathogens.js`
+
+Los tests cargan los modulos de navegador (IIFE `window.ABG`) en Node mediante `tools/test_lib.js` (mocks de window/document, sin dependencias externas).
 
 ### validate vs audit
 
