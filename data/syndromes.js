@@ -107,8 +107,8 @@ const syndromes = [
         reference: "IDSA/ATS 2019/2024",
       }
     ],
-    pathogens: ["S. pneumoniae", "H. influenzae", "Mycoplasma pneumoniae", "Chlamydia pneumoniae"],
-    pathogenIds: ["streptococcus_pneumoniae", "haemophilus_influenzae", "mycoplasma_pneumoniae", "chlamydia_pneumoniae"],
+    pathogens: ["S. pneumoniae", "H. influenzae", "Mycoplasma pneumoniae", "Chlamydia pneumoniae", "Moraxella catarrhalis"],
+    pathogenIds: ["streptococcus_pneumoniae", "haemophilus_influenzae", "mycoplasma_pneumoniae", "chlamydia_pneumoniae", "moraxella_catarrhalis"],
   },
   {
     id: "itu_cistitis",
@@ -389,9 +389,10 @@ const syndromes = [
       "Klebsiella spp.",
       "Proteus mirabilis",
       "Pseudomonas aeruginosa",
-      "Enterococcus spp."
+      "Enterococcus spp.",
+      "Serratia marcescens"
     ],
-    pathogenIds: ["escherichia_coli", "klebsiella_pneumoniae", "proteus_mirabilis", "pseudomonas_aeruginosa", "enterococcus_spp"]
+    pathogenIds: ["escherichia_coli", "klebsiella_pneumoniae", "proteus_mirabilis", "pseudomonas_aeruginosa", "enterococcus_spp", "serratia_marcescens"]
   },
 
   {
@@ -1084,7 +1085,8 @@ const syndromes = [
       "HACEK",
       "Bacilos gramnegativos (nosocomial/no-HACEK)",
       "Candida spp. (seleccionados)",
-      "Coxiella burnetii / Bartonella / Brucella (cultivos negativos, seleccionados)"
+      "Coxiella burnetii / Bartonella / Brucella (cultivos negativos, seleccionados)",
+      "Enterococcus faecium"
     ],
     pathogenIds: [
       "staphylococcus_aureus",
@@ -1095,8 +1097,7 @@ const syndromes = [
       "hacek_group",
       "gram_negative_bacilli_non_hacek",
       "candida_spp",
-      "coxiella_burnetii", "bartonella_henselae", "brucella_spp"
-    ]
+      "coxiella_burnetii", "bartonella_henselae", "brucella_spp", "enterococcus_faecium"]
   },
   {
     id: "nih",
@@ -1158,7 +1159,10 @@ const syndromes = [
       "Klebsiella pneumoniae",
       "Escherichia coli",
       "Acinetobacter baumannii",
-      "Stenotrophomonas maltophilia"
+      "Stenotrophomonas maltophilia",
+      "Enterobacter spp.",
+      "Serratia marcescens",
+      "Legionella pneumophila"
     ],
     pathogenIds: [
       "staphylococcus_aureus",
@@ -1167,8 +1171,7 @@ const syndromes = [
       "klebsiella_pneumoniae",
       "escherichia_coli",
       "acinetobacter_baumannii",
-      "stenotrophomonas_maltophilia"
-    ]
+      "stenotrophomonas_maltophilia", "enterobacter_spp", "serratia_marcescens", "legionella_pneumophila"]
   },
 
   // ===========================================================================
@@ -1262,8 +1265,8 @@ const syndromes = [
         reference: "MINSAL, OT antibióticos ambulatorios 2021, p. 13",
       },
     ],
-    pathogens: ["S. pneumoniae", "H. influenzae"],
-    pathogenIds: ["streptococcus_pneumoniae", "haemophilus_influenzae"],
+    pathogens: ["S. pneumoniae", "H. influenzae", "Moraxella catarrhalis"],
+    pathogenIds: ["streptococcus_pneumoniae", "haemophilus_influenzae", "moraxella_catarrhalis"],
   },
 
   {
@@ -1333,8 +1336,8 @@ const syndromes = [
         reference: "MINSAL, OT antibióticos ambulatorios 2021, p. 15",
       },
     ],
-    pathogens: ["S. pneumoniae", "H. influenzae"],
-    pathogenIds: ["streptococcus_pneumoniae", "haemophilus_influenzae"],
+    pathogens: ["S. pneumoniae", "H. influenzae", "Moraxella catarrhalis"],
+    pathogenIds: ["streptococcus_pneumoniae", "haemophilus_influenzae", "moraxella_catarrhalis"],
   },
 
   {
@@ -1636,8 +1639,8 @@ const syndromes = [
         reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 13",
       },
     ],
-    pathogens: ["Staphylococcus aureus"],
-    pathogenIds: ["staphylococcus_aureus"],
+    pathogens: ["Staphylococcus aureus", "Brucella spp."],
+    pathogenIds: ["staphylococcus_aureus", "brucella_spp"],
   },
 
   {
@@ -1680,8 +1683,8 @@ const syndromes = [
         reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 13",
       },
     ],
-    pathogens: ["Staphylococcus aureus", "Escherichia coli"],
-    pathogenIds: ["staphylococcus_aureus", "escherichia_coli"],
+    pathogens: ["Staphylococcus aureus", "Escherichia coli", "Brucella spp."],
+    pathogenIds: ["staphylococcus_aureus", "escherichia_coli", "brucella_spp"],
   },
 
   {
@@ -1724,8 +1727,8 @@ const syndromes = [
         reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 13",
       },
     ],
-    pathogens: ["Bacteroides fragilis", "Streptococcus pyogenes"],
-    pathogenIds: ["bacteroides_fragilis", "streptococcus_pyogenes"],
+    pathogens: ["Bacteroides fragilis", "Streptococcus pyogenes", "Actinomyces spp."],
+    pathogenIds: ["bacteroides_fragilis", "streptococcus_pyogenes", "actinomyces_spp"],
   },
 
   {
@@ -1857,8 +1860,8 @@ const syndromes = [
         reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 16",
       },
     ],
-    pathogens: ["Streptococcus pyogenes", "Bacteroides fragilis", "Staphylococcus aureus"],
-    pathogenIds: ["streptococcus_pyogenes", "bacteroides_fragilis", "staphylococcus_aureus"],
+    pathogens: ["Streptococcus pyogenes", "Bacteroides fragilis", "Staphylococcus aureus", "Nocardia spp."],
+    pathogenIds: ["streptococcus_pyogenes", "bacteroides_fragilis", "staphylococcus_aureus", "nocardia_spp"],
   },
 
   {
@@ -1929,8 +1932,8 @@ const syndromes = [
         reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 14",
       },
     ],
-    pathogens: ["Bacteroides fragilis", "Streptococcus pyogenes", "Staphylococcus aureus"],
-    pathogenIds: ["bacteroides_fragilis", "streptococcus_pyogenes", "staphylococcus_aureus"],
+    pathogens: ["Bacteroides fragilis", "Streptococcus pyogenes", "Staphylococcus aureus", "Actinomyces spp."],
+    pathogenIds: ["bacteroides_fragilis", "streptococcus_pyogenes", "staphylococcus_aureus", "actinomyces_spp"],
   },
 
   {
@@ -1972,8 +1975,8 @@ const syndromes = [
         reference: "Manual de Antibioterapia UC CHRISTUS 2024, p. 14",
       },
     ],
-    pathogens: ["Staphylococcus aureus", "Bacteroides fragilis", "Streptococcus pyogenes"],
-    pathogenIds: ["staphylococcus_aureus", "bacteroides_fragilis", "streptococcus_pyogenes"],
+    pathogens: ["Staphylococcus aureus", "Bacteroides fragilis", "Streptococcus pyogenes", "Nocardia spp."],
+    pathogenIds: ["staphylococcus_aureus", "bacteroides_fragilis", "streptococcus_pyogenes", "nocardia_spp"],
   },
 
   {
@@ -2132,7 +2135,9 @@ const syndromes = [
       "Klebsiella pneumoniae",
       "Enterobacter cloacae",
       "Pseudomonas aeruginosa",
-      "Candida spp.",
+      "Candida spp.",,
+      "Acinetobacter baumannii",
+      "Stenotrophomonas maltophilia"
     ],
     pathogenIds: [
       "staphylococcus_cons",
@@ -2141,8 +2146,7 @@ const syndromes = [
       "klebsiella_pneumoniae",
       "enterobacter_cloacae_complex",
       "pseudomonas_aeruginosa",
-      "candida_spp",
-    ],
+      "candida_spp",, "acinetobacter_baumannii", "stenotrophomonas_maltophilia"],
   },
 
   {
@@ -2231,7 +2235,8 @@ const syndromes = [
       "Klebsiella pneumoniae",
       "Enterobacter cloacae",
       "Pseudomonas aeruginosa",
-      "Acinetobacter baumannii",
+      "Acinetobacter baumannii",,
+      "Stenotrophomonas maltophilia"
     ],
     pathogenIds: [
       "staphylococcus_aureus",
@@ -2239,8 +2244,7 @@ const syndromes = [
       "klebsiella_pneumoniae",
       "enterobacter_cloacae_complex",
       "pseudomonas_aeruginosa",
-      "acinetobacter_baumannii",
-    ],
+      "acinetobacter_baumannii",, "stenotrophomonas_maltophilia"],
   },
 
   // ===========================================================================
@@ -2337,8 +2341,8 @@ const syndromes = [
         reference: "Tratamiento de las Enfermedades Infecciosas 2024-2026 (OPS), 9.ª ed., p. 128",
       },
     ],
-    pathogens: ["Salmonella no tifoidea", "Staphylococcus aureus"],
-    pathogenIds: ["salmonella_no_tifoidea", "staphylococcus_aureus"],
+    pathogens: ["Salmonella no tifoidea", "Staphylococcus aureus", "Clostridium perfringens"],
+    pathogenIds: ["salmonella_no_tifoidea", "staphylococcus_aureus", "clostridium_perfringens"],
   },
 
   // ===========================================================================

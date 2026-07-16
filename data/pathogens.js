@@ -77,8 +77,7 @@ const pathogens = [
       "summary": "Coco Gram positivo frecuente en NAC y meningitis.",
       "usualSyndromes": [
         "nac",
-        "meningitis",
-        "sepsis_urinaria"
+        "meningitis"
       ],
       "context": "Comunitario",
       "pearls": [
@@ -158,8 +157,7 @@ const pathogens = [
         "celulitis",
         "nac",
         "endocarditis_infecciosa",
-        "pie_diabetico",
-        "sepsis_urinaria"
+        "pie_diabetico"
       ],
       "context": "Comunitario y hospitalario",
       "pearls": [
@@ -236,7 +234,6 @@ const pathogens = [
     "clinical": {
       "summary": "Coccobacilo respiratorio frecuente en NAC.",
       "usualSyndromes": [
-        "faringitis",
         "meningitis"
       ],
       "context": "Comunitario",
@@ -710,8 +707,7 @@ const pathogens = [
     "clinical": {
       "summary": "Diplococo causante de meningitis.",
       "usualSyndromes": [
-        "meningitis",
-        "sepsis_urinaria"
+        "meningitis"
       ],
       "context": "Comunitario (brotes epidémicos)",
       "pearls": [
@@ -1447,8 +1443,7 @@ const pathogens = [
     "clinical": {
       "summary": "Coco asociado a bacteriemia en adultos vulnerables.",
       "usualSyndromes": [
-        "meningitis",
-        "itu_cistitis"
+        "meningitis"
       ],
       "context": "Materno-fetal;embarazo",
       "pearls": [
@@ -1483,9 +1478,7 @@ const pathogens = [
     },
     "clinical": {
       "summary": "Anaerobio productor de toxina en diarrea asociada a antibióticos.",
-      "usualSyndromes": [
-        "intraabdominal"
-      ],
+      "usualSyndromes": [],
       "context": "Hospitalario",
       "pearls": [
         "Riesgo aumentado tras uso de clindamicina o quinolonas"
@@ -1594,9 +1587,7 @@ const pathogens = [
     },
     "clinical": {
       "summary": "Agente de la fiebre tifoidea transmitido por vía fecal-oral",
-      "usualSyndromes": [
-        "sepsis_urinaria"
-      ],
+      "usualSyndromes": [],
       "context": "Comunitario (áreas con saneamiento deficiente)",
       "pearls": [
         "Estado de portador crónico en vesícula biliar"
@@ -1957,9 +1948,7 @@ const pathogens = [
     },
     "clinical": {
       "summary": "Micosis sistémica oportunista definitoria de SIDA",
-      "usualSyndromes": [
-        "nac"
-      ],
+      "usualSyndromes": [],
       "context": "Comunitario (heces de aves)",
       "pearls": [
         "Detección de antígeno en LCR o suero es muy sensible"
