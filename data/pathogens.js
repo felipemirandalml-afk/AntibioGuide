@@ -580,13 +580,13 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "lincosamidas",
+        "Lincosamidas",
         "vancomicina"
       ],
       "typicalAcquired": [
         "penicilina_g (producción de penicilinasa)",
         "ciprofloxacino (mutaciones gyrA)",
-        "tetraciclinas",
+        "Tetraciclinas",
         "azitromicina (resistencia en aumento global)"
       ],
       "stewardshipNote": "Las guías actuales (CDC) recomiendan monoterapia con altas dosis de Ceftriaxona (500 mg IM dosis única) para infecciones no complicadas, abandonando la adición rutinaria de Azitromicina empírica para el gonococo (por aumento de resistencia a macrólidos), salvo que no se haya descartado Chlamydia."
@@ -602,7 +602,7 @@ const pathogens = [
     "shortName": "C. trachomatis",
     "aliases": [],
     "taxonomy": {
-      "gram": "atípico",
+      "gram": "atypical",
       "morphology": "intracelular obligado",
       "group": "Chlamydiaceae"
     },
@@ -666,7 +666,7 @@ const pathogens = [
     "shortName": "M. genitalium",
     "aliases": [],
     "taxonomy": {
-      "gram": "atípico",
+      "gram": "atypical",
       "morphology": "pleomórfico",
       "group": "Mycoplasma"
     },
@@ -758,10 +758,10 @@ const pathogens = [
     "resistance": {
       "intrinsic": [
         "todas_las_cefalosporinas (incluyendo cefotaxima, ceftriaxona y cefepime)",
-        "fosfomicina"
+        "fosfomicina_trometamol"
       ],
       "typicalAcquired": [
-        "macrolidos",
+        "Macrólidos",
         "fluoroquinolonas (raro)"
       ],
       "stewardshipNote": "REGLA DE ORO: Ninguna cefalosporina cubre Listeria. Es el motivo por el cual se añade Ampicilina empírica al esquema de meningitis en >50 años, embarazadas o inmunocomprometidos. En alergia severa a penicilina, el Cotrimoxazol es la alternativa de elección."
@@ -1076,7 +1076,7 @@ const pathogens = [
       "Levaduras"
     ],
     "taxonomy": {
-      "gram": "fúngico",
+      "gram": "fungal",
       "morphology": "levadura",
       "group": "Fungi"
     },
@@ -1132,14 +1132,14 @@ const pathogens = [
       "intrinsic": [
         "ampicilina",
         "amoxicilina_clavulanico",
-        "cefalosporinas_primera_segunda_generacion",
+        "Cefalosporinas de 1ª y 2ª generación",
         "ertapenem",
         "cloranfenicol"
       ],
       "typicalAcquired": [
         "carbapenemicos (meropenem/imipenem)",
-        "aminoglucosidos",
-        "fluoroquinolonas",
+        "Aminoglucósidos",
+        "Fluoroquinolonas",
         "colistin"
       ],
       "stewardshipNote": "El componente Sulbactam (en Ampicilina-Sulbactam) tiene actividad bactericida intrínseca contra A. baumannii y es de primera línea. En cepas XDR, se recurre a esquemas combinados con Cefiderocol, Tigeciclina o Polimixinas."
@@ -1204,16 +1204,16 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "todas_las_cefalosporinas",
+        "Cefalosporinas (todas)",
         "clindamicina",
         "cloxacilina",
-        "aminoglucosidos_bajo_nivel",
+        "Aminoglucósidos (bajo nivel)",
         "cotrimoxazol (in vivo)"
       ],
       "typicalAcquired": [
         "ampicilina (casi 100% en cepas nosocomiales chilenas)",
         "vancomicina (VRE/ERV)",
-        "gentamicina_alto_nivel"
+        "Gentamicina de alto nivel"
       ],
       "stewardshipNote": "Si se aísla E. faecium en un hospital chileno, se asume resistencia a Ampicilina. Si es sensible a Vancomicina, es de elección; si es ERV, Linezolid o Daptomicina son los estándares de cuidado. Las cefalosporinas NUNCA cubren enterococos."
     },
@@ -1345,7 +1345,7 @@ const pathogens = [
       ],
       "typicalAcquired": [
         "cefalosporinas_tercera_generacion (por desrepresión AmpC o BLEE)",
-        "carbapenemicos"
+        "Carbapenémicos"
       ],
       "stewardshipNote": "Evitar Cefotaxima/Ceftriaxona incluso si el antibiograma reporta sensibilidad inicial, por alto riesgo de falla terapéutica (inducción de AmpC). Preferir Cefepime o Carbapenémicos para infecciones moderadas a severas. Su resistencia intrínseca a Colistín es clave para diferenciarla de otras enterobacterias en fenotipos MDR."
     },
@@ -1413,11 +1413,11 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "todos_los_carbapenemicos",
+        "Carbapenémicos (todos)",
         "aminoglucosidos (frecuente, por bombas de eflujo)"
       ],
       "typicalAcquired": [
-        "fluoroquinolonas",
+        "Fluoroquinolonas",
         "cotrimoxazol (emergente)"
       ],
       "stewardshipNote": "Es intrínsecamente resistente a los carbapenémicos debido a la producción de una metalo-beta-lactamasa (L1). Cotrimoxazol (TMP-SMX) a dosis altas es el gold standard absoluto. Minociclina, Levofloxacino o Cefiderocol son terapias de rescate."
@@ -1755,8 +1755,8 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "todos_los_betalactamicos",
-        "aminoglucosidos"
+        "Betalactámicos (todos)",
+        "Aminoglucósidos"
       ],
       "typicalAcquired": [],
       "stewardshipNote": "Al ser intracelular, requiere antibióticos con alta penetración tisular y macrófaga. Azitromicina (o Claritromicina) y Fluoroquinolonas respiratorias (Levofloxacino) son las terapias de primera línea exclusivas."
@@ -1774,7 +1774,7 @@ const pathogens = [
       "Espiroqueta de la sífilis"
     ],
     "taxonomy": {
-      "gram": "atípico",
+      "gram": "atypical",
       "morphology": "espiroqueta",
       "group": "Spirochaetaceae"
     },
@@ -1804,7 +1804,7 @@ const pathogens = [
       "Bacilo de Koch"
     ],
     "taxonomy": {
-      "gram": "atípico",
+      "gram": "atypical",
       "morphology": "bacilo ácido-alcohol resistente (AAR)",
       "group": "Mycobacteriaceae"
     },
@@ -1837,7 +1837,7 @@ const pathogens = [
       "Bacilo de Hansen"
     ],
     "taxonomy": {
-      "gram": "atípico",
+      "gram": "atypical",
       "morphology": "bacilo AAR",
       "group": "Mycobacteriaceae"
     },
@@ -1865,7 +1865,7 @@ const pathogens = [
     "shortName": "C. albicans",
     "aliases": [],
     "taxonomy": {
-      "gram": "hongo",
+      "gram": "fungal",
       "morphology": "levadura",
       "group": "Saccharomycetaceae"
     },
@@ -1918,7 +1918,7 @@ const pathogens = [
         "fluconazol (alta prevalencia de resistencia natural o rápida adquisición)"
       ],
       "typicalAcquired": [
-        "anfotericina_b",
+        "Anfotericina B",
         "equinocandinas (emergente, cepas panresistentes descritas)"
       ],
       "stewardshipNote": "Las equinocandinas (Caspofungina, Anidulafungina, Micafungina) son la terapia empírica de elección, pero la prueba de susceptibilidad es obligatoria. Medidas de aislamiento de contacto estricto son prioritarias."
@@ -1934,7 +1934,7 @@ const pathogens = [
     "shortName": "C. neoformans",
     "aliases": [],
     "taxonomy": {
-      "gram": "hongo",
+      "gram": "fungal",
       "morphology": "levadura encapsulada",
       "group": "Tremellaceae"
     },
@@ -1962,7 +1962,7 @@ const pathogens = [
     "shortName": "A. fumigatus",
     "aliases": [],
     "taxonomy": {
-      "gram": "hongo",
+      "gram": "fungal",
       "morphology": "filamentoso (hifas)",
       "group": "Aspergillaceae"
     },
@@ -1990,7 +1990,7 @@ const pathogens = [
     "shortName": "H. capsulatum",
     "aliases": [],
     "taxonomy": {
-      "gram": "hongo",
+      "gram": "fungal",
       "morphology": "dimórfico",
       "group": "Ajellomycetaceae"
     },
@@ -2020,7 +2020,7 @@ const pathogens = [
       "Pneumocystis carinii (antiguo)"
     ],
     "taxonomy": {
-      "gram": "hongo",
+      "gram": "fungal",
       "morphology": "quistes/trofozoítos",
       "group": "Pneumocystidaceae"
     },
@@ -2051,7 +2051,7 @@ const pathogens = [
     "shortName": "Leishmania",
     "aliases": [],
     "taxonomy": {
-      "gram": "atípico",
+      "gram": "atypical",
       "morphology": "protozoo intracelular",
       "group": "Trypanosomatidae"
     },
@@ -2081,7 +2081,7 @@ const pathogens = [
       "Agente enfermedad de Lyme"
     ],
     "taxonomy": {
-      "gram": "atípico",
+      "gram": "atypical",
       "morphology": "espiroqueta",
       "group": "Spirochaetaceae"
     },
@@ -2197,12 +2197,12 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "penicilina_g",
-        "macrolidos_clasicos"
+        "Penicilina G",
+        "Macrólidos clásicos"
       ],
       "typicalAcquired": [
         "ampicilina",
-        "cotrimoxazol",
+        "tmp_smx",
         "ciprofloxacino (resistencia creciente en Chile)"
       ],
       "stewardshipNote": "Solo tratar formas severas, bacteriemias o pacientes de alto riesgo. Ceftriaxona es de elección empírica en cuadros sistémicos."
@@ -2240,11 +2240,11 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "penicilina_g"
+        "Penicilina G"
       ],
       "typicalAcquired": [
         "ampicilina",
-        "cotrimoxazol",
+        "tmp_smx",
         "ciprofloxacino"
       ],
       "stewardshipNote": "A diferencia de Salmonella, Shigella siempre debe tratarse para acortar la clínica y reducir la transmisibilidad. Azitromicina o Ceftriaxona son de elección en Chile dada la resistencia a fluoroquinolonas."
@@ -2282,7 +2282,7 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "aminoglucosidos",
+        "Aminoglucósidos",
         "aztreonam"
       ],
       "typicalAcquired": [
@@ -2324,7 +2324,7 @@ const pathogens = [
     "resistance": {
       "intrinsic": [
         "metronidazol",
-        "aminoglucosidos"
+        "Aminoglucósidos"
       ],
       "typicalAcquired": [],
       "stewardshipNote": "Requiere tratamientos muy prolongados (meses). Amoxicilina o Penicilina G EV inicial son de elección. Curiosamente, a pesar de ser anaerobio, es intrínsecamente resistente al Metronidazol."
@@ -2363,7 +2363,7 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "penicilina_g",
+        "Penicilina G",
         "macrolidos (depende de la especie)"
       ],
       "typicalAcquired": [
@@ -2406,8 +2406,8 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "betalactamicos",
-        "aminoglucosidos"
+        "Betalactámicos",
+        "Aminoglucósidos"
       ],
       "typicalAcquired": [],
       "stewardshipNote": "Doxiciclina es el tratamiento de primera línea para cuadros agudos. La endocarditis (crónica) requiere terapia prolongada (18-24 meses) con Doxiciclina + Hidroxicloroquina (para alcalinizar el fagolisosoma)."
@@ -2447,8 +2447,8 @@ const pathogens = [
     },
     "resistance": {
       "intrinsic": [
-        "cefalosporinas_primera_generacion",
-        "penicilina_g"
+        "Cefalosporinas de 1ª generación",
+        "Penicilina G"
       ],
       "typicalAcquired": [],
       "stewardshipNote": "La monoterapia está proscrita por altas tasas de recaída. Esquemas estándar: Doxiciclina + Rifampicina (OMS) por 6 semanas, o Doxiciclina + Gentamicina/Estreptomicina. En neurobrucelosis o endocarditis se prefiere terapia triple."

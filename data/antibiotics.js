@@ -190,7 +190,7 @@ const antibiotics = [
   {
     "id": "cefazolina",
     "name": "Cefazolina",
-    "family": "Cefalosporina de 1ra generación",
+    "family": "Cefalosporina de 1ª generación",
     "mechanism": "Bactericida. Inhibe la síntesis de pared bacteriana.",
     "spectrum": "Cocos Grampositivos (MSSA) y algunos bacilos Gramnegativos (E. coli sensible).",
     "dose": "1-2 g IV c/8 h.",
@@ -210,7 +210,7 @@ const antibiotics = [
   {
     "id": "cefadroxilo",
     "name": "Cefadroxilo",
-    "family": "Cefalosporina de 1ra generación (Oral)",
+    "family": "Cefalosporina de 1ª generación (Oral)",
     "mechanism": "Bactericida por inhibición de síntesis de pared.",
     "spectrum": "Grampositivos y algunos Gramnegativos (especialmente urinarios).",
     "dose": "500 mg - 1 g PO c/12 h.",
@@ -249,7 +249,7 @@ const antibiotics = [
   {
     "id": "cefuroxima",
     "name": "Cefuroxima",
-    "family": "Cefalosporina de 2ra generación",
+    "family": "Cefalosporina de 2ª generación",
     "mechanism": "Bactericida por inhibición de síntesis de pared.",
     "spectrum": "Grampositivos y mayor cobertura contra Gramnegativos (E. coli, H. influenzae) que 1ra gen.",
     "dose": "750 mg - 1.5 g IV c/8 h o 250-500 mg PO c/12 h.",
@@ -269,7 +269,7 @@ const antibiotics = [
   {
     "id": "ceftriaxona",
     "name": "Ceftriaxona",
-    "family": "Cefalosporina de 3ra generación",
+    "family": "Cefalosporina de 3ª generación",
     "mechanism": "Bactericida. Inhibe la síntesis de pared celular bacteriana.",
     "spectrum": "Gram-, Streptococci. No Pseudomonas, no Enterococos.",
     "dose": "1-2 g IV c/24h (2 g IV c/12h en Meningitis/Endocarditis).",
@@ -295,7 +295,7 @@ const antibiotics = [
   {
     "id": "ceftazidima",
     "name": "Ceftazidima",
-    "family": "Cefalosporina de 3ra generación antipseudomónica",
+    "family": "Cefalosporina de 3ª generación antipseudomónica",
     "mechanism": "Bactericida. Alta afinidad hacia PBP de Pseudomonas aeruginosa.",
     "spectrum": "Bacilos Gramnegativos, alta y específica actividad antipseudomónica. Pobre Gram+.",
     "dose": "1-2 g IV c/8 h.",
@@ -315,7 +315,7 @@ const antibiotics = [
   {
     "id": "cefepime",
     "name": "Cefepime",
-    "family": "Cefalosporina de 4ta generación",
+    "family": "Cefalosporina de 4ª generación",
     "mechanism": "Bactericida de amplio espectro con estabilidad frente a AmpC.",
     "spectrum": "Enterobacterias (incluyendo AmpC), Pseudomonas aeruginosa, MSSA y Streptococci.",
     "dose": "2 g IV c/8-12 h (2 g c/8 h en Neutropenia Febril / Meningitis).",
@@ -338,7 +338,7 @@ const antibiotics = [
   {
     "id": "ertapenem",
     "name": "Ertapenem",
-    "family": "Carbapenémicos",
+    "family": "Carbapenémico",
     "mechanism": "Bactericida. Inhibe la síntesis de pared celular bacteriana (vida media larga)",
     "spectrum": "Bacterias Gram+, Gram- (BLEE) y Anaerobios. Sin actividad contra Pseudomonas o Acinetobacter",
     "dose": "1 g c/24 h (IV/IM)",
@@ -481,7 +481,7 @@ const antibiotics = [
   {
     "id": "gentamicina",
     "name": "Gentamicina",
-    "family": "Aminoglucósidos",
+    "family": "Aminoglucósido",
     "mechanism": "Bactericida. Inhibe la síntesis de proteínas mediante unión a la subunidad 30S",
     "spectrum": "Bacilos Gramnegativos aerobios y sinergia contra Grampositivos (enterococo y estafilococo)",
     "dose": "5 mg/kg c/24 h o 1-2 mg/kg c/8 h (IV/IM)",
@@ -584,7 +584,7 @@ const antibiotics = [
   {
     "id": "moxifloxacino",
     "name": "Moxifloxacino",
-    "family": "Fluoroquinolonas",
+    "family": "Fluoroquinolona",
     "mechanism": "Bactericida. Inhibe la topoisomerasa IV y la ADN girasa",
     "spectrum": "Potente contra Gram+, Atípicos (Mycoplasma, Legionella) y patógenos respiratorios. Menor actividad antipseudomónica",
     "dose": "400 mg/día (Oral/IV)",
@@ -689,14 +689,21 @@ const antibiotics = [
   {
     "id": "tmp_smx",
     "name": "Cotrimoxazol (TMP-SMX)",
-    "family": "Antifolatos",
-    "mechanism": "Inhibe síntesis de folato (dos pasos).",
-    "spectrum": "MRSA comunitario, algunos Gram- urinarios.",
-    "dose": "DS 160/800 mg PO c/12h (según indicación)",
-    "renal": "Ajustar en IR; vigilar K+.",
-    "contraindications": "Alergia sulfas, embarazo (según trimestre), déficit G6PD (precaución).",
-    "adverse": "Rash, hiperK, citopenias, nefritis intersticial (raro).",
-    "uses": "SSTI con riesgo MRSA, alternativas ITU, cobertura Listeria (según caso).",
+    "family": "Antifolato",
+    "mechanism": "Bacteriostático dual que inhibe pasos secuenciales en la síntesis de ácido fólico bacteriano.",
+    "spectrum": "Bacterias Gram+, Gram- (incluyendo SARM comunitario) y Pneumocystis jirovecii.",
+    "dose": "800/160 mg c/12 h (Oral/IV); dosis altas para Pneumocystis: 15-20 mg/kg/día de TMP divididos c/6-8 h",
+    "renal": "ClCr 15-30 mL/min: reducir a la mitad; ClCr < 15 mL/min: evitar o uso condicionado. Vigilar K+.",
+    "contraindications": "Alergia a sulfamidas, deficiencia de G6PD, primer trimestre de embarazo, lactantes menores de 2 meses.",
+    "adverse": "Reacciones cutáneas severas (DRESS, SSJ), hiperpotasemia, nefrotoxicidad, supresión medular, nefritis intersticial (raro).",
+    "uses": "Tratamiento y profilaxis de P. jirovecii, infecciones urinarias, SSTI con riesgo MRSA, nocardiosis, listeriosis, toxoplasmosis.",
+    "synonyms": [
+      "sulfametoxazol-trimetoprima",
+      "sulfametoxazol trimetoprima",
+      "cotrimoxazol",
+      "tmp-smx",
+      "smx-tmp"
+    ],
     "clinical_metadata": {
       "aware": "Access",
       "spectrum": "broad",
@@ -729,7 +736,7 @@ const antibiotics = [
   {
     "id": "rifampicina",
     "name": "Rifampicina",
-    "family": "Rifamicinas",
+    "family": "Rifamicina",
     "mechanism": "Bactericida. Inhibe la ARN-polimerasa dependiente de ADN bacteriana",
     "spectrum": "Micobacterias (M. tuberculosis) y potentes sinergias contra Grampositivos (Estafilococos)",
     "dose": "600 mg/día o 10 mg/kg/día (Oral/IV)",
@@ -809,7 +816,7 @@ const antibiotics = [
   {
     "id": "dicloxacilina",
     "name": "Dicloxacilina",
-    "family": "Penicilina resistente a beta-lactamasas (Isoxazolil)",
+    "family": "Penicilina antiestafilocócica",
     "mechanism": "Bactericida. Inhibe la síntesis de la pared celular, resistente a penicilinasas",
     "spectrum": "Estafilococos productores de penicilinasa (S. aureus sensible a meticilina) y estreptococos",
     "dose": "Información no disponible",
@@ -828,7 +835,7 @@ const antibiotics = [
   {
     "id": "oxacilina",
     "name": "Oxacilina",
-    "family": "Penicilina resistente a beta-lactamasas (Grupo M)",
+    "family": "Penicilina antiestafilocócica",
     "mechanism": "Bactericida. Inhibe la síntesis de la pared bacteriana. Resistente a penicilinasas estafilocócicas",
     "spectrum": "Bacterias Grampositivas, principalmente S. aureus sensible a meticilina (MSSA)",
     "dose": "8-12 g/día divididos en 4-6 dosis (IV en infusión lenta)",
@@ -961,7 +968,7 @@ const antibiotics = [
   {
     "id": "ceftarolina",
     "name": "Ceftarolina Fosamilo",
-    "family": "Cefalosporina de 5ta generación",
+    "family": "Cefalosporina de 5ª generación",
     "mechanism": "Bactericida. Único betalactámico con alta afinidad por PBP2a; cubre MRSA.",
     "spectrum": "Amplia cobertura Grampositiva (MRSA, Neumococo resistente) y algunos Gramnegativos.",
     "dose": "600 mg IV c/12 h en infusión de 60 min.",
@@ -986,7 +993,7 @@ const antibiotics = [
   {
     "id": "tobramicina",
     "name": "Tobramicina",
-    "family": "Aminoglucósidos",
+    "family": "Aminoglucósido",
     "mechanism": "Bactericida. Inhibe la síntesis proteica uniéndose a la subunidad 30S ribosomal",
     "spectrum": "Bacilos Gramnegativos aerobios, especialmente Pseudomonas aeruginosa",
     "dose": "3 mg/kg/día o 1 mg/kg c/8 h (IV/IM); Inhalado: 300 mg c/12 h (en FQ)",
@@ -1005,7 +1012,7 @@ const antibiotics = [
   {
     "id": "teicoplanina",
     "name": "Teicoplanina",
-    "family": "Glucopéptidos",
+    "family": "Glicopéptido",
     "mechanism": "Bactericida. Inhibe la biosíntesis de la pared celular bacteriana",
     "spectrum": "Exclusivo para bacterias Grampositivas (S. aureus, SARM, Enterococcus)",
     "dose": "Carga: 6-12 mg/kg c/12 h por 3 dosis. Mantenimiento: 6-12 mg/kg/día (IV/IM)",
@@ -1024,7 +1031,7 @@ const antibiotics = [
   {
     "id": "polimixina_b",
     "name": "Polimixina B",
-    "family": "Polimixinas",
+    "family": "Polimixina",
     "mechanism": "Bactericida. Altera la permeabilidad de la membrana externa de bacterias Gramnegativas",
     "spectrum": "Bacilos Gramnegativos resistentes (P. aeruginosa, K. pneumoniae, Acinetobacter)",
     "dose": "15,000 - 25,000 U/kg/día divididos c/12 h (IV)",
@@ -1043,7 +1050,7 @@ const antibiotics = [
   {
     "id": "norfloxacino",
     "name": "Norfloxacino",
-    "family": "Fluoroquinolonas",
+    "family": "Fluoroquinolona",
     "mechanism": "Bactericida. Inhibe la ADN-girasa bacteriana",
     "spectrum": "Bacterias Gramnegativas del tracto urinario y gastrointestinal",
     "dose": "400 mg c/12 h (Oral)",
@@ -1062,7 +1069,7 @@ const antibiotics = [
   {
     "id": "isoniazida",
     "name": "Isoniazida",
-    "family": "Hidrazidas (Antituberculoso)",
+    "family": "Hidrazida (Antituberculoso)",
     "mechanism": "Bactericida. Inhibe la biosíntesis de ácido micólico de la pared micobacteriana",
     "spectrum": "Específico para Mycobacterium tuberculosis y M. bovis",
     "dose": "300 mg/día o 10-15 mg/kg/día (Oral)",
@@ -1176,28 +1183,9 @@ const antibiotics = [
   },
 
   {
-    "id": "sulfametoxazol_trimetoprima",
-    "name": "Sulfametoxazol-Trimetoprima (Cotrimoxazol)",
-    "family": "Sulfonamida + Diaminopirimidina",
-    "mechanism": "Bacteriostático dual que inhibe pasos secuenciales en la síntesis de ácido fólico bacteriano",
-    "spectrum": "Bacterias Gram+, Gram- (incluyendo SARM comunitario) y Pneumocystis jirovecii",
-    "dose": "800/160 mg c/12 h (Oral/IV); Dosis altas para Pneumocystis: 15-20 mg/kg/día de TMP divididos c/6-8 h",
-    "renal": "Clcr 15-30 ml/min: reducir a la mitad; Clcr < 15 ml/min: evitar o uso condicionado",
-    "contraindications": "Alergia a sulfamidas, deficiencia de G6PD, primer trimestre de embarazo, lactantes menores de 2 meses",
-    "adverse": "Reacciones cutáneas severas (DRESS, SSJ), hiperpotasemia, nefrotoxicidad, supresión medular",
-    "uses": "Tratamiento y profilaxis de P. jirovecii, infecciones urinarias, nocardiosis, listeriosis, toxoplasmosis",
-    "clinical_metadata": {
-      "aware": "Access",
-      "spectrum": "broad",
-      "anti_pseudomonas": false,
-      "anaerobic_activity": false,
-      "oral_option": true
-    }
-  },
-  {
     "id": "cloranfenicol",
     "name": "Cloranfenicol",
-    "family": "Anfenicoles",
+    "family": "Anfenicol",
     "mechanism": "Bacteriostático de amplio espectro. Interfiere en la síntesis proteica bacteriana",
     "spectrum": "Amplio espectro: Salmonella typhi, H. influenzae, bacterias Gramnegativas y Rickettsias",
     "dose": "Información no disponible",
@@ -1217,7 +1205,7 @@ const antibiotics = [
   {
     "id": "bencilpenicilina_benzatina",
     "name": "Bencilpenicilina Benzatina (Penicilina G Benzatina)",
-    "family": "Penicilinas sensibles a beta-lactamasa",
+    "family": "Penicilina sensible a beta-lactamasa",
     "mechanism": "Bactericida de depósito. Bloquea síntesis de pared bacteriana y mantiene niveles duraderos en sangre",
     "spectrum": "Estreptococos, neumococos y espiroquetas (Treponema pallidum)",
     "dose": "1.2 a 2.4 millones UI (IM) en dosis única o según protocolo (cada 4 semanas para profilaxis)",
@@ -1260,7 +1248,7 @@ const antibiotics = [
   {
     "id": "eritromicina",
     "name": "Eritromicina",
-    "family": "Macrólidos",
+    "family": "Macrólido",
     "mechanism": "Bacteriostático. Se une a la subunidad 50S ribosomal inhibiendo la síntesis proteica",
     "spectrum": "S. pyogenes, S. aureus (MSSA), Campylobacter jejuni, Corynebacterium y Atípicos",
     "dose": "250-500 mg c/6 h (Oral); 500 mg-1 g c/6 h (IV)",
@@ -1279,7 +1267,7 @@ const antibiotics = [
   {
     "id": "estreptomicina",
     "name": "Estreptomicina",
-    "family": "Aminoglucósidos",
+    "family": "Aminoglucósido",
     "mechanism": "Bactericida. Inhibe la síntesis proteica bacteriana uniéndose al ribosoma",
     "spectrum": "Bacilos Gramnegativos y Micobacterias (incluyendo M. tuberculosis)",
     "dose": "Información no disponible",
@@ -1298,7 +1286,7 @@ const antibiotics = [
   {
     "id": "neomicina",
     "name": "Neomicina",
-    "family": "Aminoglucósidos",
+    "family": "Aminoglucósido",
     "mechanism": "Inhibe la síntesis de proteínas bacterianas",
     "spectrum": "Bacterias Gramnegativas en el lumen intestinal",
     "dose": "500 mg (uso tópico/oral para efecto local intestinal)",
@@ -1317,7 +1305,7 @@ const antibiotics = [
   {
     "id": "ofloxacino",
     "name": "Ofloxacino",
-    "family": "Fluoroquinolonas",
+    "family": "Fluoroquinolona",
     "mechanism": "Bactericida. Inhibe las topoisomerasas bacterianas (ADN girasa y Topo IV)",
     "spectrum": "Grampositivos, Gramnegativos y Atípicos",
     "dose": "200-400 mg c/12 h (Oral)",
@@ -1336,7 +1324,7 @@ const antibiotics = [
   {
     "id": "delafloxacino",
     "name": "Delafloxacino",
-    "family": "Fluoroquinolonas",
+    "family": "Fluoroquinolona",
     "mechanism": "Bactericida aniónico. Inhibe la ADN girasa y la topoisomerasa IV",
     "spectrum": "Grampositivos (incluyendo SAMR y Enterococcus faecalis) y selectos Gramnegativos",
     "dose": "450 mg (Oral) / 300 mg (IV)",
@@ -1357,7 +1345,7 @@ const antibiotics = [
   {
     "id": "rifabutina",
     "name": "Rifabutina",
-    "family": "Rifamicinas",
+    "family": "Rifamicina",
     "mechanism": "Inhibe la ARN-polimerasa ADN-dependiente micobacteriana",
     "spectrum": "Mycobacterium tuberculosis y Complejo Mycobacterium avium (MAC)",
     "dose": "Información no disponible",
@@ -1395,7 +1383,7 @@ const antibiotics = [
   {
     "id": "bedaquilina",
     "name": "Bedaquilina",
-    "family": "Diarilquinolinas (Antituberculoso)",
+    "family": "Diarilquinolina (Antituberculoso)",
     "mechanism": "Bactericida específico. Inhibe la bomba de ATP sintasa micobacteriana",
     "spectrum": "Mycobacterium tuberculosis",
     "dose": "Terapia administrada junto a comidas (Oral)",
@@ -1434,7 +1422,7 @@ const antibiotics = [
   {
     "id": "rifaximina",
     "name": "Rifaximina",
-    "family": "Rifamicinas",
+    "family": "Rifamicina",
     "mechanism": "Bactericida local (no absorbible). Inhibe la síntesis de ARN bacteriano",
     "spectrum": "Flora bacteriana gastrointestinal",
     "dose": "Mayores de 12 años: 400 mg c/8 h (Oral); Máx: 1600 mg/día",
@@ -1453,7 +1441,7 @@ const antibiotics = [
   {
     "id": "flucloxacilina",
     "name": "Flucloxacilina",
-    "family": "Penicilinas (Grupo Isoxazolil)",
+    "family": "Penicilina antiestafilocócica",
     "mechanism": "Antibiótico con actividad bactericida",
     "spectrum": "Gérmenes productores de betalactamasa",
     "dose": "250 mg - 500 mg (Oral). Administrar alejado de alimentos (1-2 hr)",
@@ -1510,7 +1498,7 @@ const antibiotics = [
   {
     "id": "dapsona",
     "name": "Dapsona",
-    "family": "Medicamentos para el tratamiento de la lepra",
+    "family": "Medicamento para el tratamiento de la lepra",
     "mechanism": "",
     "spectrum": "",
     "dose": "Información no disponible",
@@ -1529,7 +1517,7 @@ const antibiotics = [
   {
     "id": "rifapentina",
     "name": "Rifapentina",
-    "family": "Información no disponible",
+    "family": "Rifamicina",
     "mechanism": "",
     "spectrum": "",
     "dose": "Información no disponible",
@@ -1548,7 +1536,7 @@ const antibiotics = [
   {
     "id": "tetraciclina",
     "name": "Tetraciclina",
-    "family": "Tetraciclinas",
+    "family": "Tetraciclina",
     "mechanism": "Antibiótico bacteriostático que inhibe la síntesis proteica bacteriana",
     "spectrum": "Amplio espectro de microorganismos sensibles",
     "dose": "500 mg (Oral). Ingerir con abundante agua, alejar de alimentos y cationes",
