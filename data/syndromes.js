@@ -2135,7 +2135,7 @@ const syndromes = [
       "Klebsiella pneumoniae",
       "Enterobacter cloacae",
       "Pseudomonas aeruginosa",
-      "Candida spp.",,
+      "Candida spp.",
       "Acinetobacter baumannii",
       "Stenotrophomonas maltophilia"
     ],
@@ -2146,7 +2146,10 @@ const syndromes = [
       "klebsiella_pneumoniae",
       "enterobacter_cloacae_complex",
       "pseudomonas_aeruginosa",
-      "candida_spp",, "acinetobacter_baumannii", "stenotrophomonas_maltophilia"],
+      "candida_spp",
+      "acinetobacter_baumannii",
+      "stenotrophomonas_maltophilia"
+    ],
   },
 
   {
@@ -2235,7 +2238,7 @@ const syndromes = [
       "Klebsiella pneumoniae",
       "Enterobacter cloacae",
       "Pseudomonas aeruginosa",
-      "Acinetobacter baumannii",,
+      "Acinetobacter baumannii",
       "Stenotrophomonas maltophilia"
     ],
     pathogenIds: [
@@ -2244,7 +2247,9 @@ const syndromes = [
       "klebsiella_pneumoniae",
       "enterobacter_cloacae_complex",
       "pseudomonas_aeruginosa",
-      "acinetobacter_baumannii",, "stenotrophomonas_maltophilia"],
+      "acinetobacter_baumannii",
+      "stenotrophomonas_maltophilia"
+    ],
   },
 
   // ===========================================================================
