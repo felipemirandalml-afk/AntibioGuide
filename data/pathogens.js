@@ -1779,25 +1779,20 @@ const pathogens = [
       "group": "Spirochaetaceae"
     },
     "clinical": {
-      "summary": "Agente de la sífilis",
+      "summary": "Agente de la sífilis, patógeno crónico sistémico",
       "usualSyndromes": [],
-      "context": "Sífilis (primaria",
+      "context": "Comunitario",
       "pearls": [
-        "secundaria"
+        "Diagnóstico mediante pruebas no treponémicas (RPR/VDRL) y treponémicas"
       ]
     },
     "resistance": {
-      "intrinsic": [
-        "latente"
-      ],
-      "typicalAcquired": [
-        "terciaria)",
-        "neurosífilis"
-      ],
-      "stewardshipNote": "Comunitario"
+      "intrinsic": [],
+      "typicalAcquired": [],
+      "stewardshipNote": "Tratamiento de elección: Penicilina Benzatina"
     },
     "appMeta": {
-      "relevance": "diagnóstico mediante pruebas no treponémicas (rpr/vdrl) y treponémicas",
+      "relevance": "alta",
       "status": "active"
     }
   },
@@ -1814,22 +1809,23 @@ const pathogens = [
       "group": "Mycobacteriaceae"
     },
     "clinical": {
-      "summary": "Causa la tuberculosis",
+      "summary": "Causa la tuberculosis, principal causa de muerte infecciosa global",
       "usualSyndromes": [],
-      "context": "Tuberculosis pulmonar y extrapulmonar",
+      "context": "Comunitario/Institucional",
       "pearls": [
-        "Comunitario/Institucional"
+        "Requiere tratamiento prolongado y multiasociado (TDO)"
       ]
     },
     "resistance": {
-      "intrinsic": [
-        "Requiere tratamiento prolongado y multiasociado (TDO)"
+      "intrinsic": [],
+      "typicalAcquired": [
+        "MDR",
+        "XDR (multirresistencia)"
       ],
-      "typicalAcquired": [],
-      "stewardshipNote": "MDR;XDR (multirresistencia)"
+      "stewardshipNote": "Uso restringido de rifampicina en programas nacionales"
     },
     "appMeta": {
-      "relevance": "uso restringido de rifampicina en programas nacionales",
+      "relevance": "extrema",
       "status": "active"
     }
   },
@@ -1846,22 +1842,20 @@ const pathogens = [
       "group": "Mycobacteriaceae"
     },
     "clinical": {
-      "summary": "Agente de la lepra",
+      "summary": "Agente de la lepra, afecta piel y nervios periféricos",
       "usualSyndromes": [],
-      "context": "Lepra paucibacilar y multibacilar",
+      "context": "Comunitario",
       "pearls": [
-        "Comunitario"
+        "No cultivable en medios artificiales"
       ]
     },
     "resistance": {
-      "intrinsic": [
-        "No cultivable en medios artificiales"
-      ],
+      "intrinsic": [],
       "typicalAcquired": [],
-      "stewardshipNote": ""
+      "stewardshipNote": "Tratamiento multidroga (Rifampicina+Dapsona+Clofazimina)"
     },
     "appMeta": {
-      "relevance": "tratamiento multidroga (rifampicina+dapsona+clofazimina)",
+      "relevance": "moderada",
       "status": "active"
     }
   },
@@ -1876,22 +1870,20 @@ const pathogens = [
       "group": "Saccharomycetaceae"
     },
     "clinical": {
-      "summary": "Comensal humano",
+      "summary": "Comensal humano, causa común de micosis oportunistas",
       "usualSyndromes": [],
-      "context": "Candidiasis oral;vulvovaginitis;candidemia",
+      "context": "Comunitario y hospitalario",
       "pearls": [
-        "Comunitario y hospitalario"
+        "Especie más sensible a fluconazol en general"
       ]
     },
     "resistance": {
-      "intrinsic": [
-        "Especie más sensible a fluconazol en general"
-      ],
+      "intrinsic": [],
       "typicalAcquired": [],
-      "stewardshipNote": ""
+      "stewardshipNote": "Uso de equinocandinas en paciente inestable"
     },
     "appMeta": {
-      "relevance": "uso de equinocandinas en paciente inestable",
+      "relevance": "alta",
       "status": "active"
     }
   },
@@ -2091,23 +2083,23 @@ const pathogens = [
     "taxonomy": {
       "gram": "atípico",
       "morphology": "espiroqueta",
-      "group": ""
+      "group": "Spirochaetaceae"
     },
     "clinical": {
-      "summary": "Spirochaetaceae",
+      "summary": "Causa la enfermedad de Lyme transmitida por garrapatas",
       "usualSyndromes": [],
-      "context": "Eritema migrans;artritis de Lyme;neuroborreliosis",
-      "pearls": []
+      "context": "",
+      "pearls": [
+        "Rash en \"ojo de buey\" patognomónico"
+      ]
     },
     "resistance": {
-      "intrinsic": [
-        "Rash en ojo de buey patognomónico"
-      ],
+      "intrinsic": [],
       "typicalAcquired": [],
       "stewardshipNote": ""
     },
     "appMeta": {
-      "relevance": "medium",
+      "relevance": "baja",
       "status": "active"
     }
   },
