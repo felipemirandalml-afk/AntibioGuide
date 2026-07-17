@@ -1,0 +1,1075 @@
+<title>AntibioGuide — Grafo clínico</title>
+<style>
+  /* ---- Tokens ------------------------------------------------------------
+     Neutrales con sesgo frío hacia el azul del acento (no gris puro).
+     Los tres tipos de nodo llevan color Y forma: la forma es la codificación
+     secundaria que exige la separación CVD en modo claro.                    */
+  :root {
+    color-scheme: light;
+    --plane:      #f7f8fa;
+    --surface:    #fcfcfd;
+    --surface-2:  #f1f3f7;
+    --ink:        #0b0d10;
+    --ink-2:      #52565e;
+    --ink-muted:  #898d95;
+    --rule:       #e0e3ea;
+    --ring:       rgba(11, 13, 16, 0.10);
+
+    --syndrome:   #2a78d6;
+    --pathogen:   #008300;
+    --drug:       #e87ba4;
+
+    --good:       #0ca30c;
+    --warning:    #fab219;
+    --critical:   #d03b3b;
+
+    --edge:       rgba(82, 86, 94, 0.28);
+    --edge-strong:rgba(11, 13, 16, 0.55);
+    --canvas-bg:  #fcfcfd;
+    --grid:       rgba(11, 13, 16, 0.035);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --plane:      #0d0e10;
+      --surface:    #1a1b1e;
+      --surface-2:  #232529;
+      --ink:        #ffffff;
+      --ink-2:      #c3c6cd;
+      --ink-muted:  #898d95;
+      --rule:       #2c2e33;
+      --ring:       rgba(255, 255, 255, 0.10);
+
+      --syndrome:   #3987e5;
+      --pathogen:   #008300;
+      --drug:       #d55181;
+
+      --edge:       rgba(195, 198, 205, 0.22);
+      --edge-strong:rgba(255, 255, 255, 0.55);
+      --canvas-bg:  #1a1b1e;
+      --grid:       rgba(255, 255, 255, 0.04);
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --plane:      #0d0e10;
+    --surface:    #1a1b1e;
+    --surface-2:  #232529;
+    --ink:        #ffffff;
+    --ink-2:      #c3c6cd;
+    --ink-muted:  #898d95;
+    --rule:       #2c2e33;
+    --ring:       rgba(255, 255, 255, 0.10);
+
+    --syndrome:   #3987e5;
+    --pathogen:   #008300;
+    --drug:       #d55181;
+
+    --edge:       rgba(195, 198, 205, 0.22);
+    --edge-strong:rgba(255, 255, 255, 0.55);
+    --canvas-bg:  #1a1b1e;
+    --grid:       rgba(255, 255, 255, 0.04);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--plane);
+    color: var(--ink);
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 28px 20px 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  /* ---- Header ---- */
+  .head { display: flex; flex-direction: column; gap: 6px; }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  h1 {
+    margin: 0;
+    font-size: clamp(24px, 3.4vw, 34px);
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+  .head p {
+    margin: 4px 0 0;
+    color: var(--ink-2);
+    max-width: 68ch;
+  }
+  .stamp {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---- Stat row ---- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+  }
+  .tile {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .tile .v {
+    font-size: 26px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .tile .k {
+    font-size: 12px;
+    color: var(--ink-2);
+  }
+  .tile .note { font-size: 11px; color: var(--ink-muted); }
+  .tile.flag { border-left: 3px solid var(--warning); }
+  .tile.crit { border-left: 3px solid var(--critical); }
+
+  /* ---- Stage ---- */
+  .stage {
+    display: grid;
+    grid-template-columns: 232px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .stage { grid-template-columns: 1fr; }
+  }
+
+  .rail {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: sticky;
+    top: 16px;
+  }
+  @media (max-width: 860px) {
+    .rail { position: static; }
+  }
+
+  .rail h2 {
+    margin: 0 0 8px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+
+  .search {
+    width: 100%;
+    padding: 7px 9px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--surface-2);
+    color: var(--ink);
+    font: inherit;
+    font-size: 13px;
+  }
+  .search:focus-visible {
+    outline: 2px solid var(--syndrome);
+    outline-offset: 1px;
+  }
+
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 0;
+    font-size: 13px;
+    cursor: pointer;
+    color: var(--ink-2);
+  }
+  .opt input { accent-color: var(--syndrome); cursor: pointer; margin: 0; }
+  .opt:hover { color: var(--ink); }
+  .opt .swatch { width: 14px; height: 14px; flex: none; }
+  .opt .count {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--ink-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .btn {
+    width: 100%;
+    padding: 7px 10px;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: var(--surface-2);
+    color: var(--ink-2);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .btn:hover { color: var(--ink); border-color: var(--ink-muted); }
+  .btn:focus-visible { outline: 2px solid var(--syndrome); outline-offset: 1px; }
+
+  .canvas-box {
+    position: relative;
+    background: var(--canvas-bg);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  canvas { display: block; width: 100%; height: 620px; cursor: grab; }
+  canvas.dragging { cursor: grabbing; }
+  @media (max-width: 860px) { canvas { height: 460px; } }
+
+  .hint {
+    position: absolute;
+    left: 12px;
+    bottom: 10px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    pointer-events: none;
+  }
+
+  .tip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    padding: 7px 9px;
+    font-size: 12px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+    max-width: 240px;
+    opacity: 0;
+    transition: opacity 0.1s;
+    z-index: 5;
+  }
+  .tip.on { opacity: 1; }
+  .tip .t-name { font-weight: 600; }
+  .tip .t-sub { color: var(--ink-2); font-size: 11px; }
+
+  /* ---- Detail ---- */
+  .detail {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+  .detail .empty { color: var(--ink-muted); font-size: 13px; margin: 0; }
+  .d-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .d-head h3 { margin: 0; font-size: 19px; font-weight: 620; letter-spacing: -0.01em; }
+  .d-desc { color: var(--ink-2); font-size: 13px; margin: 6px 0 0; max-width: 72ch; }
+  .d-groups {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+    margin-top: 14px;
+  }
+  .d-group h4 {
+    margin: 0 0 6px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    border: 1px solid var(--rule);
+    background: var(--surface-2);
+    color: var(--ink-2);
+    font-size: 12px;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .chip:hover { color: var(--ink); border-color: var(--ink-muted); }
+  .chip:focus-visible { outline: 2px solid var(--syndrome); outline-offset: 1px; }
+  .chip .dot { width: 7px; height: 7px; border-radius: 50%; flex: none; }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 500;
+    border: 1px solid var(--ring);
+    color: var(--ink-2);
+    background: var(--surface-2);
+  }
+  .pill.warn { border-color: var(--warning); color: var(--ink); }
+  .pill.crit { border-color: var(--critical); color: var(--ink); }
+
+  /* ---- Findings ---- */
+  .findings { display: flex; flex-direction: column; gap: 14px; }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .card > summary {
+    padding: 12px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-weight: 550;
+    font-size: 14px;
+    list-style: none;
+  }
+  .card > summary::-webkit-details-marker { display: none; }
+  .card > summary::before {
+    content: "▸";
+    color: var(--ink-muted);
+    font-size: 11px;
+    transition: transform 0.12s;
+  }
+  .card[open] > summary::before { transform: rotate(90deg); }
+  .card > summary:focus-visible { outline: 2px solid var(--syndrome); outline-offset: -2px; }
+  .card > summary .n {
+    margin-left: auto;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink-muted);
+    font-size: 12px;
+    font-weight: 400;
+  }
+  .card .body { padding: 0 16px 14px; }
+  .card .lede { margin: 0 0 10px; font-size: 13px; color: var(--ink-2); max-width: 76ch; }
+
+  .scroll { overflow-x: auto; }
+  table { border-collapse: collapse; width: 100%; font-size: 12.5px; }
+  th, td {
+    text-align: left;
+    padding: 5px 10px 5px 0;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+  }
+  th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--ink-muted);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  td.mono {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    color: var(--ink-2);
+  }
+  tbody tr:last-child td { border-bottom: none; }
+
+  footer {
+    color: var(--ink-muted);
+    font-size: 12px;
+    border-top: 1px solid var(--rule);
+    padding-top: 14px;
+    max-width: 78ch;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div class="eyebrow">Herramienta de auditoría · no es runtime</div>
+    <h1>El grafo clínico de AntibioGuide</h1>
+    <p>
+      Cada síndrome apunta a los patógenos que lo causan y a los fármacos que lo tratan;
+      cada patógeno apunta a los fármacos que <em>no</em> le sirven. Esta página recorre
+      esas tres relaciones sobre el dataset completo para dejar a la vista lo que una
+      lista no muestra: qué queda aislado, qué se declara desde un solo lado y qué no
+      es enlazable.
+    </p>
+    <div class="stamp" id="stamp"></div>
+  </header>
+
+  <section class="stats" id="stats" aria-label="Resumen del grafo"></section>
+
+  <section class="stage">
+    <aside class="rail">
+      <div>
+        <h2>Buscar</h2>
+        <input class="search" id="q" type="search" placeholder="neumonía, ceftriaxona…"
+               autocomplete="off" aria-label="Buscar nodo por nombre" />
+      </div>
+      <div>
+        <h2>Tipo de nodo</h2>
+        <div id="type-filters"></div>
+      </div>
+      <div>
+        <h2>Relación</h2>
+        <div id="rel-filters"></div>
+      </div>
+      <div>
+        <h2>Ver</h2>
+        <label class="opt"><input type="checkbox" id="hl-orphan" /> Nodos aislados<span class="count" id="c-orphan"></span></label>
+        <label class="opt"><input type="checkbox" id="hl-asym" /> Marcar asimétricos<span class="count" id="c-asym"></span></label>
+        <label class="opt"><input type="checkbox" id="show-labels" /> Más etiquetas</label>
+      </div>
+      <button class="btn" id="recenter" type="button">Centrar vista</button>
+    </aside>
+
+    <div class="canvas-box">
+      <canvas id="cv"></canvas>
+      <div class="tip" id="tip" role="tooltip" aria-hidden="true"></div>
+      <div class="hint">Clic para fijar un nodo · arrastra para moverlo · rueda para acercar</div>
+    </div>
+  </section>
+
+  <section class="detail" id="detail" aria-live="polite">
+    <p class="empty">Selecciona un nodo del grafo para ver sus enlaces.</p>
+  </section>
+
+  <section class="findings" id="findings"></section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+const G = {"meta":{"app":"AntibioGuide","version":"0.4.1","dataUpdated":"2026-07-16","generated":"2026-07-16","scope":"Adultos. No incluye pediatria, embarazo ni lactancia."},"stats":{"syndromes":34,"pathogens":70,"drugs":82,"nodes":186,"edges":393,"causedBy":166,"treatedBy":160,"resistantTo":67,"asymmetric":94,"orphans":54,"drugsNoRegimen":39,"resProse":88,"resDrift":0,"resLinked":67,"backlogRefs":19},"nodes":[{"id":"nac","type":"syndrome","label":"Neumonía Adquirida en la Comunidad (NAC)","short":"NAC","sub":"5 esquema(s)","desc":"Infección del parénquima pulmonar adquirida fuera del hospital.","group":null,"regimens":5,"deg":13},{"id":"itu_cistitis","type":"syndrome","label":"ITU – Cistitis No Complicada","short":"ITU – Cistitis No Complicada","sub":"5 esquema(s)","desc":"Infección urinaria baja en adulto no embarazado, sin factores de complicación.","group":null,"regimens":5,"deg":9},{"id":"itu_pielonefritis","type":"syndrome","label":"ITU – Pielonefritis Aguda","short":"ITU – Pielonefritis Aguda","sub":"4 esquema(s)","desc":"Infección bacteriana del parénquima renal asociada a síntomas sistémicos.","group":null,"regimens":4,"deg":8},{"id":"itu_complicada","type":"syndrome","label":"ITU – Complicada","short":"ITU – Complicada","sub":"3 esquema(s)","desc":"ITU en presencia de factores predisponentes como obstrucción urinaria, diabetes, inmunosupresión o anomalías anatómicas.","group":null,"regimens":3,"deg":10},{"id":"itu_cauti","type":"syndrome","label":"ITU – Asociada a Catéter (CAUTI)","short":"CAUTI","sub":"2 esquema(s)","desc":"Infección urinaria en paciente portador de catéter urinario actual o reciente.","group":null,"regimens":2,"deg":9},{"id":"celulitis","type":"syndrome","label":"Celulitis","short":"Celulitis","sub":"4 esquema(s)","desc":"Infección difusa de la dermis y tejido subcutáneo.","group":null,"regimens":4,"deg":8},{"id":"epi","type":"syndrome","label":"Enfermedad Inflamatoria Pélvica (EPI)","short":"EPI","sub":"3 esquema(s)","desc":"Infección del tracto genital superior femenino.","group":null,"regimens":3,"deg":10},{"id":"meningitis","type":"syndrome","label":"Meningitis bacteriana","short":"Meningitis bacteriana","sub":"3 esquema(s)","desc":"Inflamación de las meninges causada por bacterias.","group":null,"regimens":3,"deg":11},{"id":"pie_diabetico","type":"syndrome","label":"Infección de pie diabético","short":"Infección de pie diabético","sub":"3 esquema(s)","desc":"Infección en tejidos por debajo del maleolo en pacientes con diabetes.","group":null,"regimens":3,"deg":9},{"id":"intraabdominal","type":"syndrome","label":"Infección intraabdominal","short":"Infección intraabdominal","sub":"3 esquema(s)","desc":"Infecciones de órganos abdominales, usualmente polimicrobianas.","group":null,"regimens":3,"deg":13},{"id":"faringitis","type":"syndrome","label":"Faringitis estreptocócica","short":"Faringitis estreptocócica","sub":"5 esquema(s)","desc":"Infección de la faringe por Streptoccocus pyogenes.","group":null,"regimens":5,"deg":6},{"id":"sepsis_urinaria","type":"syndrome","label":"Sepsis de Foco Urinario (Urosepsis)","short":"Sepsis de Foco Urinario","sub":"4 esquema(s)","desc":"Disfunción orgánica causada por una respuesta desregulada a una infección urinaria.","group":null,"regimens":4,"deg":11},{"id":"endocarditis_infecciosa","type":"syndrome","label":"Endocarditis infecciosa (adultos)","short":"Endocarditis infecciosa","sub":"11 esquema(s)","desc":"Infección del endocardio valvular o mural con vegetaciones. Alta mortalidad; requiere hospitalización inicial, hemocultivos y ecocardiografía (ETT/ETE) y tratamiento IV según escenario (ESC 2023).","group":null,"regimens":11,"deg":22},{"id":"nih","type":"syndrome","label":"Neumonía Intrahospitalaria (NIH)","short":"NIH","sub":"3 esquema(s)","desc":"Neumonía que ocurre ≥48 horas después del ingreso hospitalario, no estando incubada al momento de la admisión. Incluye neumonía asociada a ventilación mecánica (NAV) cuando aparece ≥48-72 horas tras intubación endotraqueal.","group":null,"regimens":3,"deg":15},{"id":"sinusitis_aguda","type":"syndrome","label":"Rinosinusitis Aguda Bacteriana","short":"Rinosinusitis Aguda Bacteri…","sub":"5 esquema(s)","desc":"Infección mayoritariamente VIRAL y autolimitada. La complicación bacteriana ocurre solo en el 0,5–2 % de los casos y también suele ser autolimitada. Agentes bacterianos principales: S. pneumoniae y H. influenzae.","group":null,"regimens":5,"deg":8},{"id":"otitis_media_aguda","type":"syndrome","label":"Otitis Media Aguda (OMA)","short":"OMA","sub":"4 esquema(s)","desc":"En ADULTOS la OMA es rara. Cualquiera sea su etiología (viral o bacteriana), tiende a la resolución espontánea hasta en el 60 % de los casos. Agentes bacterianos principales: S. pneumoniae y H. influenzae.","group":null,"regimens":4,"deg":8},{"id":"exacerbacion_epoc","type":"syndrome","label":"Exacerbación de EPOC","short":"Exacerbación de EPOC","sub":"3 esquema(s)","desc":"Episodio de aumento de la disnea, la tos o el esputo basal que va más allá de las variaciones diarias habituales en un paciente con diagnóstico de EPOC. La causa es infecciosa en el 50–70 % de los casos, y dentro de éstas puede haber bacterias hasta en el 80 %. ⚠ LA EPOC ES PATOLOGÍA GES: las actualizaciones de su propia guía clínica PREVALECEN sobre esta recomendación para la toma de decisiones en el uso de antibióticos.","group":null,"regimens":3,"deg":7},{"id":"uretritis","type":"syndrome","label":"Uretritis (ITS)","short":"ITS","sub":"4 esquema(s)","desc":"Infección de transmisión sexual con inflamación uretral. Los agentes principales son Neisseria gonorrhoeae y Chlamydia trachomatis, que coexisten con frecuencia. El tratamiento empírico debe cubrir AMBOS mientras no se descarte la coinfección.","group":null,"regimens":4,"deg":6},{"id":"cervicitis","type":"syndrome","label":"Cervicitis (ITS)","short":"ITS","sub":"2 esquema(s)","desc":"Inflamación del cuello uterino de transmisión sexual. Comparte agentes y tratamiento con la uretritis: Neisseria gonorrhoeae y Chlamydia trachomatis, con coinfección frecuente. El tratamiento empírico debe cubrir AMBOS.","group":null,"regimens":2,"deg":5},{"id":"artritis_septica","type":"syndrome","label":"Artritis Séptica Aguda (articulación nativa)","short":"Artritis Séptica Aguda","sub":"3 esquema(s)","desc":"Infección aguda de una articulación nativa. El aseo quirúrgico es FUNDAMENTAL: el antibiótico solo no basta. Agentes principales: S. aureus y, en el adulto joven sexualmente activo, N. gonorrhoeae.","group":null,"regimens":3,"deg":8},{"id":"osteoartritis","type":"syndrome","label":"Osteomielitis Crónica (huesos largos)","short":"Osteomielitis Crónica","sub":"2 esquema(s)","desc":"Osteomielitis crónica de huesos largos (extremidades). Requiere aseo quirúrgico y evaluación por infectología. NOTA: el id `osteoartritis` es heredado; el contenido corresponde a osteomielitis.","group":null,"regimens":2,"deg":7},{"id":"espondilodiscitis","type":"syndrome","label":"Espondilodiscitis (osteomielitis vertebral)","short":"Espondilodiscitis","sub":"2 esquema(s)","desc":"Osteomielitis vertebral. Requiere cobertura de S. aureus y de bacilos gram negativos. La toma de cultivos previa al antibiótico es especialmente valiosa aquí, porque la terapia es prolongada.","group":null,"regimens":2,"deg":8},{"id":"infeccion_cervicofacial","type":"syndrome","label":"Infección Cervicofacial / Osteomielitis Orofacial","short":"Infección Cervicofacial","sub":"2 esquema(s)","desc":"Osteomielitis orofacial (mandibular o maxilar) e infecciones cervicofaciales. Flora polimicrobiana de origen oral, con anaerobios: la cobertura anaerobia es indispensable.","group":null,"regimens":2,"deg":8},{"id":"infeccion_necrotizante_tejidos_blandos","type":"syndrome","label":"Fascitis Necrotizante / Infección Necrotizante de Tejidos Blandos","short":"Fascitis Necrotizante","sub":"4 esquema(s)","desc":"Infección necrotizante de tejidos blandos. EMERGENCIA QUIRÚRGICA: el manejo quirúrgico es IMPRESCINDIBLE y no debe retrasarse por el antibiótico. La clindamicina se asocia por su efecto antitoxina.","group":null,"regimens":4,"deg":11},{"id":"absceso_cerebral","type":"syndrome","label":"Absceso Cerebral","short":"Absceso Cerebral","sub":"3 esquema(s)","desc":"Colección supurada intraparenquimatosa cerebral. Requiere considerar drenaje quirúrgico y terapia antibiótica prolongada. Flora habitualmente polimicrobiana con anaerobios.","group":null,"regimens":3,"deg":8},{"id":"absceso_pulmonar","type":"syndrome","label":"Absceso Pulmonar / Neumonía Aspirativa","short":"Absceso Pulmonar","sub":"4 esquema(s)","desc":"Neumonía aspirativa con formación de absceso. Sospechar ante historia de macroaspiración evidente, pobre higiene dental, aliento pútrido, absceso pulmonar o empiema. Flora oral con anaerobios.","group":null,"regimens":4,"deg":10},{"id":"neumonia_cavitada","type":"syndrome","label":"Neumonía Cavitada","short":"Neumonía Cavitada","sub":"2 esquema(s)","desc":"Neumonía con cavitación radiológica. Comparte fisiopatología y manejo con el absceso pulmonar: sospechar aspiración, anaerobios y S. aureus. ⚠ DIAGNÓSTICO DIFERENCIAL OBLIGADO: descartar TUBERCULOSIS antes de asumir etiología bacteriana piógena.","group":null,"regimens":2,"deg":7},{"id":"diarrea_disenterica","type":"syndrome","label":"Diarrea Aguda Disentérica Febril","short":"Diarrea Aguda Disentérica F…","sub":"4 esquema(s)","desc":"Diarrea aguda con sangre y fiebre. Es la ÚNICA presentación diarreica que habitualmente justifica antibiótico empírico. Distinguir si está o no ASOCIADA A ANTIBIÓTICOS previos, porque el tratamiento es completamente distinto.","group":null,"regimens":4,"deg":8},{"id":"bacteriemia_asociada_cateter","type":"syndrome","label":"Bacteriemia asociada a Catéter Venoso Central (ITS/CVC)","short":"ITS/CVC","sub":"4 esquema(s)","desc":"Sospechar en TODO paciente con síndrome febril, portador de CVC y SIN otro foco de infección aparente. Agentes más frecuentes: Staphylococcus coagulasa negativo, Enterobacterales (E. coli, K. pneumoniae, E. cloacae), Pseudomonas aeruginosa y Candida spp.","group":null,"regimens":4,"deg":17},{"id":"bacteriemia","type":"syndrome","label":"Bacteriemia / Infección del Torrente Sanguíneo","short":"Bacteriemia","sub":"2 esquema(s)","desc":"Presencia de bacterias viables en sangre. NO es un diagnóstico final: SIEMPRE obliga a buscar el FOCO. El manejo se define por el agente aislado y por el foco identificado.","group":null,"regimens":2,"deg":13},{"id":"neumonia_asociada_ventilacion","type":"syndrome","label":"Neumonía Asociada a Ventilación Mecánica (NAVM)","short":"NAVM","sub":"1 esquema(s)","desc":"Neumonía que aparece 48 horas o más después del inicio de la ventilación mecánica, en un paciente con intubación traqueal o traqueostomía. Agentes: S. aureus, Enterobacterales (E. coli, K. pneumoniae, E. cloacae), P. aeruginosa y Acinetobacter baumannii. ⚠ DOS ADVERTENCIAS QUE EVITAN TRATAMIENTOS INNECESARIOS: (1) el hallazgo de CANDIDA en secreción traqueal representa COLONIZACIÓN y NO es la causa de la infección respiratoria baja — no la trate (aunque debe hacer plantear una candidiasis diseminada); (2) ENTEROCOCCUS spp. NO debe considerarse agente productor de neumonía.","group":null,"regimens":1,"deg":13},{"id":"gastroenteritis_aguda","type":"syndrome","label":"Gastroenteritis Aguda / Diarrea Aguda","short":"Gastroenteritis Aguda","sub":"3 esquema(s)","desc":"⚠ LA MAYORÍA ES AUTOLIMITADA Y **NO REQUIERE ANTIBIÓTICO**. LA HIDRATACIÓN ES EL TRATAMIENTO. El antibiótico solo se indica en situaciones acotadas. Si hay diarrea con sangre y fiebre, ver el síndrome `diarrea_disenterica`.","group":null,"regimens":3,"deg":7},{"id":"intoxicacion_alimentaria","type":"syndrome","label":"Intoxicación Alimentaria / Toxiinfección Alimentaria","short":"Intoxicación Alimentaria","sub":"1 esquema(s)","desc":"⚠ EN GENERAL **NO REQUIERE ANTIBIÓTICO**: es autolimitada y muchas formas son mediadas por TOXINA preformada (S. aureus, B. cereus), donde el antibiótico no aporta nada. La hidratación es el tratamiento. La excepción relevante es el BROTE por Salmonella no tifoidea.","group":null,"regimens":1,"deg":4},{"id":"candidemia","type":"syndrome","label":"Candidemia / Candidiasis Invasora","short":"Candidemia","sub":"3 esquema(s)","desc":"Infección invasora por Candida spp. El tratamiento DE ELECCIÓN son las EQUINOCANDINAS. El fluconazol NO es tratamiento inicial de elección: se reserva para desescalar en el paciente estable con susceptibilidad demostrada.","group":null,"regimens":3,"deg":9},{"id":"escherichia_coli","type":"pathogen","label":"E. coli","short":"E. coli","sub":"Gram −","desc":"Bacilo entérico frecuente en ITU y bacteriemia.","group":"enterobacterales","gram":"Gram −","gramRaw":"negative","deg":17},{"id":"streptococcus_pneumoniae","type":"pathogen","label":"S. pneumoniae","short":"S. pneumoniae","sub":"Gram +","desc":"Coco Gram positivo frecuente en NAC y meningitis.","group":"diplococci","gram":"Gram +","gramRaw":"positive","deg":7},{"id":"streptococcus_pyogenes","type":"pathogen","label":"S. pyogenes","short":"S. pyogenes","sub":"Gram +","desc":"Coco causante de faringitis y celulitis.","group":"cocci","gram":"Gram +","gramRaw":"positive","deg":10},{"id":"staphylococcus_aureus","type":"pathogen","label":"S. aureus","short":"S. aureus","sub":"Gram +","desc":"Coco frecuente en infecciones cutáneas y bacteriemia.","group":"cocci","gram":"Gram +","gramRaw":"positive","deg":17},{"id":"pseudomonas_aeruginosa","type":"pathogen","label":"P. aeruginosa","short":"P. aeruginosa","sub":"Gram −","desc":"Bacilo no fermentador asociado a infecciones graves.","group":"non_fermenter","gram":"Gram −","gramRaw":"negative","deg":15},{"id":"haemophilus_influenzae","type":"pathogen","label":"H. influenzae","short":"H. influenzae","sub":"Gram −","desc":"Coccobacilo respiratorio frecuente en NAC.","group":"coccobacilli","gram":"Gram −","gramRaw":"negative","deg":6},{"id":"mycoplasma_pneumoniae","type":"pathogen","label":"M. pneumoniae","short":"M. pneumoniae","sub":"Atípico","desc":"Agente atípico en neumonía.","group":"atypical","gram":"Atípico","gramRaw":"atypical","deg":2},{"id":"chlamydia_pneumoniae","type":"pathogen","label":"C. pneumoniae","short":"C. pneumoniae","sub":"Atípico","desc":"Agente atípico respiratorio.","group":"atypical","gram":"Atípico","gramRaw":"atypical","deg":1},{"id":"klebsiella_pneumoniae","type":"pathogen","label":"K. pneumoniae","short":"K. pneumoniae","sub":"Gram −","desc":"Bacilo entérico asociado a ITU, neumonía hospitalaria e infecciones intraabdominales.","group":"enterobacterales","gram":"Gram −","gramRaw":"negative","deg":12},{"id":"proteus_mirabilis","type":"pathogen","label":"P. mirabilis","short":"P. mirabilis","sub":"Gram −","desc":"Bacilo entérico asociado a ITU complicada.","group":"enterobacterales","gram":"Gram −","gramRaw":"negative","deg":7},{"id":"staphylococcus_saprophyticus","type":"pathogen","label":"S. saprophyticus","short":"S. saprophyticus","sub":"Gram +","desc":"Segunda causa más común de cistitis no complicada en mujeres jóvenes sexualmente activas (después de E. coli).","group":"Staphylococcaceae","gram":"Gram +","gramRaw":"positive","deg":2},{"id":"enterobacter_spp","type":"pathogen","label":"Enterobacter","short":"Enterobacter","sub":"Gram −","desc":"Bacilos del grupo SPACE/ESPM (productores induccibles AmpC).","group":"Enterobacterales","gram":"Gram −","gramRaw":"negative","deg":4},{"id":"enterococcus_spp","type":"pathogen","label":"Enterococcus","short":"Enterococcus","sub":"Gram +","desc":"Cocos grampositivos asociados a ITU nosocomial y endocarditis.","group":"Enterococcus","gram":"Gram +","gramRaw":"positive","deg":5},{"id":"methicillin_resistant_staphylococcus_aureus","type":"pathogen","label":"MRSA","short":"MRSA","sub":"Gram +","desc":"Cepa de S. aureus con gen mecA (PBP2a), prevalente en abscesos cutáneos o foco invasivo nosocomial.","group":"Staphylococcus","gram":"Gram +","gramRaw":"positive","deg":5},{"id":"neisseria_gonorrhoeae","type":"pathogen","label":"N. gonorrhoeae","short":"N. gonorrhoeae","sub":"Gram −","desc":"Agente etiológico de la gonorrea, causante de uretritis/cervicitis, enfermedad pélvica inflamatoria (EPI) e infección gonocócica diseminada.","group":"Neisseriaceae","gram":"Gram −","gramRaw":"negative","deg":5},{"id":"chlamydia_trachomatis","type":"pathogen","label":"C. trachomatis","short":"C. trachomatis","sub":"Atípico","desc":"ITS bacteriana más frecuente en el mundo","group":"Chlamydiaceae","gram":"Atípico","gramRaw":"atypical","deg":3},{"id":"anaerobes","type":"pathogen","label":"Anaerobios","short":"Anaerobios","sub":"Variable","desc":"Flora mixta sinérgica en abscesos, infecciones abdominales y pie diabético.","group":"Anaerobes","gram":"Variable","gramRaw":"variable","deg":4},{"id":"mycoplasma_genitalium","type":"pathogen","label":"M. genitalium","short":"M. genitalium","sub":"Atípico","desc":"Agente emergente de ETS, similar a uretritis clamidial y parte del espectro EPI.","group":"Mycoplasma","gram":"Atípico","gramRaw":"atypical","deg":2},{"id":"neisseria_meningitidis","type":"pathogen","label":"N. meningitidis","short":"N. meningitidis","sub":"Gram −","desc":"Diplococo causante de meningitis.","group":"diplococci","gram":"Gram −","gramRaw":"negative","deg":3},{"id":"listeria_monocytogenes","type":"pathogen","label":"L. monocytogenes","short":"L. monocytogenes","sub":"Gram +","desc":"Patógeno transmitido por alimentos que causa meningoencefalitis y sepsis severa en recién nacidos, embarazadas, ancianos e inmunocomprometidos.","group":"Listeriaceae","gram":"Gram +","gramRaw":"positive","deg":2},{"id":"streptococcus_spp","type":"pathogen","label":"Streptococcus spp.","short":"Streptococcus spp.","sub":"Gram +","desc":"Cocos en cadenas asociados predominantemente a piel/tejidos blandos, y oro-faringe.","group":"Streptococcus","gram":"Gram +","gramRaw":"positive","deg":2},{"id":"enterobacterales","type":"pathogen","label":"Enterobacterias","short":"Enterobacterias","sub":"Gram −","desc":"Familia principal de bacilos gram negativos intestinales causantes de ITU y patología abdominal.","group":"Enterobacterales","gram":"Gram −","gramRaw":"negative","deg":2},{"id":"bacteroides_fragilis","type":"pathogen","label":"B. fragilis","short":"B. fragilis","sub":"Gram −","desc":"Anaerobio frecuente en infecciones intraabdominales.","group":"obligate_anaerobe","gram":"Gram −","gramRaw":"negative","deg":7},{"id":"staphylococcus_cons","type":"pathogen","label":"CoNS","short":"CoNS","sub":"Gram +","desc":"Comensales de piel, frecuentemente causan bacteriemia transitoria o infección en cuerpos extraños/prótesis.","group":"Staphylococcus","gram":"Gram +","gramRaw":"positive","deg":3},{"id":"streptococcus_viridans_group","type":"pathogen","label":"Viridans","short":"Viridans","sub":"Gram +","desc":"Comensales orales implicados fuertemente en Endocarditis Infecciosa nativa subaguda.","group":"Streptococcus","gram":"Gram +","gramRaw":"positive","deg":1},{"id":"streptococcus_gallolyticus","type":"pathogen","label":"S. gallolyticus","short":"S. gallolyticus","sub":"Gram +","desc":"Causa endocarditis clásicamente asociada a cáncer de colon concomitante.","group":"Streptococcus","gram":"Gram +","gramRaw":"positive","deg":1},{"id":"enterococcus_faecalis","type":"pathogen","label":"E. faecalis","short":"E. faecalis","sub":"Gram +","desc":"Coco entérico asociado a ITU y bacteriemia.","group":"cocci","gram":"Gram +","gramRaw":"positive","deg":4},{"id":"hacek_group","type":"pathogen","label":"HACEK","short":"HACEK","sub":"Gram −","desc":"Haemophilus, Aggregatibacter, Cardiobacterium, Eikenella, Kingella. Flora orofaríngea de lento crecimiento, causa de endocarditis indoloria.","group":"HACEK","gram":"Gram −","gramRaw":"negative","deg":1},{"id":"gram_negative_bacilli_non_hacek","type":"pathogen","label":"BGN no-HACEK","short":"BGN no-HACEK","sub":"Gram −","desc":"Casos más raros de endocarditis por enterobacterias asociadas a focos a distancia (urinario, abdominal, catéteres).","group":"Mixto BGN","gram":"Gram −","gramRaw":"negative","deg":1},{"id":"candida_spp","type":"pathogen","label":"Candida spp.","short":"Candida spp.","sub":"fungal","desc":"Infección fúngica invasora asentuada en nutrición parenteral, UDIV, y prótesis graves.","group":"Fungi","gram":"—","gramRaw":"fungal","deg":3},{"id":"acinetobacter_baumannii","type":"pathogen","label":"A. baumannii","short":"A. baumannii","sub":"Gram −","desc":"Patógeno oportunista intrahospitalario clásico, causante de brotes en UCI debido a su extrema persistencia en superficies secas e instrumental.","group":"Moraxellaceae","gram":"Gram −","gramRaw":"negative","deg":8},{"id":"staphylococcus_sp","type":"pathogen","label":"Staph spp (no tipificado)","short":"Staph spp","sub":"Gram +","desc":"Dato crudo que engloba especies sin diferenciación exacta en tablas de susceptibilidad.","group":"Staphylococcus","gram":"Gram +","gramRaw":"positive","deg":0},{"id":"enterococcus_faecium","type":"pathogen","label":"E. faecium","short":"E. faecium","sub":"Gram +","desc":"Enterococo menos prevalente pero altamente resistente, causante de infecciones nosocomiales, frecuentemente portador de genes de resistencia a vancomicina (vanA/vanB).","group":"Enterococcaceae","gram":"Gram +","gramRaw":"positive","deg":6},{"id":"klebsiella_oxytoca","type":"pathogen","label":"K. oxytoca","short":"K. oxytoca","sub":"Gram −","desc":"Segunda especie de Klebsiella de importancia clínica.","group":"Enterobacterales","gram":"Gram −","gramRaw":"negative","deg":0},{"id":"enterobacter_cloacae_complex","type":"pathogen","label":"E. cloacae complex","short":"E. cloacae complex","sub":"Gram −","desc":"Complejo bacteriano oportunista prototipo del grupo AmpC.","group":"Enterobacterales","gram":"Gram −","gramRaw":"negative","deg":2},{"id":"citrobacter_freundii","type":"pathogen","label":"C. freundii","short":"C. freundii","sub":"Gram −","desc":"Agente bacteriano entérico que puede portar el gen de AmpC intra-cromosomal.","group":"Enterobacterales","gram":"Gram −","gramRaw":"negative","deg":0},{"id":"serratia_marcescens","type":"pathogen","label":"S. marcescens","short":"S. marcescens","sub":"Gram −","desc":"Enterobacteria nosocomial productora de AmpC inducible, frecuentemente asociada a infecciones del tracto urinario, bacteriemias y contaminación de soluciones/dispositivos médicos.","group":"Yersiniaceae (orden Enterobacterales)","gram":"Gram −","gramRaw":"negative","deg":9},{"id":"morganella_morganii","type":"pathogen","label":"M. morganii","short":"M. morganii","sub":"Gram −","desc":"Pertenece al antiguo grupo Proteeae y con comportamiento de productor AmpC natural.","group":"Enterobacterales","gram":"Gram −","gramRaw":"negative","deg":0},{"id":"stenotrophomonas_maltophilia","type":"pathogen","label":"S. maltophilia","short":"S. maltophilia","sub":"Gram −","desc":"Patógeno oportunista intrahospitalario clásico que emerge tras esquemas prolongados con carbapenémicos en pacientes de UCI o inmunocomprometidos.","group":"Xanthomonadaceae","gram":"Gram −","gramRaw":"negative","deg":3},{"id":"streptococcus_agalactiae","type":"pathogen","label":"S. agalactiae","short":"S. agalactiae","sub":"Gram +","desc":"Coco asociado a bacteriemia en adultos vulnerables.","group":"cocci","gram":"Gram +","gramRaw":"positive","deg":3},{"id":"clostridioides_difficile","type":"pathogen","label":"C. difficile","short":"C. difficile","sub":"Gram +","desc":"Anaerobio productor de toxina en diarrea asociada a antibióticos.","group":"obligate_anaerobe","gram":"Gram +","gramRaw":"positive","deg":3},{"id":"corynebacterium_diphtheriae","type":"pathogen","label":"C. diphtheriae","short":"C. diphtheriae","sub":"Gram +","desc":"Productor de exotoxina causante de membranas faríngeas","group":"Corynebacteriaceae","gram":"Gram +","gramRaw":"positive","deg":0},{"id":"moraxella_catarrhalis","type":"pathogen","label":"M. catarrhalis","short":"M. catarrhalis","sub":"Gram −","desc":"Patógeno respiratorio estrictamente humano, fundamental en exacerbaciones de EPOC, otitis media aguda y sinusitis en pediatría.","group":"Moraxellaceae","gram":"Gram −","gramRaw":"negative","deg":7},{"id":"salmonella_enterica_typhi","type":"pathogen","label":"S. Typhi","short":"S. Typhi","sub":"Gram −","desc":"Agente de la fiebre tifoidea transmitido por vía fecal-oral","group":"Enterobacteriaceae","gram":"Gram −","gramRaw":"negative","deg":0},{"id":"bordetella_pertussis","type":"pathogen","label":"B. pertussis","short":"B. pertussis","sub":"Gram −","desc":"Causa la tos ferina o coqueluche","group":"Alcaligenaceae","gram":"Gram −","gramRaw":"negative","deg":0},{"id":"vibrio_cholerae","type":"pathogen","label":"V. cholerae","short":"V. cholerae","sub":"Gram −","desc":"Bacilo acuático causante de cólera.","group":"bacilli","gram":"Gram −","gramRaw":"negative","deg":1},{"id":"campylobacter_jejuni","type":"pathogen","label":"C. jejuni","short":"C. jejuni","sub":"Gram −","desc":"Bacilo curvo causante de diarrea.","group":"bacilli","gram":"Gram −","gramRaw":"negative","deg":5},{"id":"helicobacter_pylori","type":"pathogen","label":"H. pylori","short":"H. pylori","sub":"Gram −","desc":"Colonizador gástrico asociado a úlceras y cáncer","group":"Helicobacteraceae","gram":"Gram −","gramRaw":"negative","deg":0},{"id":"legionella_pneumophila","type":"pathogen","label":"L. pneumophila","short":"L. pneumophila","sub":"Atípico","desc":"Agente etiológico de neumonía atípica severa, a menudo asociada a brotes epidémicos por sistemas de agua contaminados o aires acondicionados.","group":"Legionellaceae","gram":"Atípico","gramRaw":"atypical","deg":1},{"id":"treponema_pallidum","type":"pathogen","label":"T. pallidum","short":"T. pallidum","sub":"Atípico","desc":"Agente de la sífilis, patógeno crónico sistémico","group":"Spirochaetaceae","gram":"Atípico","gramRaw":"atypical","deg":0},{"id":"mycobacterium_tuberculosis","type":"pathogen","label":"M. tuberculosis","short":"M. tuberculosis","sub":"Atípico","desc":"Causa la tuberculosis, principal causa de muerte infecciosa global","group":"Mycobacteriaceae","gram":"Atípico","gramRaw":"atypical","deg":0},{"id":"mycobacterium_leprae","type":"pathogen","label":"M. leprae","short":"M. leprae","sub":"Atípico","desc":"Agente de la lepra, afecta piel y nervios periféricos","group":"Mycobacteriaceae","gram":"Atípico","gramRaw":"atypical","deg":0},{"id":"candida_albicans","type":"pathogen","label":"C. albicans","short":"C. albicans","sub":"fungal","desc":"Comensal humano, causa común de micosis oportunistas","group":"Saccharomycetaceae","gram":"—","gramRaw":"fungal","deg":1},{"id":"candida_auris","type":"pathogen","label":"C. auris","short":"C. auris","sub":"Gram +","desc":"Hongo emergente de notificación obligatoria, altamente transmisible en entornos de salud y con elevadas tasas de multirresistencia.","group":"Saccharomycetaceae","gram":"Gram +","gramRaw":"positive","deg":1},{"id":"cryptococcus_neoformans","type":"pathogen","label":"C. neoformans","short":"C. neoformans","sub":"fungal","desc":"Micosis sistémica oportunista definitoria de SIDA","group":"Tremellaceae","gram":"—","gramRaw":"fungal","deg":0},{"id":"aspergillus_fumigatus","type":"pathogen","label":"A. fumigatus","short":"A. fumigatus","sub":"fungal","desc":"Principal causa de aspergillosis invasiva en inmunocomprometidos","group":"Aspergillaceae","gram":"—","gramRaw":"fungal","deg":0},{"id":"histoplasma_capsulatum","type":"pathogen","label":"H. capsulatum","short":"H. capsulatum","sub":"fungal","desc":"Micosis endémica adquirida por inhalación de guano","group":"Ajellomycetaceae","gram":"—","gramRaw":"fungal","deg":0},{"id":"pneumocystis_jirovecii","type":"pathogen","label":"P. jirovecii","short":"P. jirovecii","sub":"fungal","desc":"Hongo atípico causa de neumonía grave en SIDA","group":"Pneumocystidaceae","gram":"—","gramRaw":"fungal","deg":0},{"id":"leishmania_spp","type":"pathogen","label":"Leishmania","short":"Leishmania","sub":"Atípico","desc":"Parásito transmitido por flebótomos causante de úlceras o daño visceral","group":"Trypanosomatidae","gram":"Atípico","gramRaw":"atypical","deg":0},{"id":"borrelia_burgdorferi","type":"pathogen","label":"B. burgdorferi","short":"B. burgdorferi","sub":"Atípico","desc":"Causa la enfermedad de Lyme transmitida por garrapatas","group":"Spirochaetaceae","gram":"Atípico","gramRaw":"atypical","deg":0},{"id":"burkholderia_cepacia","type":"pathogen","label":"B. cepacia","short":"B. cepacia","sub":"Gram −","desc":"Grupo de especies con alta resistencia intrínseca y riesgo en fibrosis quística","group":"Burkholderiaceae","gram":"Gram −","gramRaw":"negative","deg":3},{"id":"haemophilus_ducreyi","type":"pathogen","label":"H. ducreyi","short":"H. ducreyi","sub":"Gram −","desc":"Causa úlceras genitales dolorosas (chancroide)","group":"Pasteurellaceae","gram":"Gram −","gramRaw":"negative","deg":0},{"id":"salmonella_no_tifoidea","type":"pathogen","label":"Salmonella spp.","short":"Salmonella spp.","sub":"Gram −","desc":"Causa frecuente de gastroenteritis aguda transmitida por alimentos; riesgo de bacteriemia en extremos de edad e inmunocomprometidos.","group":"Enterobacteriaceae","gram":"Gram −","gramRaw":"negative","deg":6},{"id":"shigella_spp","type":"pathogen","label":"Shigella spp.","short":"Shigella spp.","sub":"Gram −","desc":"Agente clásico de la disentería bacilar, altamente contagioso debido a su bajísimo inóculo infectante (10-100 bacterias).","group":"Enterobacteriaceae","gram":"Gram −","gramRaw":"negative","deg":5},{"id":"clostridium_perfringens","type":"pathogen","label":"C. perfringens","short":"C. perfringens","sub":"Gram +","desc":"Agente causal de la gangrena gaseosa (mionecrosis) y toxiinfecciones alimentarias autolimitadas.","group":"Clostridiaceae","gram":"Gram +","gramRaw":"positive","deg":3},{"id":"actinomyces_spp","type":"pathogen","label":"Actinomyces spp.","short":"Actinomyces spp.","sub":"Gram +","desc":"Bacteria anaerobia/microaerófila de la flora oral y gastrointestinal normal, causante de infecciones granulomatosas crónicas.","group":"Actinomycetaceae","gram":"Gram +","gramRaw":"positive","deg":4},{"id":"nocardia_spp","type":"pathogen","label":"Nocardia spp.","short":"Nocardia spp.","sub":"Gram +","desc":"Patógeno oportunista ambiental que afecta primariamente a pacientes con inmunidad celular comprometida (trasplantados, uso crónico de corticoides).","group":"Nocardiaceae","gram":"Gram +","gramRaw":"positive","deg":3},{"id":"coxiella_burnetii","type":"pathogen","label":"C. burnetii","short":"C. burnetii","sub":"Atípico","desc":"Agente de la Fiebre Q, zoonosis altamente infectante transmitida principalmente por aerosoles de ganado ovino/caprino/bovino.","group":"Coxiellaceae","gram":"Atípico","gramRaw":"atypical","deg":1},{"id":"brucella_spp","type":"pathogen","label":"Brucella spp.","short":"Brucella spp.","sub":"Gram −","desc":"Zoonosis que causa enfermedad febril sistémica (fiebre ondulante) con fuerte tropismo osteoarticular y hepatoesplénico.","group":"Brucellaceae","gram":"Gram −","gramRaw":"negative","deg":3},{"id":"bartonella_henselae","type":"pathogen","label":"B. henselae","short":"B. henselae","sub":"Gram −","desc":"Causa principal de la linfadenitis regional tras contacto con gatos.","group":"Bartonellaceae","gram":"Gram −","gramRaw":"negative","deg":1},{"id":"amoxicilina","type":"drug","label":"Amoxicilina","short":"Amoxicilina","sub":"Aminopenicilina","desc":"Grampositivos (Streptococcus spp. sensibles) y algunos Gramnegativos.","group":"Aminopenicilina","aware":"Access","deg":7},{"id":"amoxicilina_clavulanico","type":"drug","label":"Amoxicilina-Clavulánico","short":"Amoxicilina-Clavulánico","sub":"Penicilina + Inhibidor de beta-lactamasas","desc":"Grampositivos, Gramnegativos y anaerobios productores de beta-lactamasas.","group":"Penicilina + Inhibidor de beta-lactamasas","aware":"Access","deg":10},{"id":"ampicilina","type":"drug","label":"Ampicilina","short":"Ampicilina","sub":"Aminopenicilina","desc":"Enterococcus faecalis, Listeria monocytogenes, algunos Gramnegativos.","group":"Aminopenicilina","aware":"Access","deg":12},{"id":"ampicilina_sulbactam","type":"drug","label":"Ampicilina-Sulbactam","short":"Ampicilina-Sulbactam","sub":"Penicilina + Inhibidor de beta-lactamasas","desc":"Grampositivos, Gramnegativos y anaerobios productores de beta-lactamasas (No Pseudomonas).","group":"Penicilina + Inhibidor de beta-lactamasas","aware":"Access","deg":5},{"id":"cloxacilina","type":"drug","label":"Cloxacilina","short":"Cloxacilina","sub":"Penicilina antiestafilocócica","desc":"S. aureus sensible a meticilina (MSSA) y Streptococcus spp. (excluyendo Enterococcus).","group":"Penicilina antiestafilocócica","aware":"Access","deg":5},{"id":"bencilpenicilina_sodica","type":"drug","label":"Bencilpenicilina Sódica","short":"Bencilpenicilina Sódica","sub":"Penicilina natural","desc":"Streptococcus spp., Neisseria meningitidis, Treponema pallidum y Clostridium spp.","group":"Penicilina natural","aware":"Access","deg":6},{"id":"penicilina_v","type":"drug","label":"Penicilina V","short":"Penicilina V","sub":"Penicilina (oral)","desc":"Estreptococos (GAS).","group":"Penicilina (oral)","aware":"Access","deg":1},{"id":"piperacilina_tazobactam","type":"drug","label":"Piperacilina-Tazobactam","short":"Piperacilina-Tazobactam","sub":"Penicilina antipseudomónica + Inhibidor de beta-lactamasas","desc":"Muy amplio: Pseudomonas aeruginosa, Enterobacterales, Grampositivos y Anaerobios.","group":"Penicilina antipseudomónica + Inhibidor de beta-lactamasas","aware":"Watch","deg":8},{"id":"cefazolina","type":"drug","label":"Cefazolina","short":"Cefazolina","sub":"Cefalosporina de 1ª generación","desc":"Cocos Grampositivos (MSSA) y algunos bacilos Gramnegativos (E. coli sensible).","group":"Cefalosporina de 1ª generación","aware":"Access","deg":8},{"id":"cefadroxilo","type":"drug","label":"Cefadroxilo","short":"Cefadroxilo","sub":"Cefalosporina de 1ª generación (Oral)","desc":"Grampositivos y algunos Gramnegativos (especialmente urinarios).","group":"Cefalosporina de 1ª generación (Oral)","aware":"Access","deg":4},{"id":"cefalexina","type":"drug","label":"Cefalexina","short":"Cefalexina","sub":"Cefalosporina de 1ª generación","desc":"Cocos Grampositivos (excepto enterococos y SARM) y algunos bacilos Gramnegativos (E. coli)","group":"Cefalosporina de 1ª generación","aware":"Access","deg":1},{"id":"cefuroxima","type":"drug","label":"Cefuroxima","short":"Cefuroxima","sub":"Cefalosporina de 2ª generación","desc":"Grampositivos y mayor cobertura contra Gramnegativos (E. coli, H. influenzae) que 1ra gen.","group":"Cefalosporina de 2ª generación","aware":"Watch","deg":3},{"id":"ceftriaxona","type":"drug","label":"Ceftriaxona","short":"Ceftriaxona","sub":"Cefalosporina de 3ª generación","desc":"Gram-, Streptococci. No Pseudomonas, no Enterococos.","group":"Cefalosporina de 3ª generación","aware":"Watch","deg":19},{"id":"ceftazidima","type":"drug","label":"Ceftazidima","short":"Ceftazidima","sub":"Cefalosporina de 3ª generación antipseudomónica","desc":"Bacilos Gramnegativos, alta y específica actividad antipseudomónica. Pobre Gram+.","group":"Cefalosporina de 3ª generación antipseudomónica","aware":"Watch","deg":1},{"id":"cefepime","type":"drug","label":"Cefepime","short":"Cefepime","sub":"Cefalosporina de 4ª generación","desc":"Enterobacterias (incluyendo AmpC), Pseudomonas aeruginosa, MSSA y Streptococci.","group":"Cefalosporina de 4ª generación","aware":"Watch","deg":2},{"id":"ertapenem","type":"drug","label":"Ertapenem","short":"Ertapenem","sub":"Carbapenémico","desc":"Bacterias Gram+, Gram- (BLEE) y Anaerobios. Sin actividad contra Pseudomonas o Acinetobacter","group":"Carbapenémico","aware":"Watch","deg":4},{"id":"meropenem","type":"drug","label":"Meropenem","short":"Meropenem","sub":"Carbapenémico","desc":"Muy amplio: Gram+, Gram-, anaerobios, Pseudomonas y Acinetobacter.","group":"Carbapenémico","aware":"Watch","deg":4},{"id":"imipenem","type":"drug","label":"Imipenem-Cilastatina","short":"Imipenem-Cilastatina","sub":"Carbapenémico","desc":"Extenso: Gram+, Gram-, Pseudomonas aeruginosa y Anaerobios.","group":"Carbapenémico","aware":"Watch","deg":3},{"id":"vancomicina","type":"drug","label":"Vancomicina","short":"Vancomicina","sub":"Glicopéptido","desc":"Cocos Grampositivos incluyendo MRSA y Enterococcus spp. (variable). No activa Gram-.","group":"Glicopéptido","aware":"Watch","deg":17},{"id":"linezolid","type":"drug","label":"Linezolid","short":"Linezolid","sub":"Oxazolidinona","desc":"Grampositivos multirresistentes: MRSA, VRE y neumococo resistente.","group":"Oxazolidinona","aware":"Watch","deg":2},{"id":"daptomicina","type":"drug","label":"Daptomicina","short":"Daptomicina","sub":"Lipopéptido cíclico","desc":"Exclusivo para bacterias Grampositivas, incluyendo MRSA y VRE.","group":"Lipopéptido cíclico","aware":"Reserve","deg":1},{"id":"amikacina","type":"drug","label":"Amikacina","short":"Amikacina","sub":"Aminoglucósido","desc":"Bacilos Gramnegativos aerobios, incluyendo Pseudomonas aeruginosa y Acinetobacter.","group":"Aminoglucósido","aware":"Watch","deg":2},{"id":"gentamicina","type":"drug","label":"Gentamicina","short":"Gentamicina","sub":"Aminoglucósido","desc":"Bacilos Gramnegativos aerobios y sinergia contra Grampositivos (enterococo y estafilococo)","group":"Aminoglucósido","aware":"Access","deg":9},{"id":"azitromicina","type":"drug","label":"Azitromicina","short":"Azitromicina","sub":"Macrólido","desc":"Atípicos (Mycoplasma, Chlamydia, Legionella), gérmenes respiratorios.","group":"Macrólido","aware":"Watch","deg":12},{"id":"claritromicina","type":"drug","label":"Claritromicina","short":"Claritromicina","sub":"Macrólido","desc":"Grampositivos selectos y microorganismos atípicos.","group":"Macrólido","aware":"Watch","deg":1},{"id":"ciprofloxacino","type":"drug","label":"Ciprofloxacino","short":"Ciprofloxacino","sub":"Fluoroquinolona","desc":"Excelente contra bacilos Gramnegativos (incluye Pseudomonas sensible). Pobre contra Neumococo.","group":"Fluoroquinolona","aware":"Watch","deg":12},{"id":"levofloxacino","type":"drug","label":"Levofloxacino","short":"Levofloxacino","sub":"Fluoroquinolona","desc":"Amplio: Neumococo, Atípicos y Gramnegativos (actividad Pseudomonas variable).","group":"Fluoroquinolona","aware":"Watch","deg":10},{"id":"moxifloxacino","type":"drug","label":"Moxifloxacino","short":"Moxifloxacino","sub":"Fluoroquinolona","desc":"Potente contra Gram+, Atípicos (Mycoplasma, Legionella) y patógenos respiratorios. Menor actividad antipseudomónica","group":"Fluoroquinolona","aware":"Watch","deg":2},{"id":"metronidazol","type":"drug","label":"Metronidazol","short":"Metronidazol","sub":"Nitroimidazol","desc":"Anaerobios estrictos, protozoos. Bactericida potente contra B. fragilis.","group":"Nitroimidazol","aware":"Access","deg":9},{"id":"clindamicina","type":"drug","label":"Clindamicina","short":"Clindamicina","sub":"Lincosamida","desc":"Gran positivos (incluye MRSA comunitario) y anaerobios (excepto B. fragilis resistente).","group":"Lincosamida","aware":"Access","deg":11},{"id":"nitrofurantoina","type":"drug","label":"Nitrofurantoína","short":"Nitrofurantoína","sub":"Nitrofurano","desc":"Bacterias de vía urinaria (E. coli, Enterococcus). No activa contra Proteus ni Pseudomonas.","group":"Nitrofurano","aware":"Access","deg":3},{"id":"fosfomicina_trometamol","type":"drug","label":"Fosfomicina trometamol","short":"Fosfomicina trometamol","sub":"Derivado del ácido fosfónico","desc":"Amplio espectro urinario, incluyendo cepas productoras de BLEE.","group":"Derivado del ácido fosfónico","aware":"Watch","deg":2},{"id":"tmp_smx","type":"drug","label":"Cotrimoxazol (TMP-SMX)","short":"TMP-SMX","sub":"Antifolato","desc":"Bacterias Gram+, Gram- (incluyendo SARM comunitario) y Pneumocystis jirovecii.","group":"Antifolato","aware":"Access","deg":8},{"id":"doxiciclina","type":"drug","label":"Doxiciclina","short":"Doxiciclina","sub":"Tetraciclina","desc":"Grampositivos, Gramnegativos, atípicos y espiroquetas. No Pseudomonas.","group":"Tetraciclina","aware":"Access","deg":6},{"id":"rifampicina","type":"drug","label":"Rifampicina","short":"Rifampicina","sub":"Rifamicina","desc":"Micobacterias (M. tuberculosis) y potentes sinergias contra Grampositivos (Estafilococos)","group":"Rifamicina","aware":"Watch","deg":1},{"id":"tigeciclina","type":"drug","label":"Tigeciclina","short":"Tigeciclina","sub":"Glicilciclina","desc":"Muy amplio frente a multirresistentes (VRE, MRSA, BLEE). No cubre Pseudomonas ni Proteus.","group":"Glicilciclina","aware":"Reserve","deg":0},{"id":"colistin","type":"drug","label":"Colistín (Polimixina E)","short":"Colistín","sub":"Polimixina","desc":"Bacilos Gramnegativos pan-resistentes (XDR/PDR) incluyendo Pseudomonas y Acinetobacter.","group":"Polimixina","aware":"Reserve","deg":3},{"id":"aztreonam","type":"drug","label":"Aztreonam","short":"Aztreonam","sub":"Monobactámico","desc":"Gramnegativos aerobios incluyendo Pseudomonas. NO activo contra Gram+ ni anaerobios.","group":"Monobactámico","aware":"Watch","deg":2},{"id":"dicloxacilina","type":"drug","label":"Dicloxacilina","short":"Dicloxacilina","sub":"Penicilina antiestafilocócica","desc":"Estafilococos productores de penicilinasa (S. aureus sensible a meticilina) y estreptococos","group":"Penicilina antiestafilocócica","aware":"Access","deg":0},{"id":"oxacilina","type":"drug","label":"Oxacilina","short":"Oxacilina","sub":"Penicilina antiestafilocócica","desc":"Bacterias Grampositivas, principalmente S. aureus sensible a meticilina (MSSA)","group":"Penicilina antiestafilocócica","aware":"Access","deg":0},{"id":"sultamicilina","type":"drug","label":"Sultamicilina","short":"Sultamicilina","sub":"Penicilina + Inhibidor de beta-lactamasas","desc":"Gram+, Gram-, microorganismos productores de beta-lactamasas y Anaerobios","group":"Penicilina + Inhibidor de beta-lactamasas","aware":"Access","deg":0},{"id":"cefalotina","type":"drug","label":"Cefalotina","short":"Cefalotina","sub":"Cefalosporina de 1ª generación","desc":"Grampositivos (estafilococos y estreptococos) y algunos Gramnegativos","group":"Cefalosporina de 1ª generación","aware":"Access","deg":0},{"id":"cefoxitina","type":"drug","label":"Cefoxitina","short":"Cefoxitina","sub":"Cefalosporina de 2ª generación (Cefamicina)","desc":"Grampositivos, Gramnegativos y notable actividad contra Anaerobios (Bacteroides spp.)","group":"Cefalosporina de 2ª generación (Cefamicina)","aware":"Watch","deg":0},{"id":"cefixima","type":"drug","label":"Cefixima","short":"Cefixima","sub":"Cefalosporina de 3ª generación","desc":"Actividad potente contra bacilos Gramnegativos (H. influenzae, E. coli, M. catarrhalis)","group":"Cefalosporina de 3ª generación","aware":"Watch","deg":0},{"id":"ceftazidima_avibactam","type":"drug","label":"Ceftazidima-Avibactam","short":"Ceftazidima-Avibactam","sub":"Cefalosporina antipseudomónica + Inhibidor de beta-lactamasas","desc":"Bacilos Gramnegativos multirresistentes, incluyendo productores de BLEE y carbapenemasas (KPC)","group":"Cefalosporina antipseudomónica + Inhibidor de beta-lactamasas","aware":"Reserve","deg":0},{"id":"cefoperazona_sulbactam","type":"drug","label":"Cefoperazona / Sulbactam","short":"Cefoperazona","sub":"Cefalosporina de 3ª generación + Inhibidor de beta-lactamasas","desc":"Enterobacterias y Pseudomonas aeruginosa","group":"Cefalosporina de 3ª generación + Inhibidor de beta-lactamasas","aware":"Watch","deg":0},{"id":"ceftarolina","type":"drug","label":"Ceftarolina Fosamilo","short":"Ceftarolina Fosamilo","sub":"Cefalosporina de 5ª generación","desc":"Amplia cobertura Grampositiva (MRSA, Neumococo resistente) y algunos Gramnegativos.","group":"Cefalosporina de 5ª generación","aware":"Reserve","deg":0},{"id":"tobramicina","type":"drug","label":"Tobramicina","short":"Tobramicina","sub":"Aminoglucósido","desc":"Bacilos Gramnegativos aerobios, especialmente Pseudomonas aeruginosa","group":"Aminoglucósido","aware":"Watch","deg":0},{"id":"teicoplanina","type":"drug","label":"Teicoplanina","short":"Teicoplanina","sub":"Glicopéptido","desc":"Exclusivo para bacterias Grampositivas (S. aureus, SARM, Enterococcus)","group":"Glicopéptido","aware":"Watch","deg":0},{"id":"polimixina_b","type":"drug","label":"Polimixina B","short":"Polimixina B","sub":"Polimixina","desc":"Bacilos Gramnegativos resistentes (P. aeruginosa, K. pneumoniae, Acinetobacter)","group":"Polimixina","aware":"Reserve","deg":1},{"id":"norfloxacino","type":"drug","label":"Norfloxacino","short":"Norfloxacino","sub":"Fluoroquinolona","desc":"Bacterias Gramnegativas del tracto urinario y gastrointestinal","group":"Fluoroquinolona","aware":"Watch","deg":0},{"id":"isoniazida","type":"drug","label":"Isoniazida","short":"Isoniazida","sub":"Hidrazida (Antituberculoso)","desc":"Específico para Mycobacterium tuberculosis y M. bovis","group":"Hidrazida (Antituberculoso)","aware":"Access","deg":0},{"id":"cefradina","type":"drug","label":"Cefradina","short":"Cefradina","sub":"Cefalosporina de 1ª generación","desc":"Grampositivos y selectos Gramnegativos","group":"Cefalosporina de 1ª generación","aware":"Access","deg":0},{"id":"cefaclor","type":"drug","label":"Cefaclor","short":"Cefaclor","sub":"Cefalosporina de 2ª generación","desc":"Grampositivos y mayor cobertura de Gramnegativos (H. influenzae, M. catarrhalis) que 1ª generación","group":"Cefalosporina de 2ª generación","aware":"Watch","deg":0},{"id":"cefoperazona","type":"drug","label":"Cefoperazona","short":"Cefoperazona","sub":"Cefalosporina de 3ª generación antipseudomónica","desc":"Bacterias Gram+, Gram- y Pseudomonas aeruginosa","group":"Cefalosporina de 3ª generación antipseudomónica","aware":"Watch","deg":0},{"id":"ceftibuteno","type":"drug","label":"Ceftibuteno","short":"Ceftibuteno","sub":"Cefalosporina de 3ª generación","desc":"Enterobacterias y patógenos respiratorios (H. influenzae)","group":"Cefalosporina de 3ª generación","aware":"Watch","deg":0},{"id":"ceftobiprol_medocarilo","type":"drug","label":"Ceftobiprol Medocarilo","short":"Ceftobiprol Medocarilo","sub":"Cefalosporina de 5ª generación","desc":"Grampositivos (incluyendo SARM y S. pneumoniae resistente) y Gramnegativos (pseudomonas limitada)","group":"Cefalosporina de 5ª generación","aware":"Reserve","deg":0},{"id":"cloranfenicol","type":"drug","label":"Cloranfenicol","short":"Cloranfenicol","sub":"Anfenicol","desc":"Amplio espectro: Salmonella typhi, H. influenzae, bacterias Gramnegativas y Rickettsias","group":"Anfenicol","aware":"Watch","deg":1},{"id":"bencilpenicilina_benzatina","type":"drug","label":"Bencilpenicilina Benzatina (Penicilina G Benzatina)","short":"Bencilpenicilina Benzatina","sub":"Penicilina sensible a beta-lactamasa","desc":"Estreptococos, neumococos y espiroquetas (Treponema pallidum)","group":"Penicilina sensible a beta-lactamasa","aware":"Access","deg":1},{"id":"meropenem_vaborbactam","type":"drug","label":"Meropenem-Vaborbactam","short":"Meropenem-Vaborbactam","sub":"Carbapenémico + Inhibidor de beta-lactamasas","desc":"Enterobacterias productoras de carbapenemasas (KPC). Inactivo frente a metalo-beta-lactamasas (NDM)","group":"Carbapenémico + Inhibidor de beta-lactamasas","aware":"Reserve","deg":0},{"id":"eritromicina","type":"drug","label":"Eritromicina","short":"Eritromicina","sub":"Macrólido","desc":"S. pyogenes, S. aureus (MSSA), Campylobacter jejuni, Corynebacterium y Atípicos","group":"Macrólido","aware":"Watch","deg":0},{"id":"estreptomicina","type":"drug","label":"Estreptomicina","short":"Estreptomicina","sub":"Aminoglucósido","desc":"Bacilos Gramnegativos y Micobacterias (incluyendo M. tuberculosis)","group":"Aminoglucósido","aware":"Watch","deg":0},{"id":"neomicina","type":"drug","label":"Neomicina","short":"Neomicina","sub":"Aminoglucósido","desc":"Bacterias Gramnegativas en el lumen intestinal","group":"Aminoglucósido","aware":"Access","deg":0},{"id":"ofloxacino","type":"drug","label":"Ofloxacino","short":"Ofloxacino","sub":"Fluoroquinolona","desc":"Grampositivos, Gramnegativos y Atípicos","group":"Fluoroquinolona","aware":"Watch","deg":0},{"id":"delafloxacino","type":"drug","label":"Delafloxacino","short":"Delafloxacino","sub":"Fluoroquinolona","desc":"Grampositivos (incluyendo SAMR y Enterococcus faecalis) y selectos Gramnegativos","group":"Fluoroquinolona","aware":"Reserve","deg":0},{"id":"rifabutina","type":"drug","label":"Rifabutina","short":"Rifabutina","sub":"Rifamicina","desc":"Mycobacterium tuberculosis y Complejo Mycobacterium avium (MAC)","group":"Rifamicina","aware":"Watch","deg":0},{"id":"pirazinamida","type":"drug","label":"Pirazinamida","short":"Pirazinamida","sub":"Antituberculoso","desc":"Exclusivo para Mycobacterium tuberculosis","group":"Antituberculoso","aware":"Watch","deg":0},{"id":"bedaquilina","type":"drug","label":"Bedaquilina","short":"Bedaquilina","sub":"Diarilquinolina (Antituberculoso)","desc":"Mycobacterium tuberculosis","group":"Diarilquinolina (Antituberculoso)","aware":"Reserve","deg":0},{"id":"etambutol","type":"drug","label":"Etambutol","short":"Etambutol","sub":"Antituberculoso","desc":"Micobacterias típicas (M. tuberculosis) y atípicas","group":"Antituberculoso","aware":"Watch","deg":0},{"id":"rifaximina","type":"drug","label":"Rifaximina","short":"Rifaximina","sub":"Rifamicina","desc":"Flora bacteriana gastrointestinal","group":"Rifamicina","aware":"Watch","deg":0},{"id":"flucloxacilina","type":"drug","label":"Flucloxacilina","short":"Flucloxacilina","sub":"Penicilina antiestafilocócica","desc":"Gérmenes productores de betalactamasa","group":"Penicilina antiestafilocócica","aware":"Access","deg":0},{"id":"cefotaxima","type":"drug","label":"Cefotaxima","short":"Cefotaxima","sub":"Cefalosporina de 3ª generación","desc":"Amplio espectro frente a gérmenes sensibles de vías respiratorias, urinarias, SNC, piel y abdomen","group":"Cefalosporina de 3ª generación","aware":"Watch","deg":0},{"id":"ceftolozano_tazobactam","type":"drug","label":"Ceftolozano / Tazobactam","short":"Ceftolozano","sub":"Cefalosporina + Inhibidor de beta-lactamasa","desc":"Bacterias Gramnegativas y Grampositivas. Requiere asociación con metronidazol para cobertura de patógenos anaerobios","group":"Cefalosporina + Inhibidor de beta-lactamasa","aware":"Reserve","deg":0},{"id":"dapsona","type":"drug","label":"Dapsona","short":"Dapsona","sub":"Medicamento para el tratamiento de la lepra","desc":"","group":"Medicamento para el tratamiento de la lepra","aware":"Access","deg":0},{"id":"rifapentina","type":"drug","label":"Rifapentina","short":"Rifapentina","sub":"Rifamicina","desc":"","group":"Rifamicina","aware":"Watch","deg":0},{"id":"tetraciclina","type":"drug","label":"Tetraciclina","short":"Tetraciclina","sub":"Tetraciclina","desc":"Amplio espectro de microorganismos sensibles","group":"Tetraciclina","aware":"Access","deg":0},{"id":"anidulafungina","type":"drug","label":"Anidulafungina","short":"Anidulafungina","sub":"Equinocandina","desc":"Candida spp. (incluidas especies resistentes a fluconazol). Sin actividad frente a Cryptococcus.","group":"Equinocandina","aware":null,"deg":2},{"id":"caspofungina","type":"drug","label":"Caspofungina","short":"Caspofungina","sub":"Equinocandina","desc":"Candida spp. (incluidas especies resistentes a fluconazol) y Aspergillus spp. Sin actividad frente a Cryptococcus.","group":"Equinocandina","aware":null,"deg":2},{"id":"micafungina","type":"drug","label":"Micafungina","short":"Micafungina","sub":"Equinocandina","desc":"Candida spp. (incluidas especies resistentes a fluconazol). Sin actividad frente a Cryptococcus.","group":"Equinocandina","aware":null,"deg":1},{"id":"fluconazol","type":"drug","label":"Fluconazol","short":"Fluconazol","sub":"Azol (triazol)","desc":"Candida albicans y otras especies susceptibles. ⚠ C. krusei es INTRÍNSECAMENTE RESISTENTE; C. glabrata suele tener sensibilidad disminuida. Sin actividad frente a Aspergillus.","group":"Azol (triazol)","aware":null,"deg":1},{"id":"anfotericina_b_liposomal","type":"drug","label":"Anfotericina B liposomal","short":"Anfotericina B liposomal","sub":"Polieno","desc":"Muy amplio: Candida spp., Aspergillus spp., Cryptococcus, mucorales, hongos endémicos.","group":"Polieno","aware":null,"deg":1},{"id":"anfotericina_b_deoxicolato","type":"drug","label":"Anfotericina B deoxicolato","short":"Anfotericina B deoxicolato","sub":"Polieno","desc":"Muy amplio: Candida spp., Aspergillus spp., Cryptococcus, mucorales, hongos endémicos.","group":"Polieno","aware":null,"deg":1}],"edges":[{"s":"nac","t":"streptococcus_pneumoniae","rel":"caused_by","dir":"both"},{"s":"nac","t":"haemophilus_influenzae","rel":"caused_by","dir":"fwd"},{"s":"nac","t":"mycoplasma_pneumoniae","rel":"caused_by","dir":"both"},{"s":"nac","t":"chlamydia_pneumoniae","rel":"caused_by","dir":"both"},{"s":"nac","t":"moraxella_catarrhalis","rel":"caused_by","dir":"both"},{"s":"itu_cistitis","t":"escherichia_coli","rel":"caused_by","dir":"fwd"},{"s":"itu_cistitis","t":"klebsiella_pneumoniae","rel":"caused_by","dir":"fwd"},{"s":"itu_cistitis","t":"proteus_mirabilis","rel":"caused_by","dir":"both"},{"s":"itu_cistitis","t":"staphylococcus_saprophyticus","rel":"caused_by","dir":"both"},{"s":"itu_pielonefritis","t":"escherichia_coli","rel":"caused_by","dir":"fwd"},{"s":"itu_pielonefritis","t":"klebsiella_pneumoniae","rel":"caused_by","dir":"fwd"},{"s":"itu_pielonefritis","t":"proteus_mirabilis","rel":"caused_by","dir":"both"},{"s":"itu_pielonefritis","t":"enterobacter_spp","rel":"caused_by","dir":"both"},{"s":"itu_complicada","t":"escherichia_coli","rel":"caused_by","dir":"both"},{"s":"itu_complicada","t":"klebsiella_pneumoniae","rel":"caused_by","dir":"both"},{"s":"itu_complicada","t":"proteus_mirabilis","rel":"caused_by","dir":"fwd"},{"s":"itu_complicada","t":"enterobacter_spp","rel":"caused_by","dir":"fwd"},{"s":"itu_complicada","t":"pseudomonas_aeruginosa","rel":"caused_by","dir":"both"},{"s":"itu_complicada","t":"enterococcus_spp","rel":"caused_by","dir":"both"},{"s":"itu_cauti","t":"escherichia_coli","rel":"caused_by","dir":"fwd"},{"s":"itu_cauti","t":"klebsiella_pneumoniae","rel":"caused_by","dir":"fwd"},{"s":"itu_cauti","t":"proteus_mirabilis","rel":"caused_by","dir":"fwd"},{"s":"itu_cauti","t":"pseudomonas_aeruginosa","rel":"caused_by","dir":"fwd"},{"s":"itu_cauti","t":"enterococcus_spp","rel":"caused_by","dir":"fwd"},{"s":"itu_cauti","t":"serratia_marcescens","rel":"caused_by","dir":"both"},{"s":"celulitis","t":"streptococcus_pyogenes","rel":"caused_by","dir":"both"},{"s":"celulitis","t":"staphylococcus_aureus","rel":"caused_by","dir":"both"},{"s":"celulitis","t":"methicillin_resistant_staphylococcus_aureus","rel":"caused_by","dir":"both"},{"s":"epi","t":"neisseria_gonorrhoeae","rel":"caused_by","dir":"both"},{"s":"epi","t":"chlamydia_trachomatis","rel":"caused_by","dir":"fwd"},{"s":"epi","t":"anaerobes","rel":"caused_by","dir":"both"},{"s":"epi","t":"mycoplasma_genitalium","rel":"caused_by","dir":"both"},{"s":"meningitis","t":"streptococcus_pneumoniae","rel":"caused_by","dir":"both"},{"s":"meningitis","t":"neisseria_meningitidis","rel":"caused_by","dir":"both"},{"s":"meningitis","t":"listeria_monocytogenes","rel":"caused_by","dir":"both"},{"s":"meningitis","t":"haemophilus_influenzae","rel":"caused_by","dir":"both"},{"s":"pie_diabetico","t":"staphylococcus_aureus","rel":"caused_by","dir":"both"},{"s":"pie_diabetico","t":"methicillin_resistant_staphylococcus_aureus","rel":"caused_by","dir":"both"},{"s":"pie_diabetico","t":"streptococcus_spp","rel":"caused_by","dir":"both"},{"s":"pie_diabetico","t":"enterobacterales","rel":"caused_by","dir":"both"},{"s":"pie_diabetico","t":"anaerobes","rel":"caused_by","dir":"both"},{"s":"intraabdominal","t":"escherichia_coli","rel":"caused_by","dir":"both"},{"s":"intraabdominal","t":"bacteroides_fragilis","rel":"caused_by","dir":"both"},{"s":"intraabdominal","t":"klebsiella_pneumoniae","rel":"caused_by","dir":"both"},{"s":"intraabdominal","t":"pseudomonas_aeruginosa","rel":"caused_by","dir":"fwd"},{"s":"intraabdominal","t":"enterococcus_spp","rel":"caused_by","dir":"both"},{"s":"faringitis","t":"streptococcus_pyogenes","rel":"caused_by","dir":"both"},{"s":"sepsis_urinaria","t":"escherichia_coli","rel":"caused_by","dir":"fwd"},{"s":"sepsis_urinaria","t":"klebsiella_pneumoniae","rel":"caused_by","dir":"fwd"},{"s":"sepsis_urinaria","t":"pseudomonas_aeruginosa","rel":"caused_by","dir":"both"},{"s":"sepsis_urinaria","t":"enterococcus_spp","rel":"caused_by","dir":"both"},{"s":"endocarditis_infecciosa","t":"staphylococcus_aureus","rel":"caused_by","dir":"both"},{"s":"endocarditis_infecciosa","t":"staphylococcus_cons","rel":"caused_by","dir":"both"},{"s":"endocarditis_infecciosa","t":"streptococcus_viridans_group","rel":"caused_by","dir":"both"},{"s":"endocarditis_infecciosa","t":"streptococcus_gallolyticus","rel":"caused_by","dir":"both"},{"s":"endocarditis_infecciosa","t":"enterococcus_faecalis","rel":"caused_by","dir":"both"},{"s":"endocarditis_infecciosa","t":"hacek_group","rel":"caused_by","dir":"both"},{"s":"endocarditis_infecciosa","t":"gram_negative_bacilli_non_hacek","rel":"caused_by","dir":"both"},{"s":"endocarditis_infecciosa","t":"candida_spp","rel":"caused_by","dir":"both"},{"s":"endocarditis_infecciosa","t":"coxiella_burnetii","rel":"caused_by","dir":"fwd"},{"s":"endocarditis_infecciosa","t":"bartonella_henselae","rel":"caused_by","dir":"fwd"},{"s":"endocarditis_infecciosa","t":"brucella_spp","rel":"caused_by","dir":"fwd"},{"s":"endocarditis_infecciosa","t":"enterococcus_faecium","rel":"caused_by","dir":"both"},{"s":"nih","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"nih","t":"methicillin_resistant_staphylococcus_aureus","rel":"caused_by","dir":"both"},{"s":"nih","t":"pseudomonas_aeruginosa","rel":"caused_by","dir":"both"},{"s":"nih","t":"klebsiella_pneumoniae","rel":"caused_by","dir":"both"},{"s":"nih","t":"escherichia_coli","rel":"caused_by","dir":"fwd"},{"s":"nih","t":"acinetobacter_baumannii","rel":"caused_by","dir":"fwd"},{"s":"nih","t":"stenotrophomonas_maltophilia","rel":"caused_by","dir":"fwd"},{"s":"nih","t":"enterobacter_spp","rel":"caused_by","dir":"both"},{"s":"nih","t":"serratia_marcescens","rel":"caused_by","dir":"both"},{"s":"nih","t":"legionella_pneumophila","rel":"caused_by","dir":"both"},{"s":"sinusitis_aguda","t":"streptococcus_pneumoniae","rel":"caused_by","dir":"fwd"},{"s":"sinusitis_aguda","t":"haemophilus_influenzae","rel":"caused_by","dir":"fwd"},{"s":"sinusitis_aguda","t":"moraxella_catarrhalis","rel":"caused_by","dir":"both"},{"s":"otitis_media_aguda","t":"streptococcus_pneumoniae","rel":"caused_by","dir":"fwd"},{"s":"otitis_media_aguda","t":"haemophilus_influenzae","rel":"caused_by","dir":"fwd"},{"s":"otitis_media_aguda","t":"moraxella_catarrhalis","rel":"caused_by","dir":"both"},{"s":"exacerbacion_epoc","t":"streptococcus_pneumoniae","rel":"caused_by","dir":"fwd"},{"s":"exacerbacion_epoc","t":"haemophilus_influenzae","rel":"caused_by","dir":"fwd"},{"s":"exacerbacion_epoc","t":"moraxella_catarrhalis","rel":"caused_by","dir":"both"},{"s":"exacerbacion_epoc","t":"pseudomonas_aeruginosa","rel":"caused_by","dir":"fwd"},{"s":"uretritis","t":"neisseria_gonorrhoeae","rel":"caused_by","dir":"both"},{"s":"uretritis","t":"chlamydia_trachomatis","rel":"caused_by","dir":"fwd"},{"s":"uretritis","t":"mycoplasma_genitalium","rel":"caused_by","dir":"fwd"},{"s":"cervicitis","t":"neisseria_gonorrhoeae","rel":"caused_by","dir":"both"},{"s":"cervicitis","t":"chlamydia_trachomatis","rel":"caused_by","dir":"fwd"},{"s":"artritis_septica","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"artritis_septica","t":"streptococcus_pyogenes","rel":"caused_by","dir":"fwd"},{"s":"artritis_septica","t":"neisseria_gonorrhoeae","rel":"caused_by","dir":"both"},{"s":"osteoartritis","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"osteoartritis","t":"brucella_spp","rel":"caused_by","dir":"both"},{"s":"espondilodiscitis","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"espondilodiscitis","t":"escherichia_coli","rel":"caused_by","dir":"fwd"},{"s":"espondilodiscitis","t":"brucella_spp","rel":"caused_by","dir":"both"},{"s":"infeccion_cervicofacial","t":"bacteroides_fragilis","rel":"caused_by","dir":"fwd"},{"s":"infeccion_cervicofacial","t":"streptococcus_pyogenes","rel":"caused_by","dir":"fwd"},{"s":"infeccion_cervicofacial","t":"actinomyces_spp","rel":"caused_by","dir":"both"},{"s":"infeccion_necrotizante_tejidos_blandos","t":"streptococcus_pyogenes","rel":"caused_by","dir":"fwd"},{"s":"infeccion_necrotizante_tejidos_blandos","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"infeccion_necrotizante_tejidos_blandos","t":"clostridium_perfringens","rel":"caused_by","dir":"both"},{"s":"infeccion_necrotizante_tejidos_blandos","t":"bacteroides_fragilis","rel":"caused_by","dir":"fwd"},{"s":"absceso_cerebral","t":"streptococcus_pyogenes","rel":"caused_by","dir":"fwd"},{"s":"absceso_cerebral","t":"bacteroides_fragilis","rel":"caused_by","dir":"fwd"},{"s":"absceso_cerebral","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"absceso_cerebral","t":"nocardia_spp","rel":"caused_by","dir":"both"},{"s":"absceso_pulmonar","t":"bacteroides_fragilis","rel":"caused_by","dir":"fwd"},{"s":"absceso_pulmonar","t":"streptococcus_pyogenes","rel":"caused_by","dir":"fwd"},{"s":"absceso_pulmonar","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"absceso_pulmonar","t":"actinomyces_spp","rel":"caused_by","dir":"both"},{"s":"neumonia_cavitada","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"neumonia_cavitada","t":"bacteroides_fragilis","rel":"caused_by","dir":"fwd"},{"s":"neumonia_cavitada","t":"streptococcus_pyogenes","rel":"caused_by","dir":"fwd"},{"s":"neumonia_cavitada","t":"nocardia_spp","rel":"caused_by","dir":"both"},{"s":"diarrea_disenterica","t":"shigella_spp","rel":"caused_by","dir":"both"},{"s":"diarrea_disenterica","t":"campylobacter_jejuni","rel":"caused_by","dir":"fwd"},{"s":"diarrea_disenterica","t":"salmonella_no_tifoidea","rel":"caused_by","dir":"fwd"},{"s":"diarrea_disenterica","t":"clostridioides_difficile","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia_asociada_cateter","t":"staphylococcus_cons","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia_asociada_cateter","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia_asociada_cateter","t":"escherichia_coli","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia_asociada_cateter","t":"klebsiella_pneumoniae","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia_asociada_cateter","t":"enterobacter_cloacae_complex","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia_asociada_cateter","t":"pseudomonas_aeruginosa","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia_asociada_cateter","t":"candida_spp","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia_asociada_cateter","t":"acinetobacter_baumannii","rel":"caused_by","dir":"both"},{"s":"bacteriemia_asociada_cateter","t":"stenotrophomonas_maltophilia","rel":"caused_by","dir":"both"},{"s":"bacteriemia","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia","t":"escherichia_coli","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia","t":"klebsiella_pneumoniae","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia","t":"pseudomonas_aeruginosa","rel":"caused_by","dir":"fwd"},{"s":"bacteriemia","t":"staphylococcus_cons","rel":"caused_by","dir":"fwd"},{"s":"neumonia_asociada_ventilacion","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"neumonia_asociada_ventilacion","t":"escherichia_coli","rel":"caused_by","dir":"fwd"},{"s":"neumonia_asociada_ventilacion","t":"klebsiella_pneumoniae","rel":"caused_by","dir":"fwd"},{"s":"neumonia_asociada_ventilacion","t":"enterobacter_cloacae_complex","rel":"caused_by","dir":"fwd"},{"s":"neumonia_asociada_ventilacion","t":"pseudomonas_aeruginosa","rel":"caused_by","dir":"fwd"},{"s":"neumonia_asociada_ventilacion","t":"acinetobacter_baumannii","rel":"caused_by","dir":"both"},{"s":"neumonia_asociada_ventilacion","t":"stenotrophomonas_maltophilia","rel":"caused_by","dir":"both"},{"s":"gastroenteritis_aguda","t":"salmonella_no_tifoidea","rel":"caused_by","dir":"both"},{"s":"gastroenteritis_aguda","t":"campylobacter_jejuni","rel":"caused_by","dir":"fwd"},{"s":"gastroenteritis_aguda","t":"shigella_spp","rel":"caused_by","dir":"both"},{"s":"gastroenteritis_aguda","t":"escherichia_coli","rel":"caused_by","dir":"fwd"},{"s":"intoxicacion_alimentaria","t":"salmonella_no_tifoidea","rel":"caused_by","dir":"fwd"},{"s":"intoxicacion_alimentaria","t":"staphylococcus_aureus","rel":"caused_by","dir":"fwd"},{"s":"intoxicacion_alimentaria","t":"clostridium_perfringens","rel":"caused_by","dir":"both"},{"s":"candidemia","t":"candida_spp","rel":"caused_by","dir":"fwd"},{"s":"candidemia","t":"candida_albicans","rel":"caused_by","dir":"fwd"},{"s":"candidemia","t":"candida_auris","rel":"caused_by","dir":"both"},{"s":"meningitis","t":"escherichia_coli","rel":"caused_by","dir":"back"},{"s":"nac","t":"staphylococcus_aureus","rel":"caused_by","dir":"back"},{"s":"nac","t":"klebsiella_pneumoniae","rel":"caused_by","dir":"back"},{"s":"intraabdominal","t":"anaerobes","rel":"caused_by","dir":"back"},{"s":"celulitis","t":"streptococcus_spp","rel":"caused_by","dir":"back"},{"s":"intraabdominal","t":"enterobacterales","rel":"caused_by","dir":"back"},{"s":"itu_complicada","t":"enterococcus_faecalis","rel":"caused_by","dir":"back"},{"s":"intraabdominal","t":"enterococcus_faecalis","rel":"caused_by","dir":"back"},{"s":"intraabdominal","t":"enterococcus_faecium","rel":"caused_by","dir":"back"},{"s":"itu_cauti","t":"enterococcus_faecium","rel":"caused_by","dir":"back"},{"s":"bacteriemia","t":"enterococcus_faecium","rel":"caused_by","dir":"back"},{"s":"bacteriemia","t":"serratia_marcescens","rel":"caused_by","dir":"back"},{"s":"meningitis","t":"streptococcus_agalactiae","rel":"caused_by","dir":"back"},{"s":"nih","t":"burkholderia_cepacia","rel":"caused_by","dir":"back"},{"s":"bacteriemia","t":"salmonella_no_tifoidea","rel":"caused_by","dir":"back"},{"s":"epi","t":"actinomyces_spp","rel":"caused_by","dir":"back"},{"s":"nac","t":"amoxicilina","rel":"treated_by","empiric":true,"regs":["Ambulatorio (Sin comorbilidades)"]},{"s":"nac","t":"amoxicilina_clavulanico","rel":"treated_by","empiric":true,"regs":["Ambulatorio (Con comorbilidades)"]},{"s":"nac","t":"azitromicina","rel":"treated_by","empiric":true,"regs":["Ambulatorio (Con comorbilidades)","Hospitalario (No UCI)"]},{"s":"nac","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Hospitalario (No UCI)"]},{"s":"nac","t":"levofloxacino","rel":"treated_by","empiric":false,"regs":["Alergia a Beta-lactámicos (Ambulatorio)"]},{"s":"nac","t":"doxiciclina","rel":"treated_by","empiric":false,"regs":["Alternativa: Doxiciclina (Ambulatorio)"]},{"s":"itu_cistitis","t":"nitrofurantoina","rel":"treated_by","empiric":true,"regs":["Primera Línea"]},{"s":"itu_cistitis","t":"fosfomicina_trometamol","rel":"treated_by","empiric":true,"regs":["Primera Línea Alternativa"]},{"s":"itu_cistitis","t":"tmp_smx","rel":"treated_by","empiric":true,"regs":["Primera Línea Condicional"]},{"s":"itu_cistitis","t":"cefadroxilo","rel":"treated_by","empiric":false,"regs":["Alternativa"]},{"s":"itu_cistitis","t":"ciprofloxacino","rel":"treated_by","empiric":false,"regs":["Reserva"]},{"s":"itu_pielonefritis","t":"ciprofloxacino","rel":"treated_by","empiric":true,"regs":["Ambulatorio Primera Línea"]},{"s":"itu_pielonefritis","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Ambulatorio Alternativa (Beta-lactámicos)","Hospitalario Empírico"]},{"s":"itu_pielonefritis","t":"amoxicilina_clavulanico","rel":"treated_by","empiric":false,"regs":["Ambulatorio Alternativa (Beta-lactámicos)"]},{"s":"itu_pielonefritis","t":"piperacilina_tazobactam","rel":"treated_by","empiric":true,"regs":["Hospitalario Alternativa"]},{"s":"itu_complicada","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Empírico Hospitalario"]},{"s":"itu_complicada","t":"piperacilina_tazobactam","rel":"treated_by","empiric":true,"regs":["Alternativa Amplio Espectro"]},{"s":"itu_complicada","t":"ertapenem","rel":"treated_by","empiric":true,"regs":["Sospecha de ESBL"]},{"s":"itu_cauti","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Empírico Hospitalario"]},{"s":"itu_cauti","t":"piperacilina_tazobactam","rel":"treated_by","empiric":true,"regs":["Riesgo de Pseudomonas"]},{"s":"celulitis","t":"cefalexina","rel":"treated_by","empiric":true,"regs":["Ambulatorio (No purulenta)"]},{"s":"celulitis","t":"tmp_smx","rel":"treated_by","empiric":true,"regs":["Ambulatorio (Sospecha MRSA)"]},{"s":"celulitis","t":"cefazolina","rel":"treated_by","empiric":true,"regs":["Hospitalario"]},{"s":"celulitis","t":"clindamicina","rel":"treated_by","empiric":false,"regs":["Alergia a Beta-lactámicos"]},{"s":"epi","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Tratamiento Ambulatorio","Hospitalario (Esquema A)"]},{"s":"epi","t":"doxiciclina","rel":"treated_by","empiric":true,"regs":["Tratamiento Ambulatorio","Hospitalario (Esquema A)"]},{"s":"epi","t":"metronidazol","rel":"treated_by","empiric":true,"regs":["Tratamiento Ambulatorio","Hospitalario (Esquema A)"]},{"s":"epi","t":"clindamicina","rel":"treated_by","empiric":false,"regs":["Hospitalario (Esquema B)"]},{"s":"epi","t":"gentamicina","rel":"treated_by","empiric":false,"regs":["Hospitalario (Esquema B)"]},{"s":"meningitis","t":"vancomicina","rel":"treated_by","empiric":true,"regs":["Empírico (Adulto \u003c 50 años)","Empírico (Adulto > 50 años / Inmunocomprometido)","Alergia a Beta-lactámicos"]},{"s":"meningitis","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Empírico (Adulto \u003c 50 años)","Empírico (Adulto > 50 años / Inmunocomprometido)"]},{"s":"meningitis","t":"ampicilina","rel":"treated_by","empiric":true,"regs":["Empírico (Adulto > 50 años / Inmunocomprometido)"]},{"s":"meningitis","t":"moxifloxacino","rel":"treated_by","empiric":false,"regs":["Alergia a Beta-lactámicos"]},{"s":"meningitis","t":"tmp_smx","rel":"treated_by","empiric":false,"regs":["Alergia a Beta-lactámicos"]},{"s":"pie_diabetico","t":"amoxicilina_clavulanico","rel":"treated_by","empiric":true,"regs":["Infección Leve (Ambulatorio)"]},{"s":"pie_diabetico","t":"piperacilina_tazobactam","rel":"treated_by","empiric":true,"regs":["Infección Moderada/Grave (Hospitalario)"]},{"s":"pie_diabetico","t":"clindamicina","rel":"treated_by","empiric":false,"regs":["Alergia a Beta-lactámicos"]},{"s":"pie_diabetico","t":"levofloxacino","rel":"treated_by","empiric":false,"regs":["Alergia a Beta-lactámicos"]},{"s":"intraabdominal","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Comunitaria Leve/Moderada"]},{"s":"intraabdominal","t":"metronidazol","rel":"treated_by","empiric":true,"regs":["Comunitaria Leve/Moderada","Alergia a Beta-lactámicos"]},{"s":"intraabdominal","t":"piperacilina_tazobactam","rel":"treated_by","empiric":true,"regs":["Grave / Nosocomial"]},{"s":"intraabdominal","t":"levofloxacino","rel":"treated_by","empiric":false,"regs":["Alergia a Beta-lactámicos"]},{"s":"faringitis","t":"amoxicilina","rel":"treated_by","empiric":false,"regs":["Adultos — Primera línea (esquema chileno)","Alternativa internacional (IDSA)"]},{"s":"faringitis","t":"penicilina_v","rel":"treated_by","empiric":false,"regs":["Alternativa internacional (IDSA)"]},{"s":"faringitis","t":"bencilpenicilina_benzatina","rel":"treated_by","empiric":false,"regs":["Dosis única IM (mala adherencia esperable)"]},{"s":"faringitis","t":"cefadroxilo","rel":"treated_by","empiric":false,"regs":["Alergia a penicilina — NO anafiláctica"]},{"s":"faringitis","t":"azitromicina","rel":"treated_by","empiric":false,"regs":["Alergia ANAFILÁCTICA a betalactámicos"]},{"s":"sepsis_urinaria","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Empírico (Comunitario)"]},{"s":"sepsis_urinaria","t":"piperacilina_tazobactam","rel":"treated_by","empiric":true,"regs":["Empírico (Amplio Espectro)"]},{"s":"sepsis_urinaria","t":"ertapenem","rel":"treated_by","empiric":true,"regs":["Sospecha de ESBL"]},{"s":"sepsis_urinaria","t":"meropenem","rel":"treated_by","empiric":true,"regs":["Sospecha de ESBL"]},{"s":"sepsis_urinaria","t":"levofloxacino","rel":"treated_by","empiric":false,"regs":["Alergia a Beta-lactámicos"]},{"s":"sepsis_urinaria","t":"gentamicina","rel":"treated_by","empiric":false,"regs":["Alergia a Beta-lactámicos"]},{"s":"sepsis_urinaria","t":"aztreonam","rel":"treated_by","empiric":false,"regs":["Alergia a Beta-lactámicos"]},{"s":"endocarditis_infecciosa","t":"ampicilina","rel":"treated_by","empiric":true,"regs":["Empírico: válvula nativa o prótesis tardía (comunitaria, estable)","Dirigido: Enterococcus faecalis (primera elección)"]},{"s":"endocarditis_infecciosa","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Empírico: válvula nativa o prótesis tardía (comunitaria, estable)","Dirigido: Streptococcus viridans / S. gallolyticus sensible (NVE estándar)","Dirigido: Streptococcus viridans sensible (NVE corto, seleccionados)","Dirigido: Streptococcus viridans sensible (PVE)","Dirigido: Enterococcus faecalis (primera elección)","Dirigido: HACEK"]},{"s":"endocarditis_infecciosa","t":"gentamicina","rel":"treated_by","empiric":true,"regs":["Empírico: válvula nativa o prótesis tardía (comunitaria, estable)","Empírico: prótesis temprana (\u003c12 meses) o EI nosocomial","Dirigido: Streptococcus viridans sensible (NVE corto, seleccionados)","Dirigido: MSSA (prótesis valvular)","Dirigido: MRSA (prótesis valvular)"]},{"s":"endocarditis_infecciosa","t":"vancomicina","rel":"treated_by","empiric":true,"regs":["Empírico: prótesis temprana (\u003c12 meses) o EI nosocomial","Dirigido: MRSA (válvula nativa)","Dirigido: MRSA (prótesis valvular)"]},{"s":"endocarditis_infecciosa","t":"rifampicina","rel":"treated_by","empiric":true,"regs":["Empírico: prótesis temprana (\u003c12 meses) o EI nosocomial","Dirigido: MSSA (prótesis valvular)","Dirigido: MRSA (prótesis valvular)"]},{"s":"endocarditis_infecciosa","t":"bencilpenicilina_sodica","rel":"treated_by","empiric":false,"regs":["Dirigido: Streptococcus viridans / S. gallolyticus sensible (NVE estándar)","Dirigido: Streptococcus viridans sensible (NVE corto, seleccionados)","Dirigido: Streptococcus viridans sensible (PVE)"]},{"s":"endocarditis_infecciosa","t":"amoxicilina","rel":"treated_by","empiric":false,"regs":["Dirigido: Streptococcus viridans / S. gallolyticus sensible (NVE estándar)","Dirigido: Streptococcus viridans sensible (NVE corto, seleccionados)","Dirigido: Streptococcus viridans sensible (PVE)","Dirigido: Enterococcus faecalis (primera elección)"]},{"s":"endocarditis_infecciosa","t":"cloxacilina","rel":"treated_by","empiric":false,"regs":["Dirigido: MSSA (válvula nativa)","Dirigido: MSSA (prótesis valvular)"]},{"s":"endocarditis_infecciosa","t":"cefazolina","rel":"treated_by","empiric":false,"regs":["Dirigido: MSSA (válvula nativa)","Dirigido: MSSA (prótesis valvular)"]},{"s":"endocarditis_infecciosa","t":"daptomicina","rel":"treated_by","empiric":false,"regs":["Dirigido: MRSA (válvula nativa)"]},{"s":"nih","t":"piperacilina_tazobactam","rel":"treated_by","empiric":true,"regs":["NIH bajo riesgo MDR"]},{"s":"nih","t":"cefepime","rel":"treated_by","empiric":true,"regs":["NIH alto riesgo MDR"]},{"s":"nih","t":"vancomicina","rel":"treated_by","empiric":true,"regs":["Cobertura MRSA"]},{"s":"nih","t":"linezolid","rel":"treated_by","empiric":true,"regs":["Cobertura MRSA"]},{"s":"sinusitis_aguda","t":"amoxicilina","rel":"treated_by","empiric":true,"regs":["Adultos — Primera línea"]},{"s":"sinusitis_aguda","t":"amoxicilina_clavulanico","rel":"treated_by","empiric":false,"regs":["Adultos — Comorbilidad o sospecha de resistencia"]},{"s":"sinusitis_aguda","t":"cefuroxima","rel":"treated_by","empiric":false,"regs":["Alergia a penicilina (NO anafiláctica)"]},{"s":"sinusitis_aguda","t":"levofloxacino","rel":"treated_by","empiric":false,"regs":["Alergia ANAFILÁCTICA a betalactámicos — Levofloxacino"]},{"s":"sinusitis_aguda","t":"doxiciclina","rel":"treated_by","empiric":false,"regs":["Alergia ANAFILÁCTICA a betalactámicos — Doxiciclina"]},{"s":"otitis_media_aguda","t":"amoxicilina","rel":"treated_by","empiric":true,"regs":["Adultos — Primera línea","Adultos — Enfermedad severa"]},{"s":"otitis_media_aguda","t":"amoxicilina_clavulanico","rel":"treated_by","empiric":false,"regs":["Segunda línea"]},{"s":"otitis_media_aguda","t":"cefuroxima","rel":"treated_by","empiric":false,"regs":["Alergia a betalactámicos"]},{"s":"otitis_media_aguda","t":"levofloxacino","rel":"treated_by","empiric":false,"regs":["Alergia a betalactámicos"]},{"s":"otitis_media_aguda","t":"doxiciclina","rel":"treated_by","empiric":false,"regs":["Alergia a betalactámicos"]},{"s":"exacerbacion_epoc","t":"amoxicilina","rel":"treated_by","empiric":true,"regs":["Ambulatorio — Primera línea"]},{"s":"exacerbacion_epoc","t":"azitromicina","rel":"treated_by","empiric":false,"regs":["Alergia a betalactámicos — Azitromicina"]},{"s":"exacerbacion_epoc","t":"claritromicina","rel":"treated_by","empiric":false,"regs":["Alergia a betalactámicos — Claritromicina"]},{"s":"uretritis","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Empírico — Cobertura DUAL (gonococo + clamidia)","Gonorrea — componente antigonocócico"]},{"s":"uretritis","t":"doxiciclina","rel":"treated_by","empiric":true,"regs":["Empírico — Cobertura DUAL (gonococo + clamidia)","Clamidia — componente anticlamidial"]},{"s":"uretritis","t":"azitromicina","rel":"treated_by","empiric":false,"regs":["Clamidia — alternativa (dosis única)"]},{"s":"cervicitis","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Empírico — Cobertura DUAL (gonococo + clamidia)"]},{"s":"cervicitis","t":"doxiciclina","rel":"treated_by","empiric":true,"regs":["Empírico — Cobertura DUAL (gonococo + clamidia)"]},{"s":"cervicitis","t":"azitromicina","rel":"treated_by","empiric":false,"regs":["Clamidia — alternativa (dosis única)"]},{"s":"artritis_septica","t":"cefazolina","rel":"treated_by","empiric":true,"regs":["Empírico — Elección"]},{"s":"artritis_septica","t":"cefadroxilo","rel":"treated_by","empiric":true,"regs":["Empírico — Elección"]},{"s":"artritis_septica","t":"vancomicina","rel":"treated_by","empiric":false,"regs":["Alergia a betalactámicos"]},{"s":"artritis_septica","t":"clindamicina","rel":"treated_by","empiric":false,"regs":["Alergia a betalactámicos"]},{"s":"artritis_septica","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Sospecha de artritis GONOCÓCICA"]},{"s":"osteoartritis","t":"cefazolina","rel":"treated_by","empiric":true,"regs":["Empírico — Elección"]},{"s":"osteoartritis","t":"cefadroxilo","rel":"treated_by","empiric":true,"regs":["Empírico — Elección"]},{"s":"osteoartritis","t":"cloxacilina","rel":"treated_by","empiric":false,"regs":["Empírico — Alternativas"]},{"s":"osteoartritis","t":"vancomicina","rel":"treated_by","empiric":false,"regs":["Empírico — Alternativas"]},{"s":"osteoartritis","t":"levofloxacino","rel":"treated_by","empiric":false,"regs":["Empírico — Alternativas"]},{"s":"espondilodiscitis","t":"cefazolina","rel":"treated_by","empiric":true,"regs":["Empírico — Elección"]},{"s":"espondilodiscitis","t":"ciprofloxacino","rel":"treated_by","empiric":true,"regs":["Empírico — Elección","Empírico — Alternativas"]},{"s":"espondilodiscitis","t":"ampicilina_sulbactam","rel":"treated_by","empiric":false,"regs":["Empírico — Alternativas"]},{"s":"espondilodiscitis","t":"levofloxacino","rel":"treated_by","empiric":false,"regs":["Empírico — Alternativas"]},{"s":"espondilodiscitis","t":"vancomicina","rel":"treated_by","empiric":false,"regs":["Empírico — Alternativas"]},{"s":"infeccion_cervicofacial","t":"ampicilina_sulbactam","rel":"treated_by","empiric":true,"regs":["Empírico — Elección"]},{"s":"infeccion_cervicofacial","t":"ceftriaxona","rel":"treated_by","empiric":false,"regs":["Empírico — Alternativas"]},{"s":"infeccion_cervicofacial","t":"metronidazol","rel":"treated_by","empiric":false,"regs":["Empírico — Alternativas"]},{"s":"infeccion_cervicofacial","t":"clindamicina","rel":"treated_by","empiric":false,"regs":["Empírico — Alternativas"]},{"s":"infeccion_cervicofacial","t":"levofloxacino","rel":"treated_by","empiric":false,"regs":["Empírico — Alternativas"]},{"s":"infeccion_necrotizante_tejidos_blandos","t":"cefazolina","rel":"treated_by","empiric":true,"regs":["Extremidades — Elección"]},{"s":"infeccion_necrotizante_tejidos_blandos","t":"clindamicina","rel":"treated_by","empiric":true,"regs":["Extremidades — Elección","Extremidades — S. pyogenes confirmado","Perineal u orofaríngeo — Elección","Perineal u orofaríngeo — Alternativas"]},{"s":"infeccion_necrotizante_tejidos_blandos","t":"bencilpenicilina_sodica","rel":"treated_by","empiric":false,"regs":["Extremidades — S. pyogenes confirmado"]},{"s":"infeccion_necrotizante_tejidos_blandos","t":"ampicilina_sulbactam","rel":"treated_by","empiric":true,"regs":["Perineal u orofaríngeo — Elección","Perineal u orofaríngeo — Alternativas"]},{"s":"infeccion_necrotizante_tejidos_blandos","t":"ceftriaxona","rel":"treated_by","empiric":false,"regs":["Perineal u orofaríngeo — Alternativas"]},{"s":"infeccion_necrotizante_tejidos_blandos","t":"linezolid","rel":"treated_by","empiric":false,"regs":["Perineal u orofaríngeo — Alternativas"]},{"s":"infeccion_necrotizante_tejidos_blandos","t":"metronidazol","rel":"treated_by","empiric":false,"regs":["Perineal u orofaríngeo — Alternativas"]},{"s":"absceso_cerebral","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Empírico — Elección"]},{"s":"absceso_cerebral","t":"metronidazol","rel":"treated_by","empiric":true,"regs":["Empírico — Elección","Alternativa"]},{"s":"absceso_cerebral","t":"bencilpenicilina_sodica","rel":"treated_by","empiric":false,"regs":["Alternativa"]},{"s":"absceso_cerebral","t":"meropenem","rel":"treated_by","empiric":false,"regs":["Alergia a penicilina (confiable)"]},{"s":"absceso_pulmonar","t":"amoxicilina_clavulanico","rel":"treated_by","empiric":true,"regs":["Aspirativa no grave — Elección oral"]},{"s":"absceso_pulmonar","t":"ampicilina_sulbactam","rel":"treated_by","empiric":true,"regs":["Aspirativa — Elección endovenosa","Empiema pleural asociado"]},{"s":"absceso_pulmonar","t":"ceftriaxona","rel":"treated_by","empiric":true,"regs":["Alternativas","Empiema pleural asociado"]},{"s":"absceso_pulmonar","t":"metronidazol","rel":"treated_by","empiric":false,"regs":["Alternativas"]},{"s":"absceso_pulmonar","t":"moxifloxacino","rel":"treated_by","empiric":false,"regs":["Alternativas"]},{"s":"absceso_pulmonar","t":"clindamicina","rel":"treated_by","empiric":true,"regs":["Empiema pleural asociado"]},{"s":"neumonia_cavitada","t":"ampicilina_sulbactam","rel":"treated_by","empiric":true,"regs":["Empírico — Cobertura de aspiración/anaerobios"]},{"s":"neumonia_cavitada","t":"ceftriaxona","rel":"treated_by","empiric":false,"regs":["Alternativa"]},{"s":"neumonia_cavitada","t":"metronidazol","rel":"treated_by","empiric":false,"regs":["Alternativa"]},{"s":"diarrea_disenterica","t":"azitromicina","rel":"treated_by","empiric":true,"regs":["NO asociada a antibióticos — Elección"]},{"s":"diarrea_disenterica","t":"ciprofloxacino","rel":"treated_by","empiric":false,"regs":["NO asociada a antibióticos — Alternativa"]},{"s":"diarrea_disenterica","t":"vancomicina","rel":"treated_by","empiric":false,"regs":["ASOCIADA a antibióticos (C. difficile) — Elección"]},{"s":"diarrea_disenterica","t":"metronidazol","rel":"treated_by","empiric":false,"regs":["ASOCIADA a antibióticos (C. difficile) — Alternativa"]},{"s":"bacteriemia_asociada_cateter","t":"vancomicina","rel":"treated_by","empiric":true,"regs":["Empírico — Elección","Dirigido — S. aureus","Dirigido — S. coagulasa negativo"]},{"s":"bacteriemia_asociada_cateter","t":"imipenem","rel":"treated_by","empiric":true,"regs":["Empírico — Elección","Dirigido — Bacilos gram negativos"]},{"s":"bacteriemia_asociada_cateter","t":"amikacina","rel":"treated_by","empiric":true,"regs":["Empírico — Elección"]},{"s":"bacteriemia_asociada_cateter","t":"anidulafungina","rel":"treated_by","empiric":true,"regs":["Empírico — Elección"]},{"s":"bacteriemia_asociada_cateter","t":"caspofungina","rel":"treated_by","empiric":true,"regs":["Empírico — Elección"]},{"s":"bacteriemia_asociada_cateter","t":"cloxacilina","rel":"treated_by","empiric":false,"regs":["Dirigido — S. aureus"]},{"s":"bacteriemia_asociada_cateter","t":"cefazolina","rel":"treated_by","empiric":false,"regs":["Dirigido — S. aureus"]},{"s":"bacteriemia_asociada_cateter","t":"meropenem","rel":"treated_by","empiric":false,"regs":["Dirigido — Bacilos gram negativos"]},{"s":"bacteriemia","t":"vancomicina","rel":"treated_by","empiric":true,"regs":["Empírico — según foco y epidemiología local","Dirigido — S. aureus (bacteriemia por S. aureus)"]},{"s":"bacteriemia","t":"imipenem","rel":"treated_by","empiric":true,"regs":["Empírico — según foco y epidemiología local"]},{"s":"bacteriemia","t":"amikacina","rel":"treated_by","empiric":true,"regs":["Empírico — según foco y epidemiología local"]},{"s":"bacteriemia","t":"cloxacilina","rel":"treated_by","empiric":false,"regs":["Dirigido — S. aureus (bacteriemia por S. aureus)"]},{"s":"bacteriemia","t":"cefazolina","rel":"treated_by","empiric":false,"regs":["Dirigido — S. aureus (bacteriemia por S. aureus)"]},{"s":"neumonia_asociada_ventilacion","t":"ceftazidima","rel":"treated_by","empiric":true,"regs":["Empírico — Betalactámico antipseudomónico + Vancomicina"]},{"s":"neumonia_asociada_ventilacion","t":"cefepime","rel":"treated_by","empiric":true,"regs":["Empírico — Betalactámico antipseudomónico + Vancomicina"]},{"s":"neumonia_asociada_ventilacion","t":"piperacilina_tazobactam","rel":"treated_by","empiric":true,"regs":["Empírico — Betalactámico antipseudomónico + Vancomicina"]},{"s":"neumonia_asociada_ventilacion","t":"meropenem","rel":"treated_by","empiric":true,"regs":["Empírico — Betalactámico antipseudomónico + Vancomicina"]},{"s":"neumonia_asociada_ventilacion","t":"imipenem","rel":"treated_by","empiric":true,"regs":["Empírico — Betalactámico antipseudomónico + Vancomicina"]},{"s":"neumonia_asociada_ventilacion","t":"vancomicina","rel":"treated_by","empiric":true,"regs":["Empírico — Betalactámico antipseudomónico + Vancomicina"]},{"s":"gastroenteritis_aguda","t":"ciprofloxacino","rel":"treated_by","empiric":true,"regs":["Salmonella NO typhi — solo si hay indicación","Diarrea del viajero"]},{"s":"gastroenteritis_aguda","t":"azitromicina","rel":"treated_by","empiric":false,"regs":["Campylobacter — solo si hay indicación"]},{"s":"gastroenteritis_aguda","t":"levofloxacino","rel":"treated_by","empiric":true,"regs":["Diarrea del viajero"]},{"s":"intoxicacion_alimentaria","t":"ciprofloxacino","rel":"treated_by","empiric":false,"regs":["Brote por Salmonella no tifoidea"]},{"s":"candidemia","t":"anidulafungina","rel":"treated_by","empiric":true,"regs":["Empírico — Equinocandina (ELECCIÓN)"]},{"s":"candidemia","t":"caspofungina","rel":"treated_by","empiric":true,"regs":["Empírico — Equinocandina (ELECCIÓN)"]},{"s":"candidemia","t":"micafungina","rel":"treated_by","empiric":true,"regs":["Empírico — Equinocandina (ELECCIÓN)"]},{"s":"candidemia","t":"anfotericina_b_liposomal","rel":"treated_by","empiric":false,"regs":["Alternativa — Anfotericina B (preferir liposomal)"]},{"s":"candidemia","t":"anfotericina_b_deoxicolato","rel":"treated_by","empiric":false,"regs":["Alternativa — Anfotericina B (preferir liposomal)"]},{"s":"candidemia","t":"fluconazol","rel":"treated_by","empiric":false,"regs":["Desescalamiento — Fluconazol (NO es inicio de elección)"]},{"s":"escherichia_coli","t":"vancomicina","rel":"resistant_to","kind":"intrinsic"},{"s":"escherichia_coli","t":"ampicilina","rel":"resistant_to","kind":"acquired"},{"s":"escherichia_coli","t":"tmp_smx","rel":"resistant_to","kind":"acquired"},{"s":"escherichia_coli","t":"ciprofloxacino","rel":"resistant_to","kind":"acquired"},{"s":"streptococcus_pneumoniae","t":"azitromicina","rel":"resistant_to","kind":"acquired"},{"s":"streptococcus_pneumoniae","t":"bencilpenicilina_sodica","rel":"resistant_to","kind":"acquired"},{"s":"streptococcus_pyogenes","t":"gentamicina","rel":"resistant_to","kind":"intrinsic"},{"s":"streptococcus_pyogenes","t":"azitromicina","rel":"resistant_to","kind":"acquired"},{"s":"staphylococcus_aureus","t":"bencilpenicilina_sodica","rel":"resistant_to","kind":"acquired"},{"s":"pseudomonas_aeruginosa","t":"tmp_smx","rel":"resistant_to","kind":"intrinsic"},{"s":"pseudomonas_aeruginosa","t":"ampicilina","rel":"resistant_to","kind":"intrinsic"},{"s":"pseudomonas_aeruginosa","t":"amoxicilina_clavulanico","rel":"resistant_to","kind":"intrinsic"},{"s":"pseudomonas_aeruginosa","t":"ceftriaxona","rel":"resistant_to","kind":"intrinsic"},{"s":"pseudomonas_aeruginosa","t":"ertapenem","rel":"resistant_to","kind":"intrinsic"},{"s":"pseudomonas_aeruginosa","t":"ciprofloxacino","rel":"resistant_to","kind":"acquired"},{"s":"haemophilus_influenzae","t":"vancomicina","rel":"resistant_to","kind":"intrinsic"},{"s":"mycoplasma_pneumoniae","t":"azitromicina","rel":"resistant_to","kind":"acquired"},{"s":"klebsiella_pneumoniae","t":"ampicilina","rel":"resistant_to","kind":"intrinsic"},{"s":"proteus_mirabilis","t":"nitrofurantoina","rel":"resistant_to","kind":"intrinsic"},{"s":"proteus_mirabilis","t":"ampicilina","rel":"resistant_to","kind":"acquired"},{"s":"proteus_mirabilis","t":"tmp_smx","rel":"resistant_to","kind":"acquired"},{"s":"staphylococcus_saprophyticus","t":"ampicilina","rel":"resistant_to","kind":"acquired"},{"s":"enterobacter_spp","t":"amoxicilina_clavulanico","rel":"resistant_to","kind":"intrinsic"},{"s":"enterococcus_spp","t":"clindamicina","rel":"resistant_to","kind":"intrinsic"},{"s":"methicillin_resistant_staphylococcus_aureus","t":"azitromicina","rel":"resistant_to","kind":"acquired"},{"s":"methicillin_resistant_staphylococcus_aureus","t":"clindamicina","rel":"resistant_to","kind":"acquired"},{"s":"neisseria_gonorrhoeae","t":"vancomicina","rel":"resistant_to","kind":"intrinsic"},{"s":"anaerobes","t":"gentamicina","rel":"resistant_to","kind":"intrinsic"},{"s":"neisseria_meningitidis","t":"vancomicina","rel":"resistant_to","kind":"intrinsic"},{"s":"neisseria_meningitidis","t":"bencilpenicilina_sodica","rel":"resistant_to","kind":"acquired"},{"s":"listeria_monocytogenes","t":"fosfomicina_trometamol","rel":"resistant_to","kind":"intrinsic"},{"s":"bacteroides_fragilis","t":"gentamicina","rel":"resistant_to","kind":"intrinsic"},{"s":"enterococcus_faecalis","t":"vancomicina","rel":"resistant_to","kind":"acquired"},{"s":"acinetobacter_baumannii","t":"ampicilina","rel":"resistant_to","kind":"intrinsic"},{"s":"acinetobacter_baumannii","t":"amoxicilina_clavulanico","rel":"resistant_to","kind":"intrinsic"},{"s":"acinetobacter_baumannii","t":"ertapenem","rel":"resistant_to","kind":"intrinsic"},{"s":"acinetobacter_baumannii","t":"cloranfenicol","rel":"resistant_to","kind":"intrinsic"},{"s":"acinetobacter_baumannii","t":"colistin","rel":"resistant_to","kind":"acquired"},{"s":"enterococcus_faecium","t":"clindamicina","rel":"resistant_to","kind":"intrinsic"},{"s":"enterococcus_faecium","t":"cloxacilina","rel":"resistant_to","kind":"intrinsic"},{"s":"serratia_marcescens","t":"colistin","rel":"resistant_to","kind":"intrinsic"},{"s":"serratia_marcescens","t":"polimixina_b","rel":"resistant_to","kind":"intrinsic"},{"s":"serratia_marcescens","t":"ampicilina","rel":"resistant_to","kind":"intrinsic"},{"s":"serratia_marcescens","t":"amoxicilina_clavulanico","rel":"resistant_to","kind":"intrinsic"},{"s":"serratia_marcescens","t":"cefuroxima","rel":"resistant_to","kind":"intrinsic"},{"s":"serratia_marcescens","t":"nitrofurantoina","rel":"resistant_to","kind":"intrinsic"},{"s":"streptococcus_agalactiae","t":"gentamicina","rel":"resistant_to","kind":"intrinsic"},{"s":"streptococcus_agalactiae","t":"azitromicina","rel":"resistant_to","kind":"acquired"},{"s":"clostridioides_difficile","t":"gentamicina","rel":"resistant_to","kind":"intrinsic"},{"s":"clostridioides_difficile","t":"ciprofloxacino","rel":"resistant_to","kind":"acquired"},{"s":"moraxella_catarrhalis","t":"ampicilina","rel":"resistant_to","kind":"intrinsic"},{"s":"moraxella_catarrhalis","t":"amoxicilina","rel":"resistant_to","kind":"intrinsic"},{"s":"moraxella_catarrhalis","t":"clindamicina","rel":"resistant_to","kind":"intrinsic"},{"s":"vibrio_cholerae","t":"vancomicina","rel":"resistant_to","kind":"intrinsic"},{"s":"campylobacter_jejuni","t":"vancomicina","rel":"resistant_to","kind":"intrinsic"},{"s":"campylobacter_jejuni","t":"ciprofloxacino","rel":"resistant_to","kind":"acquired"},{"s":"campylobacter_jejuni","t":"ciprofloxacino","rel":"resistant_to","kind":"acquired"},{"s":"burkholderia_cepacia","t":"gentamicina","rel":"resistant_to","kind":"intrinsic"},{"s":"burkholderia_cepacia","t":"colistin","rel":"resistant_to","kind":"intrinsic"},{"s":"salmonella_no_tifoidea","t":"ampicilina","rel":"resistant_to","kind":"acquired"},{"s":"salmonella_no_tifoidea","t":"tmp_smx","rel":"resistant_to","kind":"acquired"},{"s":"shigella_spp","t":"ampicilina","rel":"resistant_to","kind":"acquired"},{"s":"shigella_spp","t":"tmp_smx","rel":"resistant_to","kind":"acquired"},{"s":"shigella_spp","t":"ciprofloxacino","rel":"resistant_to","kind":"acquired"},{"s":"clostridium_perfringens","t":"aztreonam","rel":"resistant_to","kind":"intrinsic"},{"s":"actinomyces_spp","t":"metronidazol","rel":"resistant_to","kind":"intrinsic"},{"s":"nocardia_spp","t":"ceftriaxona","rel":"resistant_to","kind":"acquired"}],"findings":{"orphans":[{"id":"staphylococcus_sp","type":"pathogen","label":"Staph spp (no tipificado)"},{"id":"klebsiella_oxytoca","type":"pathogen","label":"K. oxytoca"},{"id":"citrobacter_freundii","type":"pathogen","label":"C. freundii"},{"id":"morganella_morganii","type":"pathogen","label":"M. morganii"},{"id":"corynebacterium_diphtheriae","type":"pathogen","label":"C. diphtheriae"},{"id":"salmonella_enterica_typhi","type":"pathogen","label":"S. Typhi"},{"id":"bordetella_pertussis","type":"pathogen","label":"B. pertussis"},{"id":"helicobacter_pylori","type":"pathogen","label":"H. pylori"},{"id":"treponema_pallidum","type":"pathogen","label":"T. pallidum"},{"id":"mycobacterium_tuberculosis","type":"pathogen","label":"M. tuberculosis"},{"id":"mycobacterium_leprae","type":"pathogen","label":"M. leprae"},{"id":"cryptococcus_neoformans","type":"pathogen","label":"C. neoformans"},{"id":"aspergillus_fumigatus","type":"pathogen","label":"A. fumigatus"},{"id":"histoplasma_capsulatum","type":"pathogen","label":"H. capsulatum"},{"id":"pneumocystis_jirovecii","type":"pathogen","label":"P. jirovecii"},{"id":"leishmania_spp","type":"pathogen","label":"Leishmania"},{"id":"borrelia_burgdorferi","type":"pathogen","label":"B. burgdorferi"},{"id":"haemophilus_ducreyi","type":"pathogen","label":"H. ducreyi"},{"id":"tigeciclina","type":"drug","label":"Tigeciclina"},{"id":"dicloxacilina","type":"drug","label":"Dicloxacilina"},{"id":"oxacilina","type":"drug","label":"Oxacilina"},{"id":"sultamicilina","type":"drug","label":"Sultamicilina"},{"id":"cefalotina","type":"drug","label":"Cefalotina"},{"id":"cefoxitina","type":"drug","label":"Cefoxitina"},{"id":"cefixima","type":"drug","label":"Cefixima"},{"id":"ceftazidima_avibactam","type":"drug","label":"Ceftazidima-Avibactam"},{"id":"cefoperazona_sulbactam","type":"drug","label":"Cefoperazona / Sulbactam"},{"id":"ceftarolina","type":"drug","label":"Ceftarolina Fosamilo"},{"id":"tobramicina","type":"drug","label":"Tobramicina"},{"id":"teicoplanina","type":"drug","label":"Teicoplanina"},{"id":"norfloxacino","type":"drug","label":"Norfloxacino"},{"id":"isoniazida","type":"drug","label":"Isoniazida"},{"id":"cefradina","type":"drug","label":"Cefradina"},{"id":"cefaclor","type":"drug","label":"Cefaclor"},{"id":"cefoperazona","type":"drug","label":"Cefoperazona"},{"id":"ceftibuteno","type":"drug","label":"Ceftibuteno"},{"id":"ceftobiprol_medocarilo","type":"drug","label":"Ceftobiprol Medocarilo"},{"id":"meropenem_vaborbactam","type":"drug","label":"Meropenem-Vaborbactam"},{"id":"eritromicina","type":"drug","label":"Eritromicina"},{"id":"estreptomicina","type":"drug","label":"Estreptomicina"},{"id":"neomicina","type":"drug","label":"Neomicina"},{"id":"ofloxacino","type":"drug","label":"Ofloxacino"},{"id":"delafloxacino","type":"drug","label":"Delafloxacino"},{"id":"rifabutina","type":"drug","label":"Rifabutina"},{"id":"pirazinamida","type":"drug","label":"Pirazinamida"},{"id":"bedaquilina","type":"drug","label":"Bedaquilina"},{"id":"etambutol","type":"drug","label":"Etambutol"},{"id":"rifaximina","type":"drug","label":"Rifaximina"},{"id":"flucloxacilina","type":"drug","label":"Flucloxacilina"},{"id":"cefotaxima","type":"drug","label":"Cefotaxima"},{"id":"ceftolozano_tazobactam","type":"drug","label":"Ceftolozano / Tazobactam"},{"id":"dapsona","type":"drug","label":"Dapsona"},{"id":"rifapentina","type":"drug","label":"Rifapentina"},{"id":"tetraciclina","type":"drug","label":"Tetraciclina"}],"drugsNoRegimen":[{"id":"tigeciclina","label":"Tigeciclina","deg":0},{"id":"colistin","label":"Colistín (Polimixina E)","deg":3},{"id":"dicloxacilina","label":"Dicloxacilina","deg":0},{"id":"oxacilina","label":"Oxacilina","deg":0},{"id":"sultamicilina","label":"Sultamicilina","deg":0},{"id":"cefalotina","label":"Cefalotina","deg":0},{"id":"cefoxitina","label":"Cefoxitina","deg":0},{"id":"cefixima","label":"Cefixima","deg":0},{"id":"ceftazidima_avibactam","label":"Ceftazidima-Avibactam","deg":0},{"id":"cefoperazona_sulbactam","label":"Cefoperazona / Sulbactam","deg":0},{"id":"ceftarolina","label":"Ceftarolina Fosamilo","deg":0},{"id":"tobramicina","label":"Tobramicina","deg":0},{"id":"teicoplanina","label":"Teicoplanina","deg":0},{"id":"polimixina_b","label":"Polimixina B","deg":1},{"id":"norfloxacino","label":"Norfloxacino","deg":0},{"id":"isoniazida","label":"Isoniazida","deg":0},{"id":"cefradina","label":"Cefradina","deg":0},{"id":"cefaclor","label":"Cefaclor","deg":0},{"id":"cefoperazona","label":"Cefoperazona","deg":0},{"id":"ceftibuteno","label":"Ceftibuteno","deg":0},{"id":"ceftobiprol_medocarilo","label":"Ceftobiprol Medocarilo","deg":0},{"id":"cloranfenicol","label":"Cloranfenicol","deg":1},{"id":"meropenem_vaborbactam","label":"Meropenem-Vaborbactam","deg":0},{"id":"eritromicina","label":"Eritromicina","deg":0},{"id":"estreptomicina","label":"Estreptomicina","deg":0},{"id":"neomicina","label":"Neomicina","deg":0},{"id":"ofloxacino","label":"Ofloxacino","deg":0},{"id":"delafloxacino","label":"Delafloxacino","deg":0},{"id":"rifabutina","label":"Rifabutina","deg":0},{"id":"pirazinamida","label":"Pirazinamida","deg":0},{"id":"bedaquilina","label":"Bedaquilina","deg":0},{"id":"etambutol","label":"Etambutol","deg":0},{"id":"rifaximina","label":"Rifaximina","deg":0},{"id":"flucloxacilina","label":"Flucloxacilina","deg":0},{"id":"cefotaxima","label":"Cefotaxima","deg":0},{"id":"ceftolozano_tazobactam","label":"Ceftolozano / Tazobactam","deg":0},{"id":"dapsona","label":"Dapsona","deg":0},{"id":"rifapentina","label":"Rifapentina","deg":0},{"id":"tetraciclina","label":"Tetraciclina","deg":0}],"asymmetric":[{"syndrome":"nac","pathogen":"haemophilus_influenzae","dir":"fwd"},{"syndrome":"itu_cistitis","pathogen":"escherichia_coli","dir":"fwd"},{"syndrome":"itu_cistitis","pathogen":"klebsiella_pneumoniae","dir":"fwd"},{"syndrome":"itu_pielonefritis","pathogen":"escherichia_coli","dir":"fwd"},{"syndrome":"itu_pielonefritis","pathogen":"klebsiella_pneumoniae","dir":"fwd"},{"syndrome":"itu_complicada","pathogen":"proteus_mirabilis","dir":"fwd"},{"syndrome":"itu_complicada","pathogen":"enterobacter_spp","dir":"fwd"},{"syndrome":"itu_cauti","pathogen":"escherichia_coli","dir":"fwd"},{"syndrome":"itu_cauti","pathogen":"klebsiella_pneumoniae","dir":"fwd"},{"syndrome":"itu_cauti","pathogen":"proteus_mirabilis","dir":"fwd"},{"syndrome":"itu_cauti","pathogen":"pseudomonas_aeruginosa","dir":"fwd"},{"syndrome":"itu_cauti","pathogen":"enterococcus_spp","dir":"fwd"},{"syndrome":"epi","pathogen":"chlamydia_trachomatis","dir":"fwd"},{"syndrome":"intraabdominal","pathogen":"pseudomonas_aeruginosa","dir":"fwd"},{"syndrome":"sepsis_urinaria","pathogen":"escherichia_coli","dir":"fwd"},{"syndrome":"sepsis_urinaria","pathogen":"klebsiella_pneumoniae","dir":"fwd"},{"syndrome":"endocarditis_infecciosa","pathogen":"coxiella_burnetii","dir":"fwd"},{"syndrome":"endocarditis_infecciosa","pathogen":"bartonella_henselae","dir":"fwd"},{"syndrome":"endocarditis_infecciosa","pathogen":"brucella_spp","dir":"fwd"},{"syndrome":"nih","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"nih","pathogen":"escherichia_coli","dir":"fwd"},{"syndrome":"nih","pathogen":"acinetobacter_baumannii","dir":"fwd"},{"syndrome":"nih","pathogen":"stenotrophomonas_maltophilia","dir":"fwd"},{"syndrome":"sinusitis_aguda","pathogen":"streptococcus_pneumoniae","dir":"fwd"},{"syndrome":"sinusitis_aguda","pathogen":"haemophilus_influenzae","dir":"fwd"},{"syndrome":"otitis_media_aguda","pathogen":"streptococcus_pneumoniae","dir":"fwd"},{"syndrome":"otitis_media_aguda","pathogen":"haemophilus_influenzae","dir":"fwd"},{"syndrome":"exacerbacion_epoc","pathogen":"streptococcus_pneumoniae","dir":"fwd"},{"syndrome":"exacerbacion_epoc","pathogen":"haemophilus_influenzae","dir":"fwd"},{"syndrome":"exacerbacion_epoc","pathogen":"pseudomonas_aeruginosa","dir":"fwd"},{"syndrome":"uretritis","pathogen":"chlamydia_trachomatis","dir":"fwd"},{"syndrome":"uretritis","pathogen":"mycoplasma_genitalium","dir":"fwd"},{"syndrome":"cervicitis","pathogen":"chlamydia_trachomatis","dir":"fwd"},{"syndrome":"artritis_septica","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"artritis_septica","pathogen":"streptococcus_pyogenes","dir":"fwd"},{"syndrome":"osteoartritis","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"espondilodiscitis","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"espondilodiscitis","pathogen":"escherichia_coli","dir":"fwd"},{"syndrome":"infeccion_cervicofacial","pathogen":"bacteroides_fragilis","dir":"fwd"},{"syndrome":"infeccion_cervicofacial","pathogen":"streptococcus_pyogenes","dir":"fwd"},{"syndrome":"infeccion_necrotizante_tejidos_blandos","pathogen":"streptococcus_pyogenes","dir":"fwd"},{"syndrome":"infeccion_necrotizante_tejidos_blandos","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"infeccion_necrotizante_tejidos_blandos","pathogen":"bacteroides_fragilis","dir":"fwd"},{"syndrome":"absceso_cerebral","pathogen":"streptococcus_pyogenes","dir":"fwd"},{"syndrome":"absceso_cerebral","pathogen":"bacteroides_fragilis","dir":"fwd"},{"syndrome":"absceso_cerebral","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"absceso_pulmonar","pathogen":"bacteroides_fragilis","dir":"fwd"},{"syndrome":"absceso_pulmonar","pathogen":"streptococcus_pyogenes","dir":"fwd"},{"syndrome":"absceso_pulmonar","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"neumonia_cavitada","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"neumonia_cavitada","pathogen":"bacteroides_fragilis","dir":"fwd"},{"syndrome":"neumonia_cavitada","pathogen":"streptococcus_pyogenes","dir":"fwd"},{"syndrome":"diarrea_disenterica","pathogen":"campylobacter_jejuni","dir":"fwd"},{"syndrome":"diarrea_disenterica","pathogen":"salmonella_no_tifoidea","dir":"fwd"},{"syndrome":"diarrea_disenterica","pathogen":"clostridioides_difficile","dir":"fwd"},{"syndrome":"bacteriemia_asociada_cateter","pathogen":"staphylococcus_cons","dir":"fwd"},{"syndrome":"bacteriemia_asociada_cateter","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"bacteriemia_asociada_cateter","pathogen":"escherichia_coli","dir":"fwd"},{"syndrome":"bacteriemia_asociada_cateter","pathogen":"klebsiella_pneumoniae","dir":"fwd"},{"syndrome":"bacteriemia_asociada_cateter","pathogen":"enterobacter_cloacae_complex","dir":"fwd"},{"syndrome":"bacteriemia_asociada_cateter","pathogen":"pseudomonas_aeruginosa","dir":"fwd"},{"syndrome":"bacteriemia_asociada_cateter","pathogen":"candida_spp","dir":"fwd"},{"syndrome":"bacteriemia","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"bacteriemia","pathogen":"escherichia_coli","dir":"fwd"},{"syndrome":"bacteriemia","pathogen":"klebsiella_pneumoniae","dir":"fwd"},{"syndrome":"bacteriemia","pathogen":"pseudomonas_aeruginosa","dir":"fwd"},{"syndrome":"bacteriemia","pathogen":"staphylococcus_cons","dir":"fwd"},{"syndrome":"neumonia_asociada_ventilacion","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"neumonia_asociada_ventilacion","pathogen":"escherichia_coli","dir":"fwd"},{"syndrome":"neumonia_asociada_ventilacion","pathogen":"klebsiella_pneumoniae","dir":"fwd"},{"syndrome":"neumonia_asociada_ventilacion","pathogen":"enterobacter_cloacae_complex","dir":"fwd"},{"syndrome":"neumonia_asociada_ventilacion","pathogen":"pseudomonas_aeruginosa","dir":"fwd"},{"syndrome":"gastroenteritis_aguda","pathogen":"campylobacter_jejuni","dir":"fwd"},{"syndrome":"gastroenteritis_aguda","pathogen":"escherichia_coli","dir":"fwd"},{"syndrome":"intoxicacion_alimentaria","pathogen":"salmonella_no_tifoidea","dir":"fwd"},{"syndrome":"intoxicacion_alimentaria","pathogen":"staphylococcus_aureus","dir":"fwd"},{"syndrome":"candidemia","pathogen":"candida_spp","dir":"fwd"},{"syndrome":"candidemia","pathogen":"candida_albicans","dir":"fwd"},{"syndrome":"meningitis","pathogen":"escherichia_coli","dir":"back"},{"syndrome":"nac","pathogen":"staphylococcus_aureus","dir":"back"},{"syndrome":"nac","pathogen":"klebsiella_pneumoniae","dir":"back"},{"syndrome":"intraabdominal","pathogen":"anaerobes","dir":"back"},{"syndrome":"celulitis","pathogen":"streptococcus_spp","dir":"back"},{"syndrome":"intraabdominal","pathogen":"enterobacterales","dir":"back"},{"syndrome":"itu_complicada","pathogen":"enterococcus_faecalis","dir":"back"},{"syndrome":"intraabdominal","pathogen":"enterococcus_faecalis","dir":"back"},{"syndrome":"intraabdominal","pathogen":"enterococcus_faecium","dir":"back"},{"syndrome":"itu_cauti","pathogen":"enterococcus_faecium","dir":"back"},{"syndrome":"bacteriemia","pathogen":"enterococcus_faecium","dir":"back"},{"syndrome":"bacteriemia","pathogen":"serratia_marcescens","dir":"back"},{"syndrome":"meningitis","pathogen":"streptococcus_agalactiae","dir":"back"},{"syndrome":"nih","pathogen":"burkholderia_cepacia","dir":"back"},{"syndrome":"bacteriemia","pathogen":"salmonella_no_tifoidea","dir":"back"},{"syndrome":"epi","pathogen":"actinomyces_spp","dir":"back"}],"resProse":[{"pathogen":"staphylococcus_aureus","kind":"acquired","text":"Meticilina (MRSA)"},{"pathogen":"pseudomonas_aeruginosa","kind":"acquired","text":"Carbapenémicos"},{"pathogen":"haemophilus_influenzae","kind":"acquired","text":"Beta-lactamasa (algunas cepas)"},{"pathogen":"mycoplasma_pneumoniae","kind":"intrinsic","text":"Beta-lactámicos"},{"pathogen":"chlamydia_pneumoniae","kind":"intrinsic","text":"Beta-lactámicos"},{"pathogen":"klebsiella_pneumoniae","kind":"acquired","text":"BLEE"},{"pathogen":"klebsiella_pneumoniae","kind":"acquired","text":"Carbapenemasas (KPC, NDM, OXA-48)"},{"pathogen":"staphylococcus_saprophyticus","kind":"intrinsic","text":"novobiocina (clave para su identificación en laboratorio)"},{"pathogen":"staphylococcus_saprophyticus","kind":"intrinsic","text":"fosfomicina (resistencia in vitro, pero el MINSAL/IDSA igual la avala por altísima concentración urinaria)"},{"pathogen":"enterobacter_spp","kind":"intrinsic","text":"Cefalosporinas de primera generación."},{"pathogen":"enterobacter_spp","kind":"acquired","text":"Des-represión de AmpC durante tratamiento con cefalosporinas 3ra gen."},{"pathogen":"enterococcus_spp","kind":"intrinsic","text":"Cefalosporinas todas"},{"pathogen":"enterococcus_spp","kind":"acquired","text":"Resistencia a Vanco (VRE) predominantemente en faecium."},{"pathogen":"methicillin_resistant_staphylococcus_aureus","kind":"intrinsic","text":"Todos los betalactámicos, excepto ceftarolina (5ta gen)."},{"pathogen":"methicillin_resistant_staphylococcus_aureus","kind":"acquired","text":"Quinolonas (frecuente)"},{"pathogen":"neisseria_gonorrhoeae","kind":"intrinsic","text":"Lincosamidas"},{"pathogen":"neisseria_gonorrhoeae","kind":"acquired","text":"penicilina_g (producción de penicilinasa)"},{"pathogen":"neisseria_gonorrhoeae","kind":"acquired","text":"ciprofloxacino (mutaciones gyrA)"},{"pathogen":"neisseria_gonorrhoeae","kind":"acquired","text":"Tetraciclinas"},{"pathogen":"neisseria_gonorrhoeae","kind":"acquired","text":"azitromicina (resistencia en aumento global)"},{"pathogen":"chlamydia_trachomatis","kind":"intrinsic","text":"Betalactámicos"},{"pathogen":"anaerobes","kind":"acquired","text":"Resistencia variable de B. fragilis a clindamicina."},{"pathogen":"mycoplasma_genitalium","kind":"intrinsic","text":"Beta-lactámicos"},{"pathogen":"mycoplasma_genitalium","kind":"acquired","text":"Resistencia a macrólidos en muy rápido ascenso (>50%)."},{"pathogen":"listeria_monocytogenes","kind":"intrinsic","text":"todas_las_cefalosporinas (incluyendo cefotaxima, ceftriaxona y cefepime)"},{"pathogen":"listeria_monocytogenes","kind":"acquired","text":"Macrólidos"},{"pathogen":"listeria_monocytogenes","kind":"acquired","text":"fluoroquinolonas (raro)"},{"pathogen":"enterobacterales","kind":"acquired","text":"BLEE"},{"pathogen":"enterobacterales","kind":"acquired","text":"Carbapenemasas"},{"pathogen":"bacteroides_fragilis","kind":"acquired","text":"Resistencia creciente a clindamicina"},{"pathogen":"staphylococcus_cons","kind":"acquired","text":"Altas tasas de resistencia a meticilina (>70% en hospitales)."},{"pathogen":"streptococcus_viridans_group","kind":"acquired","text":"Tasa de resistencia a penicilina baja pero ascendente."},{"pathogen":"enterococcus_faecalis","kind":"intrinsic","text":"Cefalosporinas"},{"pathogen":"hacek_group","kind":"acquired","text":"Eventual producción de beta-lactamasas contra Ampicilina."},{"pathogen":"gram_negative_bacilli_non_hacek","kind":"acquired","text":"Perfil de resistencia dependiente de la especie individual en hemocultivos."},{"pathogen":"candida_spp","kind":"intrinsic","text":"Antibacterianos en general."},{"pathogen":"candida_spp","kind":"acquired","text":"Fluconazol para cepas C. glabrata o C. krusei."},{"pathogen":"acinetobacter_baumannii","kind":"intrinsic","text":"Cefalosporinas de 1ª y 2ª generación"},{"pathogen":"acinetobacter_baumannii","kind":"acquired","text":"carbapenemicos (meropenem/imipenem)"},{"pathogen":"acinetobacter_baumannii","kind":"acquired","text":"Aminoglucósidos"},{"pathogen":"acinetobacter_baumannii","kind":"acquired","text":"Fluoroquinolonas"},{"pathogen":"enterococcus_faecium","kind":"intrinsic","text":"Cefalosporinas (todas)"},{"pathogen":"enterococcus_faecium","kind":"intrinsic","text":"Aminoglucósidos (bajo nivel)"},{"pathogen":"enterococcus_faecium","kind":"intrinsic","text":"cotrimoxazol (in vivo)"},{"pathogen":"enterococcus_faecium","kind":"acquired","text":"ampicilina (casi 100% en cepas nosocomiales chilenas)"},{"pathogen":"enterococcus_faecium","kind":"acquired","text":"vancomicina (VRE/ERV)"},{"pathogen":"enterococcus_faecium","kind":"acquired","text":"Gentamicina de alto nivel"},{"pathogen":"klebsiella_oxytoca","kind":"intrinsic","text":"Suele tener resistencia intrínseca o de muy bajo umbral a b-lactamicos básicos."},{"pathogen":"klebsiella_oxytoca","kind":"acquired","text":"Alta producción natural de beta-lactamasas del tipo OXY y BLEE adquirido."},{"pathogen":"enterobacter_cloacae_complex","kind":"intrinsic","text":"AmpC inducible de genotipo agresivo."},{"pathogen":"enterobacter_cloacae_complex","kind":"acquired","text":"Altamente propenso a des-represión in-vivo durante terapia con Ceftriaxona o Ceftazidima."},{"pathogen":"citrobacter_freundii","kind":"intrinsic","text":"Como parte del grupo ESPM, producción inducible de AmpC."},{"pathogen":"serratia_marcescens","kind":"acquired","text":"cefalosporinas_tercera_generacion (por desrepresión AmpC o BLEE)"},{"pathogen":"serratia_marcescens","kind":"acquired","text":"Carbapenémicos"},{"pathogen":"morganella_morganii","kind":"intrinsic","text":"Colistín/Polimixina, Nitrofurantoína, Ampicilina, Cefazolina."},{"pathogen":"morganella_morganii","kind":"acquired","text":"AmpC inducible y desrepresión."},{"pathogen":"stenotrophomonas_maltophilia","kind":"intrinsic","text":"Carbapenémicos (todos)"},{"pathogen":"stenotrophomonas_maltophilia","kind":"intrinsic","text":"aminoglucosidos (frecuente, por bombas de eflujo)"},{"pathogen":"stenotrophomonas_maltophilia","kind":"acquired","text":"Fluoroquinolonas"},{"pathogen":"stenotrophomonas_maltophilia","kind":"acquired","text":"cotrimoxazol (emergente)"},{"pathogen":"clostridioides_difficile","kind":"intrinsic","text":"Cefalosporinas"},{"pathogen":"moraxella_catarrhalis","kind":"intrinsic","text":"trimetoprima (como monoterapia)"},{"pathogen":"moraxella_catarrhalis","kind":"acquired","text":"macrolidos (raro pero descrito)"},{"pathogen":"salmonella_enterica_typhi","kind":"acquired","text":"Resistencia a quinolonas (NAL-R)"},{"pathogen":"vibrio_cholerae","kind":"acquired","text":"Tetraciclinas (variable)"},{"pathogen":"legionella_pneumophila","kind":"intrinsic","text":"Betalactámicos (todos)"},{"pathogen":"legionella_pneumophila","kind":"intrinsic","text":"Aminoglucósidos"},{"pathogen":"mycobacterium_tuberculosis","kind":"acquired","text":"MDR"},{"pathogen":"mycobacterium_tuberculosis","kind":"acquired","text":"XDR (multirresistencia)"},{"pathogen":"candida_auris","kind":"intrinsic","text":"fluconazol (alta prevalencia de resistencia natural o rápida adquisición)"},{"pathogen":"candida_auris","kind":"acquired","text":"Anfotericina B"},{"pathogen":"candida_auris","kind":"acquired","text":"equinocandinas (emergente, cepas panresistentes descritas)"},{"pathogen":"pneumocystis_jirovecii","kind":"intrinsic","text":"Fluconazol"},{"pathogen":"pneumocystis_jirovecii","kind":"intrinsic","text":"Anfotericina B"},{"pathogen":"salmonella_no_tifoidea","kind":"intrinsic","text":"Penicilina G"},{"pathogen":"salmonella_no_tifoidea","kind":"intrinsic","text":"Macrólidos clásicos"},{"pathogen":"salmonella_no_tifoidea","kind":"acquired","text":"ciprofloxacino (resistencia creciente en Chile)"},{"pathogen":"shigella_spp","kind":"intrinsic","text":"Penicilina G"},{"pathogen":"clostridium_perfringens","kind":"intrinsic","text":"Aminoglucósidos"},{"pathogen":"clostridium_perfringens","kind":"acquired","text":"clindamicina (infrecuente pero descrita)"},{"pathogen":"actinomyces_spp","kind":"intrinsic","text":"Aminoglucósidos"},{"pathogen":"nocardia_spp","kind":"intrinsic","text":"Penicilina G"},{"pathogen":"nocardia_spp","kind":"intrinsic","text":"macrolidos (depende de la especie)"},{"pathogen":"nocardia_spp","kind":"acquired","text":"imipenem (especie-dependiente)"},{"pathogen":"coxiella_burnetii","kind":"intrinsic","text":"Betalactámicos"},{"pathogen":"coxiella_burnetii","kind":"intrinsic","text":"Aminoglucósidos"},{"pathogen":"brucella_spp","kind":"intrinsic","text":"Cefalosporinas de 1ª generación"},{"pathogen":"brucella_spp","kind":"intrinsic","text":"Penicilina G"}],"resDrift":[],"backlogRefs":[{"pathogen":"neisseria_gonorrhoeae","syndrome":"conjuntivitis_neonatal"},{"pathogen":"listeria_monocytogenes","syndrome":"romboencefalitis"},{"pathogen":"listeria_monocytogenes","syndrome":"sepsis_neonatal"},{"pathogen":"listeria_monocytogenes","syndrome":"infeccion_asociada_embarazo"},{"pathogen":"acinetobacter_baumannii","syndrome":"infeccion_herida_operatoria"},{"pathogen":"stenotrophomonas_maltophilia","syndrome":"infeccion_tracto_respiratorio_fq"},{"pathogen":"legionella_pneumophila","syndrome":"neumonia_adquirida_comunidad_grave"},{"pathogen":"candida_auris","syndrome":"infeccion_invasora"},{"pathogen":"candida_auris","syndrome":"colonizacion_cutanea_persistente"},{"pathogen":"salmonella_no_tifoidea","syndrome":"infeccion_endovascular"},{"pathogen":"clostridium_perfringens","syndrome":"mionecrosis"},{"pathogen":"nocardia_spp","syndrome":"infeccion_cutanea_primaria"},{"pathogen":"coxiella_burnetii","syndrome":"sindrome_febril_agudo"},{"pathogen":"coxiella_burnetii","syndrome":"neumonia_atipica"},{"pathogen":"coxiella_burnetii","syndrome":"hepatitis_granulomatosa"},{"pathogen":"coxiella_burnetii","syndrome":"endocarditis_cultivo_negativo"},{"pathogen":"brucella_spp","syndrome":"sindrome_febril_prolongado"},{"pathogen":"bartonella_henselae","syndrome":"linfadenitis_regional"},{"pathogen":"bartonella_henselae","syndrome":"endocarditis_cultivo_negativo"}],"gramVocab":{"negative":31,"positive":21,"atypical":11,"variable":1,"fungal":6},"issues":[]}};
+
+/* ---------------------------------------------------------------------------
+   Modelo visual
+   Color por tipo + FORMA por tipo. La forma no es decorativa: en modo claro la
+   separación magenta↔azul cae en la banda 6–8 de deficiencia tritan, que solo
+   es admisible con una codificación secundaria.
+   --------------------------------------------------------------------------- */
+const TYPES = {
+  syndrome: { label: "Síndromes",  color: "--syndrome", shape: "circle" },
+  pathogen: { label: "Patógenos",  color: "--pathogen", shape: "diamond" },
+  drug:     { label: "Fármacos",   color: "--drug",     shape: "triangle" },
+};
+const RELS = {
+  caused_by:    { label: "causa",  desc: "síndrome — patógeno" },
+  treated_by:   { label: "trata",  desc: "síndrome — fármaco" },
+  resistant_to: { label: "resiste", desc: "patógeno — fármaco" },
+};
+
+const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+const byId = new Map(G.nodes.map((n) => [n.id, n]));
+
+const state = {
+  types: { syndrome: true, pathogen: true, drug: true },
+  rels: { caused_by: true, treated_by: true, resistant_to: true },
+  q: "",
+  sel: null,
+  hover: null,
+  hlOrphan: false,
+  hlAsym: false,
+  labels: false,
+  zoom: 1,
+  ox: 0,
+  oy: 0,
+};
+
+/* ---- Adyacencia ---- */
+const adj = new Map(G.nodes.map((n) => [n.id, []]));
+G.edges.forEach((e) => {
+  adj.get(e.s).push({ id: e.t, e });
+  adj.get(e.t).push({ id: e.s, e });
+});
+
+/* ---- Simulación de fuerzas -------------------------------------------------
+   187 nodos → la repulsión O(n²) son ~17k pares por tick. No necesita Barnes-Hut.
+   --------------------------------------------------------------------------- */
+const cv = document.getElementById("cv");
+const ctx = cv.getContext("2d");
+let W = 0, H = 0;
+
+const sim = G.nodes.map((n, i) => {
+  const a = (i / G.nodes.length) * Math.PI * 2;
+  const r = 120 + (i % 7) * 26;
+  return { ...n, x: Math.cos(a) * r, y: Math.sin(a) * r, vx: 0, vy: 0, fixed: false };
+});
+const simById = new Map(sim.map((n) => [n.id, n]));
+let alpha = 1;
+
+function radius(n) {
+  return 4 + Math.min(Math.sqrt(n.deg) * 1.9, 9);
+}
+
+function tick() {
+  const REP = 780, SPRING = 0.035, GRAV = 0.022, DAMP = 0.86;
+
+  for (let i = 0; i < sim.length; i++) {
+    const a = sim[i];
+    for (let j = i + 1; j < sim.length; j++) {
+      const b = sim[j];
+      let dx = b.x - a.x, dy = b.y - a.y;
+      let d2 = dx * dx + dy * dy;
+      if (d2 < 0.01) { dx = (Math.random() - 0.5) * 0.5; dy = (Math.random() - 0.5) * 0.5; d2 = 0.25; }
+      if (d2 > 90000) continue;
+      const d = Math.sqrt(d2);
+      const f = (REP * alpha) / d2;
+      const fx = (dx / d) * f, fy = (dy / d) * f;
+      a.vx -= fx; a.vy -= fy;
+      b.vx += fx; b.vy += fy;
+    }
+  }
+
+  G.edges.forEach((e) => {
+    const a = simById.get(e.s), b = simById.get(e.t);
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const d = Math.sqrt(dx * dx + dy * dy) || 0.01;
+    const rest = e.rel === "resistant_to" ? 96 : 62;
+    const f = (d - rest) * SPRING * alpha;
+    const fx = (dx / d) * f, fy = (dy / d) * f;
+    a.vx += fx; a.vy += fy;
+    b.vx -= fx; b.vy -= fy;
+  });
+
+  sim.forEach((n) => {
+    n.vx -= n.x * GRAV * alpha;
+    n.vy -= n.y * GRAV * alpha;
+    if (n.fixed) { n.vx = 0; n.vy = 0; return; }
+    n.vx *= DAMP; n.vy *= DAMP;
+    /* Freno: sin esto un par de nodos muy cercanos se dispara fuera del lienzo
+       y arrastra sus aristas a la esquina. */
+    const v = Math.hypot(n.vx, n.vy);
+    if (v > 12) { n.vx = (n.vx / v) * 12; n.vy = (n.vy / v) * 12; }
+    n.x += n.vx; n.y += n.vy;
+  });
+
+  alpha = Math.max(alpha * 0.994, 0.06);
+}
+
+/** Encuadra todo lo visible. Los 55 nodos aislados solo tienen repulsión y
+    gravedad, así que se asientan en un anillo ancho: sin encuadrar, el núcleo
+    del grafo queda fuera de cuadro. */
+function fitToView(pad = 46) {
+  const vis = sim.filter(visibleNode);
+  if (!vis.length) return;
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  vis.forEach((n) => {
+    const r = radius(n) + 16;
+    minX = Math.min(minX, n.x - r); maxX = Math.max(maxX, n.x + r);
+    minY = Math.min(minY, n.y - r); maxY = Math.max(maxY, n.y + r);
+  });
+  const z = Math.min((W - pad * 2) / (maxX - minX), (H - pad * 2) / (maxY - minY));
+  state.zoom = Math.min(Math.max(z, 0.2), 2.2);
+  state.ox = -((minX + maxX) / 2) * state.zoom;
+  state.oy = -((minY + maxY) / 2) * state.zoom;
+}
+
+/* ---- Visibilidad ------------------------------------------------------------
+   Los 55 nodos aislados no tienen arista: no aportan estructura y su repulsión
+   los empuja a un anillo que se come medio lienzo, comprimiendo el grafo real.
+   Por defecto quedan fuera del dibujo — siguen contados en el resumen y listados
+   en la tabla, que es donde se leen bien. El interruptor los trae de vuelta.
+   --------------------------------------------------------------------------- */
+const visibleNode = (n) => state.types[n.type] && (n.deg > 0 || state.hlOrphan);
+const visibleEdge = (e) =>
+  state.rels[e.rel] && visibleNode(byId.get(e.s)) && visibleNode(byId.get(e.t));
+
+function matches(n) {
+  if (!state.q) return false;
+  const q = state.q.toLowerCase();
+  return n.label.toLowerCase().includes(q) || n.id.toLowerCase().includes(q);
+}
+
+function neighborhood(id) {
+  const s = new Set([id]);
+  (adj.get(id) || []).forEach((x) => { if (visibleEdge(x.e)) s.add(x.id); });
+  return s;
+}
+
+/* ---- Dibujo ---- */
+function shapePath(p, n, r) {
+  const sh = TYPES[n.type].shape;
+  p.beginPath();
+  if (sh === "circle") {
+    p.arc(n.x, n.y, r, 0, Math.PI * 2);
+  } else if (sh === "diamond") {
+    p.moveTo(n.x, n.y - r * 1.2);
+    p.lineTo(n.x + r * 1.2, n.y);
+    p.lineTo(n.x, n.y + r * 1.2);
+    p.lineTo(n.x - r * 1.2, n.y);
+    p.closePath();
+  } else {
+    const h = r * 1.35;
+    p.moveTo(n.x, n.y - h);
+    p.lineTo(n.x + h * 0.92, n.y + h * 0.72);
+    p.lineTo(n.x - h * 0.92, n.y + h * 0.72);
+    p.closePath();
+  }
+}
+
+function draw() {
+  const dpr = window.devicePixelRatio || 1;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+  ctx.save();
+  ctx.translate(W / 2 + state.ox, H / 2 + state.oy);
+  ctx.scale(state.zoom, state.zoom);
+
+  const focus = state.sel ? neighborhood(state.sel) : null;
+  const C = {
+    edge: css("--edge"),
+    edgeStrong: css("--edge-strong"),
+    critical: css("--critical"),
+    warning: css("--warning"),
+    ink: css("--ink"),
+    ink2: css("--ink-2"),
+    surface: css("--canvas-bg"),
+  };
+
+  /* Aristas. El par de tipos ya identifica la relación (síndrome—patógeno vs
+     síndrome—fármaco vs patógeno—fármaco), así que el color queda libre para
+     codificar el SIGNO: la resistencia va en rojo punteado porque significa lo
+     contrario que tratar. */
+  G.edges.forEach((e) => {
+    if (!visibleEdge(e)) return;
+    const a = simById.get(e.s), b = simById.get(e.t);
+    const inFocus = focus && (focus.has(e.s) && focus.has(e.t));
+    const dim = focus && !inFocus;
+    const asym = e.rel === "caused_by" && e.dir !== "both";
+
+    ctx.save();
+    ctx.globalAlpha = dim ? 0.07 : 1;
+    if (e.rel === "resistant_to") {
+      ctx.strokeStyle = C.critical;
+      ctx.globalAlpha *= dim ? 1 : 0.5;
+      ctx.setLineDash([3, 3]);
+      ctx.lineWidth = 1;
+    } else if (state.hlAsym && asym) {
+      ctx.strokeStyle = C.warning;
+      ctx.setLineDash([4, 3]);
+      ctx.lineWidth = 1.6;
+    } else {
+      ctx.strokeStyle = inFocus ? C.edgeStrong : C.edge;
+      ctx.setLineDash([]);
+      ctx.lineWidth = inFocus ? 1.4 : 1;
+    }
+    ctx.beginPath();
+    ctx.moveTo(a.x, a.y);
+    ctx.lineTo(b.x, b.y);
+    ctx.stroke();
+    ctx.restore();
+  });
+
+  /* Nodos */
+  const labelled = [];
+  sim.forEach((n) => {
+    if (!visibleNode(n)) return;
+    const r = radius(n);
+    const isSel = state.sel === n.id;
+    const isHov = state.hover === n.id;
+    const hit = matches(n);
+    const dim = (focus && !focus.has(n.id)) || (state.q && !hit);
+
+    ctx.save();
+    ctx.globalAlpha = dim ? 0.12 : 1;
+
+    if (state.hlOrphan && n.deg === 0) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r + 5, 0, Math.PI * 2);
+      ctx.strokeStyle = C.critical;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+    }
+    if (hit && !dim) {
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, r + 6, 0, Math.PI * 2);
+      ctx.strokeStyle = css(TYPES[n.type].color);
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
+
+    shapePath(ctx, n, r);
+    ctx.fillStyle = css(TYPES[n.type].color);
+    ctx.fill();
+    /* Anillo del color de la superficie: separa marcas que se solapan. */
+    ctx.strokeStyle = isSel || isHov ? C.ink : C.surface;
+    ctx.lineWidth = isSel || isHov ? 2 : 1.5;
+    ctx.stroke();
+    ctx.restore();
+
+    if (!dim && (state.labels || isSel || isHov || (focus && focus.has(n.id)) || hit || n.deg >= 15)) {
+      labelled.push({ n, r });
+    }
+  });
+
+  /* Etiquetas al final para que nunca queden bajo un nodo, y en forma corta:
+     el nombre completo llega a 65 caracteres y pisa al vecino.
+     Se colocan por prioridad — lo fijado y lo apuntado primero, después por grado —
+     y se omite la que chocaría con una ya puesta. Así el núcleo denso se lee en vez
+     de volverse una mancha de texto encimado. */
+  ctx.font = "500 11px system-ui, -apple-system, sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  const prio = (x) => (state.sel === x.n.id || state.hover === x.n.id ? 1e6 : x.n.deg);
+  labelled.sort((a, b) => prio(b) - prio(a));
+
+  const placed = [];
+  labelled.forEach(({ n, r }) => {
+    const forced = state.sel === n.id || state.hover === n.id;
+    const w = ctx.measureText(n.short).width;
+    const y = n.y - r - 7;
+    const box = { x1: n.x - w / 2 - 2, y1: y - 7, x2: n.x + w / 2 + 2, y2: y + 7 };
+    const clash = placed.some(
+      (p) => !(box.x2 < p.x1 || box.x1 > p.x2 || box.y2 < p.y1 || box.y1 > p.y2)
+    );
+    if (clash && !forced) return;
+    placed.push(box);
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = C.surface;
+    ctx.strokeText(n.short, n.x, y);
+    ctx.fillStyle = forced ? C.ink : C.ink2;
+    ctx.fillText(n.short, n.x, y);
+  });
+
+  ctx.restore();
+}
+
+function loop() {
+  tick();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+/* ---- Interacción ---- */
+function resize() {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = cv.getBoundingClientRect();
+  W = rect.width; H = rect.height;
+  cv.width = W * dpr; cv.height = H * dpr;
+}
+window.addEventListener("resize", resize);
+
+function toWorld(ev) {
+  const rect = cv.getBoundingClientRect();
+  return {
+    x: (ev.clientX - rect.left - W / 2 - state.ox) / state.zoom,
+    y: (ev.clientY - rect.top - H / 2 - state.oy) / state.zoom,
+  };
+}
+
+function pick(ev) {
+  const { x, y } = toWorld(ev);
+  let best = null, bd = 16 / state.zoom;
+  sim.forEach((n) => {
+    if (!visibleNode(n)) return;
+    const d = Math.hypot(n.x - x, n.y - y);
+    if (d < Math.max(radius(n) + 4, bd) && (!best || d < best.d)) best = { n, d };
+  });
+  return best && best.n;
+}
+
+let drag = null, pan = null;
+const tip = document.getElementById("tip");
+
+cv.addEventListener("mousemove", (ev) => {
+  if (drag) {
+    const { x, y } = toWorld(ev);
+    drag.x = x; drag.y = y; drag.vx = 0; drag.vy = 0;
+    alpha = Math.max(alpha, 0.3);
+    return;
+  }
+  if (pan) {
+    state.ox = pan.ox + (ev.clientX - pan.sx);
+    state.oy = pan.oy + (ev.clientY - pan.sy);
+    return;
+  }
+  const n = pick(ev);
+  state.hover = n ? n.id : null;
+  if (n) {
+    const rect = cv.getBoundingClientRect();
+    tip.innerHTML =
+      `<div class="t-name">${esc(n.label)}</div>` +
+      `<div class="t-sub">${TYPES[n.type].label.slice(0, -1)} · ${esc(n.sub)} · grado ${n.deg}</div>`;
+    tip.classList.add("on");
+    tip.setAttribute("aria-hidden", "false");
+    const tx = ev.clientX - rect.left + 12;
+    tip.style.left = Math.min(tx, W - 250) + "px";
+    tip.style.top = (ev.clientY - rect.top + 12) + "px";
+  } else {
+    tip.classList.remove("on");
+    tip.setAttribute("aria-hidden", "true");
+  }
+});
+
+cv.addEventListener("mousedown", (ev) => {
+  const n = pick(ev);
+  if (n) {
+    drag = n; n.fixed = true;
+    cv.classList.add("dragging");
+  } else {
+    pan = { sx: ev.clientX, sy: ev.clientY, ox: state.ox, oy: state.oy };
+    cv.classList.add("dragging");
+  }
+});
+window.addEventListener("mouseup", (ev) => {
+  if (drag) { drag.fixed = false; drag = null; }
+  pan = null;
+  cv.classList.remove("dragging");
+});
+
+cv.addEventListener("click", (ev) => {
+  const n = pick(ev);
+  select(n ? n.id : null);
+});
+
+cv.addEventListener("wheel", (ev) => {
+  ev.preventDefault();
+  const k = ev.deltaY < 0 ? 1.12 : 1 / 1.12;
+  state.zoom = Math.min(Math.max(state.zoom * k, 0.35), 4);
+}, { passive: false });
+
+cv.addEventListener("mouseleave", () => {
+  state.hover = null;
+  tip.classList.remove("on");
+});
+
+/* ---- Panel de detalle ---- */
+const esc = (s) =>
+  String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function select(id) {
+  state.sel = id;
+  const box = document.getElementById("detail");
+  if (!id) {
+    box.innerHTML = '<p class="empty">Selecciona un nodo del grafo para ver sus enlaces.</p>';
+    return;
+  }
+  const n = byId.get(id);
+  const links = (adj.get(id) || []).filter((x) => visibleEdge(x.e));
+
+  const groups = [];
+  const push = (title, items, note) => {
+    if (!items.length) return;
+    groups.push(`<div class="d-group"><h4>${title} (${items.length})</h4>
+      ${note ? `<p class="lede">${note}</p>` : ""}
+      <div class="chips">${items.map(chip).join("")}</div></div>`);
+  };
+  const chip = (x) => {
+    const m = byId.get(x.id);
+    return `<button class="chip" data-goto="${esc(m.id)}">
+      <span class="dot" style="background:var(${TYPES[m.type].color})"></span>${esc(m.label)}</button>`;
+  };
+
+  if (n.type === "syndrome") {
+    push("Patógenos que cubre", links.filter((x) => x.e.rel === "caused_by"));
+    push("Fármacos que lo tratan", links.filter((x) => x.e.rel === "treated_by"));
+  } else if (n.type === "pathogen") {
+    push("Síndromes que lo listan", links.filter((x) => x.e.rel === "caused_by"));
+    push("Fármacos que NO le sirven", links.filter((x) => x.e.rel === "resistant_to"),
+         "Resistencia intrínseca o adquirida típica.");
+  } else {
+    push("Síndromes donde se usa", links.filter((x) => x.e.rel === "treated_by"));
+    push("Patógenos que le resisten", links.filter((x) => x.e.rel === "resistant_to"));
+  }
+
+  const flags = [];
+  if (n.deg === 0) flags.push('<span class="pill crit">⚠ aislado</span>');
+  if (n.type === "drug" && !links.some((x) => x.e.rel === "treated_by"))
+    flags.push('<span class="pill warn">sin régimen</span>');
+  if (n.aware) flags.push(`<span class="pill">AWaRe ${esc(n.aware)}</span>`);
+  // En un patógeno `sub` ya es el gram: repetirlo aquí lo mostraba dos veces.
+  // El grupo taxonómico sí agrega algo.
+  if (n.type === "pathogen" && n.group) flags.push(`<span class="pill">${esc(n.group)}</span>`);
+
+  box.innerHTML = `
+    <div class="d-head">
+      <h3>${esc(n.label)}</h3>
+      <span class="pill"><span class="dot" style="width:7px;height:7px;border-radius:50%;background:var(${TYPES[n.type].color})"></span>${TYPES[n.type].label.slice(0, -1)}</span>
+      <span class="pill">${esc(n.sub)}</span>
+      ${flags.join("")}
+    </div>
+    ${n.desc ? `<p class="d-desc">${esc(n.desc)}</p>` : ""}
+    ${groups.length ? `<div class="d-groups">${groups.join("")}</div>`
+                    : '<p class="d-desc">Sin enlaces con los filtros actuales.</p>'}`;
+
+  box.querySelectorAll("[data-goto]").forEach((b) =>
+    b.addEventListener("click", () => {
+      select(b.dataset.goto);
+      document.getElementById("detail").scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }));
+}
+
+/* ---- Chrome ---- */
+document.getElementById("stamp").textContent =
+  `${G.meta.app} v${G.meta.version} · datos al ${G.meta.dataUpdated} · grafo generado el ${G.meta.generated} · ${G.meta.scope}`;
+
+/* La franja de severidad solo sirve si es escasa: de los seis, uno es un defecto
+   (se escribió para enlazar y no enlaza), uno es un techo conocido, y el resto son
+   hechos esperables del dataset. Pintarlos todos de rojo no diría nada. */
+const S = G.stats;
+document.getElementById("stats").innerHTML = [
+  { v: S.nodes, k: "Nodos", note: `${S.syndromes} síndromes · ${S.pathogens} patógenos · ${S.drugs} fármacos` },
+  { v: S.edges, k: "Aristas", note: `${S.causedBy} causa · ${S.treatedBy} trata · ${S.resistantTo} resiste` },
+  // La franja solo aparece si hay algo que señalar: en cero, el rojo mentiría.
+  { v: S.resDrift, k: "Vocabulario divergente", note: S.resDrift ? "escrito como id, no existe" : "el validador lo impide", cls: S.resDrift ? "crit" : "" },
+  { v: S.resProse, k: "Resistencia en prosa", note: "clase o mecanismo, no enlazable", cls: "flag" },
+  { v: S.orphans, k: "Nodos aislados", note: `${S.drugsNoRegimen} son fármacos sin régimen` },
+  { v: S.asymmetric, k: "Enlaces asimétricos", note: "declarados por un solo lado" },
+].map((t) => `<div class="tile ${t.cls || ""}">
+    <span class="v">${t.v}</span><span class="k">${t.k}</span><span class="note">${t.note}</span>
+  </div>`).join("");
+
+/* Leyenda y filtros son el mismo control: la leyenda siempre presente que exige
+   una paleta categórica, y a la vez el filtro. */
+const counts = {};
+G.nodes.forEach((n) => (counts[n.type] = (counts[n.type] || 0) + 1));
+document.getElementById("type-filters").innerHTML = Object.entries(TYPES)
+  .map(([k, v]) => `<label class="opt">
+      <input type="checkbox" data-type="${k}" checked />
+      <svg class="swatch" viewBox="0 0 14 14" aria-hidden="true">${
+        v.shape === "circle" ? `<circle cx="7" cy="7" r="5.5" fill="var(${v.color})"/>`
+        : v.shape === "diamond" ? `<path d="M7 1 L13 7 L7 13 L1 7 Z" fill="var(${v.color})"/>`
+        : `<path d="M7 1.5 L13 12 L1 12 Z" fill="var(${v.color})"/>`}</svg>
+      ${v.label}<span class="count">${counts[k]}</span></label>`).join("");
+
+const relCounts = {};
+G.edges.forEach((e) => (relCounts[e.rel] = (relCounts[e.rel] || 0) + 1));
+document.getElementById("rel-filters").innerHTML = Object.entries(RELS)
+  .map(([k, v]) => `<label class="opt">
+      <input type="checkbox" data-rel="${k}" checked />
+      ${v.label} <span style="color:var(--ink-muted);font-size:11px">${v.desc}</span>
+      <span class="count">${relCounts[k] || 0}</span></label>`).join("");
+
+document.getElementById("c-orphan").textContent = S.orphans;
+document.getElementById("c-asym").textContent = S.asymmetric;
+
+document.querySelectorAll("[data-type]").forEach((el) =>
+  el.addEventListener("change", () => { state.types[el.dataset.type] = el.checked; alpha = Math.max(alpha, 0.25); }));
+document.querySelectorAll("[data-rel]").forEach((el) =>
+  el.addEventListener("change", () => { state.rels[el.dataset.rel] = el.checked; alpha = Math.max(alpha, 0.25); }));
+document.getElementById("q").addEventListener("input", (e) => { state.q = e.target.value.trim(); });
+document.getElementById("hl-orphan").addEventListener("change", (e) => {
+  state.hlOrphan = e.target.checked; // entran o salen del lienzo: reencuadrar
+  alpha = Math.max(alpha, 0.25);
+  fitToView();
+});
+document.getElementById("hl-asym").addEventListener("change", (e) => (state.hlAsym = e.target.checked));
+document.getElementById("show-labels").addEventListener("change", (e) => (state.labels = e.target.checked));
+
+/* ---- Hallazgos: la vista de tabla ----------------------------------------
+   Obligatoria, no opcional: el magenta de los fármacos queda bajo 3:1 sobre la
+   superficie clara, y la regla de relieve exige etiquetas visibles o tabla.
+   --------------------------------------------------------------------------- */
+const F = G.findings;
+const tbl = (head, rows, empty) =>
+  rows.length
+    ? `<div class="scroll"><table><thead><tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr></thead>
+       <tbody>${rows.join("")}</tbody></table></div>`
+    : `<p class="lede" style="margin:0"><strong>Ninguno.</strong> ${empty || ""}</p>`;
+
+const cards = [];
+
+cards.push({
+  t: "Nodos aislados",
+  n: F.orphans.length,
+  lede: "Sin ningún enlace, en ninguna dirección. En los patógenos esto es esperable: son referencia de vademécum (tuberculosis, sífilis, malaria) que la app documenta pero no trata empíricamente.",
+  body: tbl(["nodo", "tipo", "id"], F.orphans.map((o) =>
+    `<tr><td>${esc(o.label)}</td><td>${TYPES[o.type].label.slice(0, -1)}</td><td class="mono">${esc(o.id)}</td></tr>`)),
+});
+
+cards.push({
+  t: "Vocabulario divergente",
+  n: F.resDrift.length,
+  lede: "Entradas de <code>resistance</code> escritas <strong>en forma de id</strong> — minúscula, snake_case, sin espacios — que no corresponden a ningún antibiótico. Fueron escritas para enlazar y no enlazan, así que el motor las descartaba en silencio: por eso importaban más que la prosa.",
+  body: tbl(["patógeno", "tipo", "escrito", "id(s) cercano(s)"], F.resDrift.map((r) =>
+    `<tr><td class="mono">${esc(r.pathogen)}</td><td>${r.kind === "intrinsic" ? "intrínseca" : "adquirida"}</td><td class="mono">${esc(r.text)}</td><td class="mono">${r.near.length ? esc(r.near.join(", ")) : "—"}</td></tr>`),
+    "Las 28 que había se resolvieron: las que denotaban un fármaco único pasaron a su id real (<code>fosfomicina</code> → <code>fosfomicina_trometamol</code>, <code>cotrimoxazol</code> → <code>tmp_smx</code>) y las que nombraban una clase pasaron a prosa (<code>aminoglucosidos</code> → «Aminoglucósidos»). El validador ahora rechaza que vuelvan."),
+});
+
+cards.push({
+  t: "Resistencia en prosa",
+  n: F.resProse.length,
+  lede: "Entradas que nunca fueron un id: una clase (\"Beta-lactámicos\"), un mecanismo (\"BLEE\", \"Meticilina (MRSA)\") o una frase entera. Son legibles para el clínico pero invisibles para el grafo — y ahí se esconde lo importante: la resistencia más relevante de <em>S. aureus</em> es justamente \"Meticilina (MRSA)\", así que el grafo lo muestra sin su rasgo definitorio. No es un error que arreglar hoy; es el techo de lo que la relación de resistencia puede responder mientras el campo mezcle vocabularios.",
+  body: tbl(["patógeno", "tipo", "texto"], F.resProse.map((r) =>
+    `<tr><td class="mono">${esc(r.pathogen)}</td><td>${r.kind === "intrinsic" ? "intrínseca" : "adquirida"}</td><td>${esc(r.text)}</td></tr>`)),
+});
+
+cards.push({
+  t: "Enlaces declarados por un solo lado",
+  n: F.asymmetric.length,
+  lede: "El síndrome lista al patógeno pero el patógeno no devuelve el síndrome, o al revés. Casi nunca es un bug: <code>usualSyndromes</code> es una lista corta y curada de los síndromes principales de cada germen. El grafo une ambas direcciones, así que aquí solo se listan.",
+  body: tbl(["síndrome", "patógeno", "lo declara"], F.asymmetric.map((a) =>
+    `<tr><td class="mono">${esc(a.syndrome)}</td><td class="mono">${esc(a.pathogen)}</td><td>${a.dir === "fwd" ? "solo el síndrome" : "solo el patógeno"}</td></tr>`)),
+});
+
+cards.push({
+  t: "Referencias al backlog",
+  n: F.backlogRefs.length,
+  lede: "Patógenos que declaran un síndrome que todavía no existe en <code>syndromes.js</code>. Es backlog intencional, documentado en ROADMAP_SINDROMES.md: marca por dónde quiere crecer el grafo.",
+  body: tbl(["patógeno", "síndrome que espera"], F.backlogRefs.map((b) =>
+    `<tr><td class="mono">${esc(b.pathogen)}</td><td class="mono">${esc(b.syndrome)}</td></tr>`)),
+});
+
+const gramRows = Object.entries(F.gramVocab).sort((a, b) => b[1] - a[1]);
+cards.push({
+  t: "Vocabulario de taxonomía",
+  n: gramRows.length,
+  lede: "Valores distintos en <code>taxonomy.gram</code>. Antes había dos pares que eran el mismo concepto escrito de dos formas — <code>atypical</code>/<code>atípico</code> y <code>fúngico</code>/<code>hongo</code> — que partían los grupos en dos. Ya unificados; el validador exige este vocabulario.",
+  body: tbl(["valor", "patógenos"], gramRows.map(([k, v]) =>
+    `<tr><td class="mono">${esc(k)}</td><td>${v}</td></tr>`)),
+});
+
+cards.push({
+  t: "Fármacos sin régimen",
+  n: F.drugsNoRegimen.length,
+  lede: "En el vademécum pero en ningún esquema empírico. Distinto de aislado: varios tienen aristas de resistencia. Es la reserva del formulario (antituberculosos, última línea), no un hueco.",
+  body: tbl(["fármaco", "id", "grado"], F.drugsNoRegimen.map((d) =>
+    `<tr><td>${esc(d.label)}</td><td class="mono">${esc(d.id)}</td><td>${d.deg}</td></tr>`)),
+});
+
+document.getElementById("findings").innerHTML = cards
+  .map((c, i) => `<details class="card" ${i === 0 ? "open" : ""}>
+      <summary>${c.t}<span class="n">${c.n}</span></summary>
+      <div class="body"><p class="lede">${c.lede}</p>${c.body}</div>
+    </details>`).join("");
+
+document.getElementById("foot").innerHTML =
+  `Generado por <code>node tools/build_graph.js</code> desde <code>data/syndromes.js</code>, ` +
+  `<code>data/pathogens.js</code> y <code>data/antibiotics.js</code>. Los conteos salen del runtime, ` +
+  `no están escritos a mano. Para regenerar tras editar la capa de datos, corre la herramienta de nuevo.`;
+
+document.getElementById("recenter").addEventListener("click", () => {
+  alpha = Math.max(alpha, 0.28);
+  fitToView();
+});
+
+/* Asentar antes de pintar: la página abre con el grafo ya reposado y encuadrado,
+   en vez de con los nodos volando desde el anillo inicial. */
+resize();
+for (let i = 0; i < 420; i++) tick();
+fitToView();
+select(null);
+loop();
+</script>
