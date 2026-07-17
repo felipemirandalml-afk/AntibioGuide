@@ -1,8 +1,43 @@
+/**
+ * @fileoverview INGESTA CSV → data/pathogens.js
+ *
+ * ⚠ ESTA HERRAMIENTA SOBRESCRIBE LA FUENTE DE VERDAD. Hace `upsert`: cada fila
+ * del CSV REEMPLAZA el registro completo del patógeno en data/pathogens.js.
+ * Desde marzo esos registros se editan a mano (ver README), así que correrla sin
+ * pensar destruye trabajo. Por eso exige --force.
+ *
+ * Guardas (existen por defectos reales, no por precaución teórica):
+ *
+ *  1. ESQUEMA. La herramienta lee columnas `tax_*`/`clin_*`/`res_*`. Si el CSV
+ *     no las trae, `row.tax_gram` es undefined y escribe registros EN BLANCO
+ *     sin avisar. Pasó: seeds/pathogens.csv tiene otro esquema (9 columnas).
+ *  2. ANCHO DE FILA. Una coma sin encomillar dentro de un campo corre todas las
+ *     columnas siguientes. Pasó: corrompió 5 registros (treponema, TB, lepra,
+ *     candida, borrelia) y nadie lo vio por meses.
+ *  3. MAPA DE SÍNDROMES. `validSyndromesMap` quedó congelado en marzo y ya
+ *     contradice la curación del worklist.
+ */
 const fs = require('fs');
 const path = require('path');
 
 const csvPath = path.join(__dirname, '..', 'data-files', 'seeds', 'pathogens.csv');
 const outPath = path.join(__dirname, '..', 'data', 'pathogens.js');
+
+const FORCE = process.argv.includes('--force');
+
+// Las columnas que este script realmente lee más abajo.
+const REQUIRED_COLUMNS = [
+    'id', 'name', 'tax_gram', 'clin_summary', 'clin_syndromes',
+    'clin_context', 'clin_pearls', 'res_intrinsic', 'res_acquired',
+    'res_stewardship', 'meta_relevance'
+];
+
+function abort(title, detail) {
+    console.error('\n✗ ABORTADO — ' + title + '\n');
+    console.error(detail + '\n');
+    console.error('No se escribió nada en data/pathogens.js.\n');
+    process.exit(1);
+}
 
 // Load current pathogens to preserve those not in the CSV
 const clinicalData = require(path.join(__dirname, '..', 'data.js'));
@@ -36,6 +71,58 @@ function parseCSVRow(text) {
 
 const lines = rawCSV.trim().split(/\r?\n/);
 const headers = parseCSVRow(lines[0]);
+
+// --- Guarda 1: el CSV trae las columnas que este script lee ---------------
+const missing = REQUIRED_COLUMNS.filter(c => !headers.includes(c));
+if (missing.length) {
+    abort(
+        'el CSV no tiene el esquema que esta herramienta espera',
+        `Archivo : ${path.relative(path.join(__dirname, '..'), csvPath)}\n` +
+        `Columnas: ${headers.join(', ')}\n\n` +
+        `Faltan  : ${missing.join(', ')}\n\n` +
+        `Sin esas columnas el script leería undefined y escribiría los registros EN BLANCO,\n` +
+        `borrando gram, resumen, síndromes, resistencia y notas de cada patógeno del CSV.\n` +
+        `Apunta csvPath al archivo con el esquema completo, o actualiza el mapeo de abajo.`
+    );
+}
+
+// --- Guarda 2: ninguna fila corrida por comas sin encomillar --------------
+const badRows = [];
+lines.slice(1).forEach((line, i) => {
+    if (!line.trim()) return;
+    const cells = parseCSVRow(line);
+    if (cells.length !== headers.length) {
+        badRows.push(`  línea ${i + 2}: ${cells[0] || '(sin id)'} → ${cells.length} columnas, se esperaban ${headers.length}`);
+    }
+});
+if (badRows.length) {
+    abort(
+        `${badRows.length} fila(s) con el número de columnas equivocado`,
+        badRows.join('\n') +
+        `\n\nCausa habitual: una coma dentro de un campo sin encomillar. El CSV usa ';' para\n` +
+        `separar ítems y ',' para columnas, así que una coma suelta corre todos los campos\n` +
+        `siguientes y el registro queda desalineado en silencio.\n` +
+        `Arreglo: encomilla el campo — "Comensal humano, causa común de micosis".`
+    );
+}
+
+// --- Guarda 3: sobrescribir la fuente de verdad exige confirmación --------
+if (!FORCE) {
+    const willOverwrite = lines.slice(1)
+        .filter(l => l.trim())
+        .map(l => parseCSVRow(l)[0])
+        .filter(id => pathogensMap.has(id));
+    abort(
+        'esta herramienta sobrescribe data/pathogens.js (la fuente de verdad)',
+        `Reemplazaría por completo ${willOverwrite.length} registro(s) que ya existen:\n` +
+        `  ${willOverwrite.slice(0, 8).join(', ')}${willOverwrite.length > 8 ? `, … (+${willOverwrite.length - 8})` : ''}\n\n` +
+        `Desde marzo esos registros se refinan A MANO en data/pathogens.js, y el CSV no tiene\n` +
+        `ese trabajo. Además 'validSyndromesMap' quedó congelado en marzo: mapea\n` +
+        `"sepsis"→sepsis_urinaria (el over-claim que el worklist eliminó) y\n` +
+        `"fascitis necrotizante"→celulitis pese a existir ya el síndrome propio.\n\n` +
+        `Si de verdad quieres reingestar: revisa primero validSyndromesMap y corre con --force.`
+    );
+}
 
 const validSyndromesMap = {
     "ssti": "celulitis",

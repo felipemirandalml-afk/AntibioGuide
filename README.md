@@ -19,7 +19,12 @@ Para mantener consistencia clinica y tecnica, esta es la estructura oficial del 
 ### 3. Insumos e ingesta (`/data-files`)
 - `data-files/seeds/`: semillas operativas usadas por herramientas de ingesta.
 - `data-files/`: tambien contiene artefactos intermedios y datasets de trabajo para compilacion o respaldo.
-- Proceso: si cambias semillas o insumos, ejecuta las herramientas de `/tools` para actualizar el runtime en `/data`.
+- **La ingesta ya no es el proceso normal.** Desde marzo los registros de `/data` se
+  refinan a mano, y el CSV no tiene ese trabajo: reingestar lo sobrescribe. Los CSV
+  quedan como insumo historico y respaldo. Edita `/data` directamente.
+- `tools/csv_to_pathogens.js` aborta por defecto y exige `--force`. Antes de forzarlo,
+  revisa su `validSyndromesMap`: quedo congelado en marzo y contradice la curacion
+  actual (mapea `sepsis`→`sepsis_urinaria`, el over-claim que el worklist elimino).
 
 ### 4. Compatibilidad legacy
 - `data.js`: adaptador de compatibilidad que recompone `window.clinicalData`. No editar datos aqui.
@@ -49,7 +54,8 @@ Scripts individuales:
 - Tests de helpers/busqueda: `npm run test:helpers`
 - Tests del motor clinico: `npm run test:engine` (reglas de resistencia + susceptibilidad)
 - Smoke test del motor: `npm run test:smoke`
-- Ingesta CSV de patogenos: `node tools/csv_to_pathogens.js`
+- Explorador del grafo clinico: `node tools/build_graph.js` (auditoria; escribe `research/graph.html`)
+- Ingesta CSV de patogenos: `node tools/csv_to_pathogens.js` — **sobrescribe `/data`; lee el aviso de arriba**
 
 Los tests cargan los modulos de navegador (IIFE `window.ABG`) en Node mediante `tools/test_lib.js` (mocks de window/document, sin dependencias externas).
 
@@ -58,6 +64,22 @@ Los tests cargan los modulos de navegador (IIFE `window.ABG`) en Node mediante `
 Son complementarios:
 - **validate_data.js** = INTEGRIDAD estructural. Falla (exit 1) si un dato esta roto (ref que no resuelve, campo faltante, enum invalido).
 - **audit_syndromes.js** = CONSISTENCIA clinica y salud del grafo. Falla (exit 1) solo si un regimen no tiene `reference` (regla de oro). El resto (asimetrias del grafo sindrome-patogeno, `targets` faltantes, huerfanos) es informativo para revision editorial, no bloqueante.
+
+### Vocabularios canonicos (el validador los exige)
+
+Un mismo concepto escrito de dos formas parte los grupos en dos y degrada la busqueda
+(`render.js` puntua sobre `family`). El validador falla si reaparecen:
+
+| Campo | Regla |
+|---|---|
+| `taxonomy.gram` | Solo `positive`, `negative`, `atypical`, `fungal`, `variable` |
+| `antibiotics[].family` | Una sola grafia por clase (no `Macrolido` + `Macrolidos`) |
+| `resistance.intrinsic` / `typicalAcquired` | Un id de antibiotico (enlaza) **o** prosa que nombre una clase o mecanismo. Lo que tenga forma de id debe existir: si no, se descarta en silencio |
+| Cualquier array | Sin huecos (`["a", , "b"]`) ni `null` |
+
+La ultima existe porque una coma doble paso el validador, la auditoria y los tests:
+`.forEach`/`.map` saltan los huecos sin avisar, pero `.length` los cuenta y `for...of`
+devuelve `undefined`.
 
 ## Criterio de validacion clinica
 
