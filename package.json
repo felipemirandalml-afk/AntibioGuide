@@ -9,10 +9,12 @@
         "test:helpers": "node tools/test_helpers.js",
         "test:engine": "node tools/test_engine.js",
         "test:smoke": "node tools/test_clinical_engine.js",
+        "test:renal": "node tools/test_renal.js",
+        "test:patient": "node tools/test_patient_context.js",
         "build:doc": "node tools/build_syndromes_doc.js",
         "check:doc": "node tools/build_syndromes_doc.js --check",
         "build:graph": "node tools/build_graph.js",
-        "test": "node tools/validate_data.js && node tools/audit_syndromes.js && node tools/build_syndromes_doc.js --check && node tools/test_helpers.js && node tools/test_engine.js && node tools/test_clinical_engine.js"
+        "test": "node tools/validate_data.js && node tools/audit_syndromes.js && node tools/build_syndromes_doc.js --check && node tools/test_helpers.js && node tools/test_engine.js && node tools/test_clinical_engine.js && node tools/test_renal.js && node tools/test_patient_context.js"
     },
     "keywords": [],
     "author": "",
