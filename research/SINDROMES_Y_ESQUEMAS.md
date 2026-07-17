@@ -307,7 +307,7 @@ Sospechar en TODO paciente con síndrome febril, portador de CVC y SIN otro foco
 - *Ambulatorio:* NO corresponde.
 - *Hospitalario:* DIAGNÓSTICO: solicitar cultivos de CVC SOLO ante sospecha. Si no hay sospecha, NO indicar cultivo de la punta. Criterios: punta de CVC ≥15 UFC con el MISMO microorganismo en sangre periférica; o tiempo diferencial de crecimiento ≥2 h a favor de la sangre por catéter; o hemocultivos cuantitativos en razón ≥4:1 (CVC vs periférica).
 
-**Patógenos:** Staphylococcus coagulasa negativo, Staphylococcus aureus, Escherichia coli, Klebsiella pneumoniae, Enterobacter cloacae, Pseudomonas aeruginosa, Candida spp., , Acinetobacter baumannii, Stenotrophomonas maltophilia
+**Patógenos:** Staphylococcus coagulasa negativo, Staphylococcus aureus, Escherichia coli, Klebsiella pneumoniae, Enterobacter cloacae, Pseudomonas aeruginosa, Candida spp., Acinetobacter baumannii, Stenotrophomonas maltophilia
 
 ### 1. Empírico — Elección
 
@@ -1955,7 +1955,7 @@ Neumonía que aparece 48 horas o más después del inicio de la ventilación mec
 - *Ambulatorio:* NO corresponde.
 - *Hospitalario:* DIAGNÓSTICO DIFÍCIL: muchas condiciones NO infecciosas se presentan igual. Los 5 elementos clínicos clave son: (1) fiebre o hipotermia, (2) leucocitosis o leucopenia, (3) secreción bronquial mucopurulenta, (4) deterioro del intercambio gaseoso, (5) infiltrado radiológico NUEVO. ⚠ El cultivo simple de secreción traqueal SOLO informa COLONIZACIÓN. Usar cultivo CUANTITATIVO de aspirado traqueal: <10³ UFC hace poco probable la NAVM; >10⁶ es muy sugerente. Alternativas: LBA ≥10⁴ UFC/mL; cepillo protegido ≥10³ UFC/mL.
 
-**Patógenos:** Staphylococcus aureus, Escherichia coli, Klebsiella pneumoniae, Enterobacter cloacae, Pseudomonas aeruginosa, Acinetobacter baumannii, , Stenotrophomonas maltophilia
+**Patógenos:** Staphylococcus aureus, Escherichia coli, Klebsiella pneumoniae, Enterobacter cloacae, Pseudomonas aeruginosa, Acinetobacter baumannii, Stenotrophomonas maltophilia
 
 ### 1. Empírico — Betalactámico antipseudomónico + Vancomicina
 
