@@ -130,9 +130,12 @@ const check = process.argv.includes("--check");
 
 if (check) {
   const current = fs.existsSync(OUT) ? fs.readFileSync(OUT, "utf8") : "";
-  // La fecha cambia sola cada día: compararla haría fallar el check sin que nada
-  // de fondo haya cambiado. Se ignora esa línea y se compara el resto.
-  const strip = (t) => t.replace(/^> Generado automáticamente desde .*$/m, "");
+  // Se normaliza para que el check sea portable:
+  //  - CRLF→LF: git con autocrlf deja el archivo en CRLF en Windows, pero el
+  //    generador escribe LF. Sin esto el check falla en un checkout fresco.
+  //  - La línea de fecha cambia sola cada día; se ignora.
+  const strip = (t) =>
+    t.replace(/\r\n/g, "\n").replace(/^> Generado automáticamente desde .*$/m, "");
   if (strip(current) === strip(doc)) {
     console.log("✔ research/SINDROMES_Y_ESQUEMAS.md está al día con data/syndromes.js");
     process.exit(0);
