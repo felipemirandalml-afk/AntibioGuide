@@ -932,7 +932,8 @@ const S = G.stats;
 document.getElementById("stats").innerHTML = [
   { v: S.nodes, k: "Nodos", note: `${S.syndromes} síndromes · ${S.pathogens} patógenos · ${S.drugs} fármacos` },
   { v: S.edges, k: "Aristas", note: `${S.causedBy} causa · ${S.treatedBy} trata · ${S.resistantTo} resiste` },
-  { v: S.resDrift, k: "Vocabulario divergente", note: "escrito como id, no existe", cls: "crit" },
+  // La franja solo aparece si hay algo que señalar: en cero, el rojo mentiría.
+  { v: S.resDrift, k: "Vocabulario divergente", note: S.resDrift ? "escrito como id, no existe" : "el validador lo impide", cls: S.resDrift ? "crit" : "" },
   { v: S.resProse, k: "Resistencia en prosa", note: "clase o mecanismo, no enlazable", cls: "flag" },
   { v: S.orphans, k: "Nodos aislados", note: `${S.drugsNoRegimen} son fármacos sin régimen` },
   { v: S.asymmetric, k: "Enlaces asimétricos", note: "declarados por un solo lado" },
@@ -982,9 +983,11 @@ document.getElementById("show-labels").addEventListener("change", (e) => (state.
    superficie clara, y la regla de relieve exige etiquetas visibles o tabla.
    --------------------------------------------------------------------------- */
 const F = G.findings;
-const tbl = (head, rows) =>
-  `<div class="scroll"><table><thead><tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr></thead>
-   <tbody>${rows.join("")}</tbody></table></div>`;
+const tbl = (head, rows, empty) =>
+  rows.length
+    ? `<div class="scroll"><table><thead><tr>${head.map((h) => `<th>${h}</th>`).join("")}</tr></thead>
+       <tbody>${rows.join("")}</tbody></table></div>`
+    : `<p class="lede" style="margin:0"><strong>Ninguno.</strong> ${empty || ""}</p>`;
 
 const cards = [];
 
@@ -999,9 +1002,10 @@ cards.push({
 cards.push({
   t: "Vocabulario divergente",
   n: F.resDrift.length,
-  lede: "Entradas de <code>resistance</code> escritas <strong>en forma de id</strong> — minúscula, snake_case, sin espacios — que no corresponden a ningún antibiótico. Fueron escritas para enlazar y no enlazan, así que el motor las descarta en silencio: por eso importan más que la prosa. Unas son casi aciertos (<code>fosfomicina</code> cuando el id es <code>fosfomicina_trometamol</code>; <code>tetraciclinas</code> en plural cuando el id es <code>tetraciclina</code>); otras son una clase escrita como id (<code>aminoglucosidos</code>), que nunca podrá apuntar a un fármaco único y quizá deba vivir en otro campo.",
+  lede: "Entradas de <code>resistance</code> escritas <strong>en forma de id</strong> — minúscula, snake_case, sin espacios — que no corresponden a ningún antibiótico. Fueron escritas para enlazar y no enlazan, así que el motor las descartaba en silencio: por eso importaban más que la prosa.",
   body: tbl(["patógeno", "tipo", "escrito", "id(s) cercano(s)"], F.resDrift.map((r) =>
-    `<tr><td class="mono">${esc(r.pathogen)}</td><td>${r.kind === "intrinsic" ? "intrínseca" : "adquirida"}</td><td class="mono">${esc(r.text)}</td><td class="mono">${r.near.length ? esc(r.near.join(", ")) : "—"}</td></tr>`)),
+    `<tr><td class="mono">${esc(r.pathogen)}</td><td>${r.kind === "intrinsic" ? "intrínseca" : "adquirida"}</td><td class="mono">${esc(r.text)}</td><td class="mono">${r.near.length ? esc(r.near.join(", ")) : "—"}</td></tr>`),
+    "Las 28 que había se resolvieron: las que denotaban un fármaco único pasaron a su id real (<code>fosfomicina</code> → <code>fosfomicina_trometamol</code>, <code>cotrimoxazol</code> → <code>tmp_smx</code>) y las que nombraban una clase pasaron a prosa (<code>aminoglucosidos</code> → «Aminoglucósidos»). El validador ahora rechaza que vuelvan."),
 });
 
 cards.push({
@@ -1032,7 +1036,7 @@ const gramRows = Object.entries(F.gramVocab).sort((a, b) => b[1] - a[1]);
 cards.push({
   t: "Vocabulario de taxonomía",
   n: gramRows.length,
-  lede: "Valores distintos en <code>taxonomy.gram</code>. Hay dos pares que son el mismo concepto escrito de dos formas — <code>atypical</code>/<code>atípico</code> y <code>fúngico</code>/<code>hongo</code> — así que agrupar por gram parte los grupos en dos.",
+  lede: "Valores distintos en <code>taxonomy.gram</code>. Antes había dos pares que eran el mismo concepto escrito de dos formas — <code>atypical</code>/<code>atípico</code> y <code>fúngico</code>/<code>hongo</code> — que partían los grupos en dos. Ya unificados; el validador exige este vocabulario.",
   body: tbl(["valor", "patógenos"], gramRows.map(([k, v]) =>
     `<tr><td class="mono">${esc(k)}</td><td>${v}</td></tr>`)),
 });

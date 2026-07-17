@@ -246,7 +246,9 @@ const graph = {
     app: meta.appName,
     version: meta.version,
     dataUpdated: meta.lastUpdated,
-    generated: new Date().toISOString().slice(0, 10),
+    // Fecha LOCAL: toISOString() da UTC y en Chile (UTC-4) mostraba mañana
+    // durante toda la tarde.
+    generated: new Date().toLocaleDateString("sv-SE"),
     scope: meta.scope,
   },
   stats: {
