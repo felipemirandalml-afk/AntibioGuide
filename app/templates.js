@@ -3,6 +3,44 @@ window.ABG = window.ABG || {};
 window.ABG.templates = (function () {
   const { escapeHTML } = window.ABG.helpers;
 
+  /**
+   * Renderiza la prosa de ajuste renal, resaltando la banda que aplica al
+   * paciente activo. Si no hay paciente, o su CrCl no cae en ninguna banda, o
+   * la prosa no tiene bandas numéricas, devuelve el texto escapado tal cual.
+   * Nunca inventa una dosis: solo pone en negrita el segmento que ya existe.
+   */
+  function renalWithBand(proseRaw) {
+    const prose = String(proseRaw || "");
+    const pc = window.ABG.patientContext;
+    const renal = window.ABG.renal;
+
+    // Sin paciente estimable o sin motor renal: texto plano escapado.
+    if (!pc || !renal || !pc.canEstimateRenal()) return escapeHTML(prose);
+    const est = pc.getRenalEstimate();
+    if (!est || !est.ok) return escapeHTML(prose);
+
+    const m = renal.matchRenalBand(prose, est.crcl);
+    if (!m.parseable) return escapeHTML(prose); // prosa sin bandas: tal cual
+
+    // Reconstruir con los mismos separadores ("; ") que el split usó.
+    const rendered = m.segments
+      .map((seg) => {
+        const t = escapeHTML(seg.text);
+        return seg.isMatch
+          ? `<mark class="bg-amber-200 text-amber-900 font-semibold rounded px-1 dark:bg-amber-400/30 dark:text-amber-100">${t}</mark>`
+          : t;
+      })
+      .join("; ");
+
+    if (m.matchIndex !== null) {
+      return `${rendered} <span class="text-xs font-medium text-amber-700 dark:text-amber-300">(← CrCl ${escapeHTML(est.crclRounded)})</span>`;
+    }
+    if (m.aboveAllBands) {
+      return `${rendered} <span class="text-xs font-medium text-green-700 dark:text-green-300">(CrCl ${escapeHTML(est.crclRounded)}: sin ajuste por función renal)</span>`;
+    }
+    return rendered;
+  }
+
   function renderLocalSusceptibilityBanner(viewModel) {
     if (!viewModel || !viewModel.items) return "";
 
@@ -174,6 +212,10 @@ window.ABG.templates = (function () {
     const spectrum = escapeHTML(a?.spectrum || "");
     const dose = escapeHTML(a?.dose || "");
     const renal = escapeHTML(a?.renal || "");
+    // Resaltado de banda renal según el paciente activo: si hay un CrCl
+    // estimado y la prosa tiene bandas, se pone en negrita la que aplica.
+    // NO inventa dosis — solo destaca el texto que ya tiene fuente.
+    const renalHTML = renalWithBand(a?.renal || "");
     const contraindications = escapeHTML(a?.contraindications || "");
     const adverse = escapeHTML(a?.adverse || "");
     const uses = escapeHTML(a?.uses || "");
@@ -230,7 +272,7 @@ window.ABG.templates = (function () {
         <section class="bg-emerald-50 border border-emerald-200 p-4 rounded-lg dark:bg-emerald-950/40 dark:border-emerald-800/40 dark:text-emerald-200">
           <h4 class="text-sm font-bold text-emerald-800 dark:text-emerald-300 uppercase mb-2">Posología Adultos</h4>
           <p class="text-lg font-bold text-emerald-900 dark:text-emerald-200">${dose}</p>
-          <p class="text-sm text-emerald-700 dark:text-emerald-300 mt-1"><strong>Ajuste renal:</strong> ${renal}</p>
+          <p class="text-sm text-emerald-700 dark:text-emerald-300 mt-1"><strong>Ajuste renal:</strong> ${renalHTML}</p>
         </section>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -365,6 +407,7 @@ window.ABG.templates = (function () {
 
   return {
     renderLocalSusceptibilityBanner,
+    renalWithBand,
     syndromeDetail,
     medDetail,
     syndromeCard,

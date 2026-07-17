@@ -138,9 +138,78 @@ window.ABG.renal = (function () {
         return notes;
     }
 
+    /**
+     * Matchea el CrCl de un paciente contra la prosa de ajuste renal de un
+     * fármaco (antibiotics[].renal). Es la "victoria honesta": no inventa una
+     * dosis, solo RESALTA la banda que aplica en el texto que ya tiene fuente.
+     *
+     * Formatos reales que maneja:
+     *   "ClCr 10-29 mL/min: X; ClCr < 10 mL/min: Y."   → 2 bandas numéricas
+     *   "Ajustar en IR significativa."                  → prosa sin bandas
+     *
+     * @param {string} prose  el texto de antibiotics[].renal
+     * @param {number} crcl   depuración estimada (mL/min)
+     * @returns {Object}
+     *   parseable      ¿se encontró alguna banda numérica de ClCr?
+     *   segments       [{ text, lo, hi, isMatch }]  (hi exclusivo en "< n")
+     *   matchIndex     índice del segmento que aplica, o null
+     *   aboveAllBands  el CrCl está por encima de toda banda de función reducida
+     *                  listada → probablemente dosis estándar (la prosa solo
+     *                  describe función reducida, no el rango normal)
+     */
+    function matchRenalBand(prose, crcl) {
+        const text = String(prose || "");
+        if (!text.trim() || typeof crcl !== "number" || !isFinite(crcl)) {
+            return { parseable: false, segments: [], matchIndex: null, aboveAllBands: false };
+        }
+
+        const rawSegments = text.split(";").map((s) => s.trim()).filter(Boolean);
+        const segments = rawSegments.map((seg) => {
+            // "ClCr 10-29" / "ClCr 10 – 29"  → rango inclusivo [lo, hi]
+            const range = seg.match(/ClCr\s*(\d+(?:[.,]\d+)?)\s*[-–]\s*(\d+(?:[.,]\d+)?)/i);
+            if (range) {
+                return { text: seg, lo: num(range[1]), hi: num(range[2]), kind: "range", isMatch: false };
+            }
+            // "ClCr < 10"  → por debajo de 10 (hi exclusivo)
+            const below = seg.match(/ClCr\s*<\s*(\d+(?:[.,]\d+)?)/i);
+            if (below) {
+                return { text: seg, lo: -Infinity, hi: num(below[1]), kind: "below", isMatch: false };
+            }
+            return { text: seg, lo: null, hi: null, kind: "prose", isMatch: false };
+        });
+
+        const numeric = segments.filter((s) => s.kind !== "prose");
+        if (numeric.length === 0) {
+            return { parseable: false, segments, matchIndex: null, aboveAllBands: false };
+        }
+
+        let matchIndex = null;
+        segments.forEach((s, i) => {
+            if (matchIndex !== null) return;
+            const hit =
+                (s.kind === "range" && crcl >= s.lo && crcl <= s.hi) ||
+                (s.kind === "below" && crcl < s.hi);
+            if (hit) {
+                s.isMatch = true;
+                matchIndex = i;
+            }
+        });
+
+        // Por encima del techo de todas las bandas de función reducida.
+        const maxHi = Math.max(...numeric.map((s) => (s.kind === "range" ? s.hi : s.hi)));
+        const aboveAllBands = matchIndex === null && crcl > maxHi;
+
+        return { parseable: true, segments, matchIndex, aboveAllBands };
+    }
+
+    function num(s) {
+        return parseFloat(String(s).replace(",", "."));
+    }
+
     return {
         cockcroftGault,
         kdigoStage,
+        matchRenalBand,
         REFERENCE,
         FORMULA_TEXT,
         LIMITS,

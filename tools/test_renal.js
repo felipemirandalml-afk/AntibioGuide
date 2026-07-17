@@ -83,4 +83,42 @@ test("NO advierte redondeo cuando la creatinina es normal", () => {
   assert(!r.notes.some((n) => /redonde/i.test(n)), "sin advertencia de redondeo");
 });
 
+// ---- matchRenalBand: resaltar la banda que aplica en la prosa renal ----
+const PROSE = "ClCr 10-29 mL/min: 250-500 mg c/12h; ClCr < 10 mL/min: 250-500 mg c/24h.";
+
+test("CrCl 20 cae en la banda 10-29", () => {
+  const m = R.matchRenalBand(PROSE, 20);
+  assert(m.parseable, "prosa parseable");
+  eq(m.matchIndex, 0, "matchea el primer segmento (10-29)");
+  assert(m.segments[0].isMatch && !m.segments[1].isMatch, "solo la banda correcta");
+});
+
+test("CrCl 8 cae en la banda < 10", () => {
+  const m = R.matchRenalBand(PROSE, 8);
+  eq(m.matchIndex, 1, "matchea el segundo segmento (< 10)");
+});
+
+test("límite inclusivo: CrCl 10 cae en 10-29, no en < 10", () => {
+  const m = R.matchRenalBand(PROSE, 10);
+  eq(m.matchIndex, 0, "10 pertenece a 10-29");
+});
+
+test("CrCl 50 está por encima de todas las bandas → dosis estándar", () => {
+  const m = R.matchRenalBand(PROSE, 50);
+  eq(m.matchIndex, null, "ninguna banda de función reducida aplica");
+  assert(m.aboveAllBands, "marca que está sobre el techo → función normal");
+});
+
+test("banda con cortes distintos (pip-tazo 20-40 / <20)", () => {
+  const p = "ClCr 20-40 mL/min: 2.25 g c/6h; ClCr < 20 mL/min: 2.25 g c/8h.";
+  eq(R.matchRenalBand(p, 30).matchIndex, 0, "30 en 20-40");
+  eq(R.matchRenalBand(p, 15).matchIndex, 1, "15 en < 20");
+  assert(R.matchRenalBand(p, 60).aboveAllBands, "60 sobre el techo");
+});
+
+test("prosa sin bandas numéricas → no parseable (se muestra tal cual)", () => {
+  const m = R.matchRenalBand("Ajustar en IR significativa.", 25);
+  assert(!m.parseable, "no hay banda que resaltar");
+});
+
 run();
