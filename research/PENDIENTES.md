@@ -46,37 +46,39 @@ Ocho commits, en orden:
 
 ---
 
-## Lo que quedó PENDIENTE — grafo de conocimiento (graphify)
+## Grafo de conocimiento (graphify) — TERMINADO
 
 Se instaló [graphify](https://github.com/Graphify-Labs/graphify) para construir un
 grafo de conocimiento del repo como "contenedor de contexto" reutilizable entre
-sesiones. **El grafo está construido localmente en `graphify-out/` pero le faltan
-3 pasos, y por eso NO se versiona todavía** (`graphify-out/` está en `.gitignore`).
+sesiones. **Los 3 pasos que quedaban se completaron** (etiquetar comunidades,
+exportar HTML, decidir versionado).
 
-Estado actual del grafo local: **428 nodos · 536 aristas · 46 comunidades**,
-`built_at_commit` registrado. Corpus: código de la app (AST) + 7 docs de `research/`.
-Se excluyeron a propósito:
-- `research/NotebookLM/*` — experimentos previos a la normalización; usan 8 alias
-  de síndrome ya retirados (incluido el HCAP eliminado por evidencia). Incluirlos
-  le enseñaría a una sesión futura lo contrario de lo que se curó.
-- `research/graph.html` — artefacto generado (JSON incrustado), no fuente.
+Estado del grafo: **459 nodos · 559 aristas · 54 comunidades nombradas**, alineado
+con el commit actual (`graphify update` lo mantiene al día sin LLM). Corpus: código
+de la app (AST) + docs de `research/`. Nodos semánticos (el "porqué"): 130.
 
-**Los 3 pasos que faltan:**
+**Qué se versiona y qué no** (ver `.gitignore`):
+- ✅ `graphify-out/GRAPH_REPORT.md` — el reporte legible, sí va al repo.
+- ❌ `graph.json` y `graph.html` — ~700 KB generados, quedan **locales**: se
+  regeneran con `graphify update` y ensuciarían el historial en cada rebuild.
 
-1. **Etiquetar las 46 comunidades** — hoy son `Community 0`, `Community 1`… Hay que
-   darles nombre legible (p. ej. "Motor clínico", "Validador de integridad").
-   Requiere leer los nodos de cada comunidad; el listado se genera desde
-   `graphify-out/.graphify_analysis.json`.
-2. **Exportar el HTML** — `graphify export html` (genera `graphify-out/graph.html`).
-3. **Versionar el contenedor** — decidir si se commitea. Si sí: dejar de ignorar
-   `graphify-out/graph.json`, `GRAPH_REPORT.md` y `manifest.json` en `.gitignore`
-   (ver el comentario ahí), y commitearlos.
+**Cómo usarlo** (sobre el `graph.json` local):
+- `graphify query "<pregunta>"` — pregunta en lenguaje natural, devuelve nodos con
+  `archivo:línea`. El uso principal como contenedor de contexto.
+- `graphify explain "<archivo o función>"` — todo lo que toca un nodo.
+- `graphify path "A" "B"` — cómo se conectan dos conceptos.
+- Desde Claude Code: `/graphify query "..."`.
 
-Para consultarlo mientras tanto (ya funciona): `/graphify query "<pregunta>"`.
+**Mantenerlo al día:** tras cambios de código, `graphify update .` (sin LLM,
+gratis). Tras cambios en docs de `research/`, `/graphify --update` (re-extrae con
+LLM; usa la caché en `graphify-out/cache/`, así que abarata — no borrarla).
 
-> **Advertencia de costo:** reconstruir el grafo desde cero cuesta ~160K–330K
-> tokens (extracción semántica de docs vía LLM). La caché en `graphify-out/cache/`
-> abarata las re-corridas. No borrar la caché sin necesidad.
+> **Nota sobre NotebookLM:** los 6 `research/NotebookLM/*.md` son experimentos
+> previos a la normalización (usan 8 alias de síndrome ya retirados, incl. el HCAP
+> eliminado por evidencia). En la reconstrucción vía `graphify update` reaparecen
+> como nodos-archivo sueltos (sin extracción semántica), no como conceptos, así
+> que no reinyectan los alias. Si algún día se hace un rebuild semántico completo,
+> excluirlos de nuevo.
 
 ---
 

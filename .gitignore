@@ -12,12 +12,13 @@ dist/
 research/graph.json
 
 # Graphify (grafo de conocimiento del repo, /graphify).
-# Trabajo EN CURSO — no se versiona todavía. El grafo está construido localmente
-# pero le faltan pasos (ver research/PENDIENTES.md). Cuando se retome y se decida
-# versionar el contenedor de contexto, dejar de ignorar graph.json, GRAPH_REPORT.md
-# y manifest.json (los artefactos duraderos), manteniendo ignorados cache/,
-# graph.html, cost.json y los .graphify_* (estado local / regenerable).
-graphify-out/
+# Se versiona SOLO el reporte legible (GRAPH_REPORT.md). El graph.json y el
+# graph.html son ~700 KB generados que se regeneran con `graphify update`; se
+# dejan locales para no ensuciar el historial en cada rebuild.
+# Se usa `graphify-out/*` (no `graphify-out/`) para que git entre a la carpeta:
+# con el directorio entero ignorado, la negación de abajo no puede reincluir nada.
+graphify-out/*
+!graphify-out/GRAPH_REPORT.md
 
 # Sistema operativo / editores
 .DS_Store
