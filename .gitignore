@@ -11,6 +11,14 @@ dist/
 # versiona es research/graph.html; este es un intermedio regenerable.
 research/graph.json
 
+# Graphify (grafo de conocimiento del repo, /graphify).
+# Trabajo EN CURSO — no se versiona todavía. El grafo está construido localmente
+# pero le faltan pasos (ver research/PENDIENTES.md). Cuando se retome y se decida
+# versionar el contenedor de contexto, dejar de ignorar graph.json, GRAPH_REPORT.md
+# y manifest.json (los artefactos duraderos), manteniendo ignorados cache/,
+# graph.html, cost.json y los .graphify_* (estado local / regenerable).
+graphify-out/
+
 # Sistema operativo / editores
 .DS_Store
 Thumbs.db
