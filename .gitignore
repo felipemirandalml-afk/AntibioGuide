@@ -7,6 +7,10 @@ node_modules/
 dist/
 .cache/
 
+# Volcado de depuración de tools/build_graph.js (--json). El documento que se
+# versiona es research/graph.html; este es un intermedio regenerable.
+research/graph.json
+
 # Sistema operativo / editores
 .DS_Store
 Thumbs.db
