@@ -121,6 +121,13 @@ const notEmpiricSyndromeRefs = new Map([
  *   clínicamente correcta (Serratia es un patógeno nosocomial clásico).
  */
 
+// Vocabularios canónicos. Existen porque el mismo concepto escrito de dos formas
+// parte los grupos en dos y degrada la búsqueda (render.js puntúa sobre `family`).
+const CANONICAL_GRAM = new Set(["positive", "negative", "atypical", "fungal", "variable"]);
+
+// Algo "con forma de id": minúscula y snake_case, sin espacios ni mayúsculas.
+const ID_SHAPED = /^[a-z0-9_]+$/;
+
 function addError(type, message) {
   errors.push({ type, message });
 }
@@ -167,6 +174,70 @@ function assertObject(obj, field, context, required = true) {
     return false;
   }
   return true;
+}
+
+/**
+ * Arrays densos: sin elisiones (`["a", , "b"]`) ni null.
+ *
+ * Esta guarda existe por un bug real: una coma doble en `pathogenIds` pasó el
+ * validador, la auditoría Y los tests. `.forEach`, `.map` y `.filter` SALTAN los
+ * huecos en silencio, así que nada lo veía; pero `.length` sí los cuenta y
+ * `for...of` devuelve `undefined`. Recorre todo el árbol porque el defecto puede
+ * aparecer en cualquier array, no solo en los que se revisan a mano.
+ */
+function checkDenseArrays(node, path, seen = new Set()) {
+  if (node && typeof node === "object") {
+    if (seen.has(node)) return; // los perfiles de resistencia se referencian entre sí
+    seen.add(node);
+  }
+  if (Array.isArray(node)) {
+    for (let i = 0; i < node.length; i++) {
+      if (!(i in node)) {
+        addError(
+          "array_hole",
+          `${path}[${i}] es un HUECO de array (coma doble). Los métodos .forEach/.map lo saltan en silencio, ` +
+          `pero .length lo cuenta y for...of devuelve undefined.`
+        );
+      } else if (node[i] === null || node[i] === undefined) {
+        addError("array_null", `${path}[${i}] es ${node[i]} dentro de un array`);
+      } else {
+        checkDenseArrays(node[i], `${path}[${i}]`, seen);
+      }
+    }
+  } else if (node && typeof node === "object") {
+    Object.keys(node).forEach((k) => checkDenseArrays(node[k], `${path}.${k}`, seen));
+  }
+}
+
+/**
+ * Una clase de fármaco escrita de dos formas ("Macrólido" y "Macrólidos") son dos
+ * familias distintas para el motor: la búsqueda puntúa sobre `family`
+ * (render.js:239) y el agrupamiento las separa. Normaliza plural y acentos para
+ * detectar el par.
+ */
+function checkFamilyVocabulary(data) {
+  const norm = (s) =>
+    s.toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "")
+      .replace(/(es|s)$/, "")
+      .replace(/[^a-z0-9]/g, "");
+  const byKey = new Map();
+  (data.antibiotics || []).forEach((a) => {
+    if (!a || typeof a.family !== "string" || !a.family.trim()) return;
+    const k = norm(a.family);
+    if (!byKey.has(k)) byKey.set(k, new Set());
+    byKey.get(k).add(a.family);
+  });
+  byKey.forEach((forms) => {
+    if (forms.size > 1) {
+      addError(
+        "family_vocab_drift",
+        `la misma clase escrita de dos formas: ${[...forms].map((f) => `"${f}"`).join(" vs ")}. ` +
+        `Elige una: la búsqueda puntúa sobre 'family' y dos grafías dan resultados distintos.`
+      );
+    }
+  });
 }
 
 function checkTopLevelStructure(data) {
@@ -298,7 +369,7 @@ function validateAntibiotics(data) {
   });
 }
 
-function validatePathogens(data, syndromeIds) {
+function validatePathogens(data, syndromeIds, antibioticIds) {
   (data.pathogens || []).forEach((p, index) => {
     if (!p) return;
     const ctx = `pathogens[${index}] (${p.id || 'unknown'})`;
@@ -309,7 +380,32 @@ function validatePathogens(data, syndromeIds) {
     // Check canonical nested objects
     if (assertObject(p, "taxonomy", ctx)) {
       assertString(p.taxonomy, "gram", `${ctx}.taxonomy`);
+      if (typeof p.taxonomy.gram === "string" && !CANONICAL_GRAM.has(p.taxonomy.gram)) {
+        addError(
+          "invalid_gram",
+          `${ctx}.taxonomy.gram "${p.taxonomy.gram}" no está en el vocabulario canónico (${[...CANONICAL_GRAM].join(", ")}). ` +
+          `Dos grafías del mismo concepto parten los grupos en dos.`
+        );
+      }
     }
+
+    // `resistance` mezcla a propósito dos vocabularios: un id de antibiótico
+    // (enlaza) y prosa que nombra una clase o un mecanismo ("Aminoglucósidos",
+    // "BLEE"). Lo que NO se admite es el disfraz: algo con forma de id que no
+    // existe se descarta en silencio, que es justo lo que no debe pasar.
+    ["intrinsic", "typicalAcquired"].forEach((field) => {
+      const list = p.resistance && p.resistance[field];
+      if (!Array.isArray(list)) return;
+      list.forEach((x) => {
+        if (typeof x === "string" && ID_SHAPED.test(x) && !antibioticIds.has(x)) {
+          addError(
+            "resistance_vocab_drift",
+            `${ctx}.resistance.${field} "${x}" tiene forma de id pero no existe ningún antibiótico así. ` +
+            `Usa el id real, o escríbelo como prosa si es una clase (p. ej. "Aminoglucósidos").`
+          );
+        }
+      });
+    });
 
     if (assertObject(p, "clinical", ctx)) {
       assertString(p.clinical, "summary", `${ctx}.clinical`);
@@ -642,9 +738,14 @@ function main() {
   const pathogenIds = getIdSet(clinicalData.pathogens);
   const antibioticIds = getIdSet(clinicalData.antibiotics);
 
+  checkDenseArrays(clinicalData.syndromes, "syndromes");
+  checkDenseArrays(clinicalData.pathogens, "pathogens");
+  checkDenseArrays(clinicalData.antibiotics, "antibiotics");
+  checkFamilyVocabulary(clinicalData);
+
   const syndromeIds = validateSyndromes(clinicalData, pathogenIds, antibioticIds);
   validateAntibiotics(clinicalData);
-  validatePathogens(clinicalData, syndromeIds);
+  validatePathogens(clinicalData, syndromeIds, antibioticIds);
   validateResistanceProfiles(clinicalData, pathogenIds, antibioticIds, syndromeIds);
 
   printReport(clinicalData);
