@@ -105,7 +105,7 @@
         class="mt-3 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-slate-700 dark:bg-slate-900/60">
         <div class="flex items-center justify-between mb-3">
           <h3 class="text-sm font-semibold text-gray-700 dark:text-slate-200">
-            <i class="fas fa-calculator text-blue-500 mr-1"></i> Función renal del paciente
+            <i class="fas fa-user-injured text-blue-500 mr-1"></i> Contexto del paciente
           </h3>
           <button id="patient-clear" type="button"
             class="text-xs text-gray-500 hover:text-red-600 dark:text-slate-400 dark:hover:text-red-400">
@@ -113,6 +113,7 @@
           </button>
         </div>
 
+        <p class="text-xs font-medium text-gray-500 dark:text-slate-400 mb-2">Función renal</p>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div>
             <label for="pt-age" class="block text-xs text-gray-500 dark:text-slate-400 mb-1">Edad (años)</label>
@@ -142,6 +143,22 @@
 
         <!-- Resultado del cálculo, poblado por app/patientPanel.js -->
         <div id="patient-renal-result" class="mt-3"></div>
+
+        <p class="text-xs font-medium text-gray-500 dark:text-slate-400 mt-4 mb-2">Alergias</p>
+        <div id="patient-allergies" class="flex flex-wrap gap-x-4 gap-y-2">
+          <label class="inline-flex items-center gap-1.5 text-sm text-gray-700 dark:text-slate-200 cursor-pointer">
+            <input type="checkbox" data-allergy="penicilina" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"> Penicilina
+          </label>
+          <label class="inline-flex items-center gap-1.5 text-sm text-gray-700 dark:text-slate-200 cursor-pointer">
+            <input type="checkbox" data-allergy="sulfa" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"> Sulfas
+          </label>
+          <label class="inline-flex items-center gap-1.5 text-sm text-gray-700 dark:text-slate-200 cursor-pointer">
+            <input type="checkbox" data-allergy="macrolido" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"> Macrólidos
+          </label>
+          <label class="inline-flex items-center gap-1.5 text-sm text-gray-700 dark:text-slate-200 cursor-pointer">
+            <input type="checkbox" data-allergy="quinolona" class="rounded border-gray-300 text-blue-600 focus:ring-blue-500"> Quinolonas
+          </label>
+        </div>
       </div>
     </section>
 
@@ -196,6 +213,7 @@
   <script src="app/helpers.js"></script>
   <script src="app/state.js"></script>
   <script src="app/renal.js"></script>
+  <script src="app/allergy.js"></script>
   <script src="app/patientContext.js"></script>
   <script src="app/clinicalEngine.js"></script>
   <script src="app/templates.js"></script>

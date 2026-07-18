@@ -26,7 +26,14 @@ window.ABG.patientPanel = (function () {
             sex: document.getElementById("pt-sex"),
             creatinine: document.getElementById("pt-creatinine"),
             result: document.getElementById("patient-renal-result"),
+            allergyBoxes: Array.prototype.slice.call(
+                document.querySelectorAll("#patient-allergies input[data-allergy]")
+            ),
         };
+    }
+
+    function readAllergies(e) {
+        return (e.allergyBoxes || []).filter((b) => b.checked).map((b) => b.dataset.allergy);
     }
 
     // input vacío → null (no ingresado), distinto de 0.
@@ -42,6 +49,7 @@ window.ABG.patientPanel = (function () {
             weightKg: numOrNull(e.weight && e.weight.value),
             sex: (e.sex && e.sex.value) || null,
             creatinine: numOrNull(e.creatinine && e.creatinine.value),
+            allergies: readAllergies(e),
         };
     }
 
@@ -52,6 +60,9 @@ window.ABG.patientPanel = (function () {
         if (e.weight && p.weightKg != null) e.weight.value = p.weightKg;
         if (e.sex && p.sex) e.sex.value = p.sex;
         if (e.creatinine && p.creatinine != null) e.creatinine.value = p.creatinine;
+        (e.allergyBoxes || []).forEach((b) => {
+            b.checked = p.allergies.indexOf(b.dataset.allergy) !== -1;
+        });
     }
 
     function stageColor(key) {
@@ -143,6 +154,8 @@ window.ABG.patientPanel = (function () {
             if (el && el.tagName === "SELECT") el.addEventListener("change", () => onInput(e));
         });
 
+        (e.allergyBoxes || []).forEach((b) => b.addEventListener("change", () => onInput(e)));
+
         if (e.clear) {
             e.clear.addEventListener("click", () => {
                 window.ABG.patientContext.clear();
@@ -150,6 +163,7 @@ window.ABG.patientPanel = (function () {
                 if (e.weight) e.weight.value = "";
                 if (e.sex) e.sex.value = "";
                 if (e.creatinine) e.creatinine.value = "";
+                (e.allergyBoxes || []).forEach((b) => { b.checked = false; });
                 renderResult(e);
                 refreshOpenResults();
             });

@@ -41,6 +41,51 @@ window.ABG.templates = (function () {
     return rendered;
   }
 
+  /**
+   * Banner de alergia para un régimen, según el paciente activo. Resuelve los
+   * drugIds a fármacos, consulta window.ABG.allergy y devuelve el aviso:
+   *   avoid   → rojo, "contiene <clase> (paciente alérgico)"
+   *   caution → ámbar, reactividad cruzada (no bloqueo)
+   *   safe/ok → sin banner (no ensuciar con lo que no aplica)
+   * Vacío si no hay paciente, no hay alergias, o no hay conflicto.
+   */
+  function renderAllergyBanner(drugIds) {
+    const pc = window.ABG.patientContext;
+    const allergyEngine = window.ABG.allergy;
+    if (!pc || !allergyEngine) return "";
+    const allergies = pc.get().allergies;
+    if (!allergies || !allergies.length) return "";
+
+    const drugs = (Array.isArray(drugIds) ? drugIds : [])
+      .map((id) => window.ABG.helpers.getAntibioticById(id))
+      .filter(Boolean);
+    const res = allergyEngine.checkRegimen(drugs, allergies);
+    if (res.level === "ok" || res.level === "safe") return "";
+
+    const items = res.conflicts
+      .filter((c) => c.level === "avoid" || c.level === "caution")
+      .map((c) => {
+        const drug = escapeHTML(c.drug);
+        if (c.level === "avoid") {
+          return `<li><strong>${drug}</strong>: evitar — el paciente es alérgico (${escapeHTML(c.allergy)}).</li>`;
+        }
+        return `<li><strong>${drug}</strong>: ${escapeHTML(c.note)}</li>`;
+      })
+      .join("");
+    if (!items) return "";
+
+    const avoid = res.level === "avoid";
+    const box = avoid
+      ? "border-red-300 bg-red-50 text-red-900 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-200"
+      : "border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-amber-200";
+    const title = avoid ? "⛔ Alergia del paciente" : "⚠️ Reactividad cruzada";
+    return `
+      <div class="mt-3 rounded-md border ${box} px-3 py-2 text-sm">
+        <div class="font-semibold">${title}</div>
+        <ul class="list-disc pl-5 mt-1">${items}</ul>
+      </div>`;
+  }
+
   function renderLocalSusceptibilityBanner(viewModel) {
     if (!viewModel || !viewModel.items) return "";
 
@@ -148,6 +193,7 @@ window.ABG.templates = (function () {
                 ${drugBlock}
                 <p class="text-sm text-gray-600 dark:text-slate-300 font-medium">${dose} ${route} ${interval} (${duration})${durationInfoBtn}</p>
                 <p class="text-sm text-gray-500 dark:text-slate-300 mt-2 italic">${comments}</p>
+                ${renderAllergyBanner(ids)}
                 ${regimenWarnings.length > 0
             ? `
                     <div class="mt-3 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">
@@ -408,6 +454,7 @@ window.ABG.templates = (function () {
   return {
     renderLocalSusceptibilityBanner,
     renalWithBand,
+    renderAllergyBanner,
     syndromeDetail,
     medDetail,
     syndromeCard,
