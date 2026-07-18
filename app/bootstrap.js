@@ -11,6 +11,10 @@ window.ABG.bootstrap = (function () {
             window.ABG.localContext.init();
         }
 
+        if (window.ABG.patientPanel && typeof window.ABG.patientPanel.init === "function") {
+            window.ABG.patientPanel.init();
+        }
+
         // 2. EPIVIGILA
         if (window.EPIVIGILA && typeof window.EPIVIGILA.init === "function") {
             window.EPIVIGILA.init({

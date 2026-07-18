@@ -3,6 +3,105 @@ window.ABG = window.ABG || {};
 window.ABG.templates = (function () {
   const { escapeHTML } = window.ABG.helpers;
 
+  /**
+   * Renderiza la prosa de ajuste renal, resaltando la banda que aplica al
+   * paciente activo. Si no hay paciente, o su CrCl no cae en ninguna banda, o
+   * la prosa no tiene bandas numéricas, devuelve el texto escapado tal cual.
+   * Nunca inventa una dosis: solo pone en negrita el segmento que ya existe.
+   */
+  function renalWithBand(proseRaw) {
+    const prose = String(proseRaw || "");
+    const pc = window.ABG.patientContext;
+    const renal = window.ABG.renal;
+
+    // Sin paciente estimable o sin motor renal: texto plano escapado.
+    if (!pc || !renal || !pc.canEstimateRenal()) return escapeHTML(prose);
+    const est = pc.getRenalEstimate();
+    if (!est || !est.ok) return escapeHTML(prose);
+
+    const m = renal.matchRenalBand(prose, est.crcl);
+    if (!m.parseable) return escapeHTML(prose); // prosa sin bandas: tal cual
+
+    // Reconstruir con los mismos separadores ("; ") que el split usó.
+    const rendered = m.segments
+      .map((seg) => {
+        const t = escapeHTML(seg.text);
+        return seg.isMatch
+          ? `<mark class="bg-amber-200 text-amber-900 font-semibold rounded px-1 dark:bg-amber-400/30 dark:text-amber-100">${t}</mark>`
+          : t;
+      })
+      .join("; ");
+
+    if (m.matchIndex !== null) {
+      return `${rendered} <span class="text-xs font-medium text-amber-700 dark:text-amber-300">(← CrCl ${escapeHTML(est.crclRounded)})</span>`;
+    }
+    if (m.aboveAllBands) {
+      return `${rendered} <span class="text-xs font-medium text-green-700 dark:text-green-300">(CrCl ${escapeHTML(est.crclRounded)}: sin ajuste por función renal)</span>`;
+    }
+    return rendered;
+  }
+
+  /**
+   * Banner de alergia para un régimen, según el paciente activo. Resuelve los
+   * drugIds a fármacos, consulta window.ABG.allergy y devuelve el aviso:
+   *   avoid   → rojo, "contiene <clase> (paciente alérgico)"
+   *   caution → ámbar, reactividad cruzada (no bloqueo)
+   *   safe/ok → sin banner (no ensuciar con lo que no aplica)
+   * Vacío si no hay paciente, no hay alergias, o no hay conflicto.
+   */
+  function renderAllergyBanner(drugIds) {
+    const pc = window.ABG.patientContext;
+    const allergyEngine = window.ABG.allergy;
+    if (!pc || !allergyEngine) return "";
+    const allergies = pc.get().allergies;
+    if (!allergies || !allergies.length) return "";
+
+    const drugs = (Array.isArray(drugIds) ? drugIds : [])
+      .map((id) => window.ABG.helpers.getAntibioticById(id))
+      .filter(Boolean);
+    const res = allergyEngine.checkRegimen(drugs, allergies);
+    if (res.level === "ok" || res.level === "safe") return "";
+
+    const items = res.conflicts
+      .filter((c) => c.level === "avoid" || c.level === "caution")
+      .map((c) => {
+        const drug = escapeHTML(c.drug);
+        if (c.level === "avoid") {
+          return `<li><strong>${drug}</strong>: evitar — el paciente es alérgico (${escapeHTML(c.allergy)}).</li>`;
+        }
+        return `<li><strong>${drug}</strong>: ${escapeHTML(c.note)}</li>`;
+      })
+      .join("");
+    if (!items) return "";
+
+    const avoid = res.level === "avoid";
+    const box = avoid
+      ? "border-red-300 bg-red-50 text-red-900 dark:border-red-800/60 dark:bg-red-950/40 dark:text-red-200"
+      : "border-amber-300 bg-amber-50 text-amber-900 dark:border-amber-800/60 dark:bg-amber-950/40 dark:text-amber-200";
+    const title = avoid ? "⛔ Alergia del paciente" : "⚠️ Reactividad cruzada";
+    return `
+      <div class="mt-3 rounded-md border ${box} px-3 py-2 text-sm">
+        <div class="font-semibold">${title}</div>
+        <ul class="list-disc pl-5 mt-1">${items}</ul>
+      </div>`;
+  }
+
+  /**
+   * Badge "coincide con el ámbito" para un régimen, según la severidad del
+   * paciente activo. Es un hint positivo: marca el régimen del escenario
+   * correcto, sin ocultar los demás. Vacío si no hay severidad o no coincide.
+   */
+  function renderSeverityBadge(scenario) {
+    const pc = window.ABG.patientContext;
+    const sev = window.ABG.severity;
+    if (!pc || !sev) return "";
+    const patientSeverity = pc.get().severity;
+    if (!patientSeverity) return "";
+    if (!sev.matches(scenario, patientSeverity)) return "";
+    const label = escapeHTML(sev.LABELS[patientSeverity] || patientSeverity);
+    return `<span class="inline-flex items-center gap-1 text-xs font-medium rounded-full bg-green-100 text-green-800 px-2 py-0.5 dark:bg-green-900/50 dark:text-green-300 whitespace-nowrap"><i class="fas fa-check"></i> ${label}</span>`;
+  }
+
   function renderLocalSusceptibilityBanner(viewModel) {
     if (!viewModel || !viewModel.items) return "";
 
@@ -103,13 +202,17 @@ window.ABG.templates = (function () {
 
         return `
               <div class="border-l-4 border-blue-400 pl-4 py-2">
-                <div class="flex justify-between items-start">
-                  <h4 class="font-bold text-blue-700">${rName}</h4>
-                  <span class="text-xs bg-gray-100 text-gray-500 dark:bg-slate-800 dark:text-slate-400 px-2 py-1 rounded">${ref}</span>
+                <div class="flex justify-between items-start gap-2">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h4 class="font-bold text-blue-700">${rName}</h4>
+                    ${renderSeverityBadge(r?.scenario)}
+                  </div>
+                  <span class="text-xs bg-gray-100 text-gray-500 dark:bg-slate-800 dark:text-slate-400 px-2 py-1 rounded whitespace-nowrap">${ref}</span>
                 </div>
                 ${drugBlock}
                 <p class="text-sm text-gray-600 dark:text-slate-300 font-medium">${dose} ${route} ${interval} (${duration})${durationInfoBtn}</p>
                 <p class="text-sm text-gray-500 dark:text-slate-300 mt-2 italic">${comments}</p>
+                ${renderAllergyBanner(ids)}
                 ${regimenWarnings.length > 0
             ? `
                     <div class="mt-3 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm text-amber-900">
@@ -174,6 +277,10 @@ window.ABG.templates = (function () {
     const spectrum = escapeHTML(a?.spectrum || "");
     const dose = escapeHTML(a?.dose || "");
     const renal = escapeHTML(a?.renal || "");
+    // Resaltado de banda renal según el paciente activo: si hay un CrCl
+    // estimado y la prosa tiene bandas, se pone en negrita la que aplica.
+    // NO inventa dosis — solo destaca el texto que ya tiene fuente.
+    const renalHTML = renalWithBand(a?.renal || "");
     const contraindications = escapeHTML(a?.contraindications || "");
     const adverse = escapeHTML(a?.adverse || "");
     const uses = escapeHTML(a?.uses || "");
@@ -230,7 +337,7 @@ window.ABG.templates = (function () {
         <section class="bg-emerald-50 border border-emerald-200 p-4 rounded-lg dark:bg-emerald-950/40 dark:border-emerald-800/40 dark:text-emerald-200">
           <h4 class="text-sm font-bold text-emerald-800 dark:text-emerald-300 uppercase mb-2">Posología Adultos</h4>
           <p class="text-lg font-bold text-emerald-900 dark:text-emerald-200">${dose}</p>
-          <p class="text-sm text-emerald-700 dark:text-emerald-300 mt-1"><strong>Ajuste renal:</strong> ${renal}</p>
+          <p class="text-sm text-emerald-700 dark:text-emerald-300 mt-1"><strong>Ajuste renal:</strong> ${renalHTML}</p>
         </section>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -365,6 +472,9 @@ window.ABG.templates = (function () {
 
   return {
     renderLocalSusceptibilityBanner,
+    renalWithBand,
+    renderAllergyBanner,
+    renderSeverityBadge,
     syndromeDetail,
     medDetail,
     syndromeCard,
