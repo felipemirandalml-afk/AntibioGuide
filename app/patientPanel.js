@@ -29,11 +29,26 @@ window.ABG.patientPanel = (function () {
             allergyBoxes: Array.prototype.slice.call(
                 document.querySelectorAll("#patient-allergies input[data-allergy]")
             ),
+            severityBtns: Array.prototype.slice.call(
+                document.querySelectorAll("#patient-severity button[data-severity]")
+            ),
         };
     }
 
     function readAllergies(e) {
         return (e.allergyBoxes || []).filter((b) => b.checked).map((b) => b.dataset.allergy);
+    }
+
+    const SEV_ON = ["bg-blue-600", "text-white", "border-blue-600"];
+    const SEV_OFF = ["bg-white", "dark:bg-slate-800", "dark:text-slate-100"];
+
+    function paintSeverity(e, active) {
+        (e.severityBtns || []).forEach((b) => {
+            const on = b.dataset.severity === active;
+            SEV_ON.forEach((c) => b.classList.toggle(c, on));
+            SEV_OFF.forEach((c) => b.classList.toggle(c, !on));
+            b.setAttribute("aria-pressed", String(on));
+        });
     }
 
     // input vacío → null (no ingresado), distinto de 0.
@@ -63,6 +78,7 @@ window.ABG.patientPanel = (function () {
         (e.allergyBoxes || []).forEach((b) => {
             b.checked = p.allergies.indexOf(b.dataset.allergy) !== -1;
         });
+        paintSeverity(e, p.severity);
     }
 
     function stageColor(key) {
@@ -156,6 +172,16 @@ window.ABG.patientPanel = (function () {
 
         (e.allergyBoxes || []).forEach((b) => b.addEventListener("change", () => onInput(e)));
 
+        (e.severityBtns || []).forEach((b) =>
+            b.addEventListener("click", () => {
+                const current = window.ABG.patientContext.get().severity;
+                const next = current === b.dataset.severity ? null : b.dataset.severity; // toggle
+                window.ABG.patientContext.set({ severity: next });
+                paintSeverity(e, next);
+                refreshOpenResults();
+            })
+        );
+
         if (e.clear) {
             e.clear.addEventListener("click", () => {
                 window.ABG.patientContext.clear();
@@ -164,6 +190,7 @@ window.ABG.patientPanel = (function () {
                 if (e.sex) e.sex.value = "";
                 if (e.creatinine) e.creatinine.value = "";
                 (e.allergyBoxes || []).forEach((b) => { b.checked = false; });
+                paintSeverity(e, null);
                 renderResult(e);
                 refreshOpenResults();
             });

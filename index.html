@@ -113,6 +113,13 @@
           </button>
         </div>
 
+        <p class="text-xs font-medium text-gray-500 dark:text-slate-400 mb-2">Ámbito de atención</p>
+        <div id="patient-severity" class="flex flex-wrap gap-2 mb-4">
+          <button type="button" data-severity="outpatient" class="pt-sev text-sm rounded-md border border-gray-300 bg-white px-3 py-1.5 hover:border-blue-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">Ambulatorio</button>
+          <button type="button" data-severity="inpatient" class="pt-sev text-sm rounded-md border border-gray-300 bg-white px-3 py-1.5 hover:border-blue-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">Hospitalizado</button>
+          <button type="button" data-severity="icu" class="pt-sev text-sm rounded-md border border-gray-300 bg-white px-3 py-1.5 hover:border-blue-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100">UCI / grave</button>
+        </div>
+
         <p class="text-xs font-medium text-gray-500 dark:text-slate-400 mb-2">Función renal</p>
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div>
@@ -214,6 +221,7 @@
   <script src="app/state.js"></script>
   <script src="app/renal.js"></script>
   <script src="app/allergy.js"></script>
+  <script src="app/severity.js"></script>
   <script src="app/patientContext.js"></script>
   <script src="app/clinicalEngine.js"></script>
   <script src="app/templates.js"></script>

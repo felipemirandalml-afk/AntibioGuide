@@ -86,6 +86,22 @@ window.ABG.templates = (function () {
       </div>`;
   }
 
+  /**
+   * Badge "coincide con el ámbito" para un régimen, según la severidad del
+   * paciente activo. Es un hint positivo: marca el régimen del escenario
+   * correcto, sin ocultar los demás. Vacío si no hay severidad o no coincide.
+   */
+  function renderSeverityBadge(scenario) {
+    const pc = window.ABG.patientContext;
+    const sev = window.ABG.severity;
+    if (!pc || !sev) return "";
+    const patientSeverity = pc.get().severity;
+    if (!patientSeverity) return "";
+    if (!sev.matches(scenario, patientSeverity)) return "";
+    const label = escapeHTML(sev.LABELS[patientSeverity] || patientSeverity);
+    return `<span class="inline-flex items-center gap-1 text-xs font-medium rounded-full bg-green-100 text-green-800 px-2 py-0.5 dark:bg-green-900/50 dark:text-green-300 whitespace-nowrap"><i class="fas fa-check"></i> ${label}</span>`;
+  }
+
   function renderLocalSusceptibilityBanner(viewModel) {
     if (!viewModel || !viewModel.items) return "";
 
@@ -186,9 +202,12 @@ window.ABG.templates = (function () {
 
         return `
               <div class="border-l-4 border-blue-400 pl-4 py-2">
-                <div class="flex justify-between items-start">
-                  <h4 class="font-bold text-blue-700">${rName}</h4>
-                  <span class="text-xs bg-gray-100 text-gray-500 dark:bg-slate-800 dark:text-slate-400 px-2 py-1 rounded">${ref}</span>
+                <div class="flex justify-between items-start gap-2">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <h4 class="font-bold text-blue-700">${rName}</h4>
+                    ${renderSeverityBadge(r?.scenario)}
+                  </div>
+                  <span class="text-xs bg-gray-100 text-gray-500 dark:bg-slate-800 dark:text-slate-400 px-2 py-1 rounded whitespace-nowrap">${ref}</span>
                 </div>
                 ${drugBlock}
                 <p class="text-sm text-gray-600 dark:text-slate-300 font-medium">${dose} ${route} ${interval} (${duration})${durationInfoBtn}</p>
@@ -455,6 +474,7 @@ window.ABG.templates = (function () {
     renderLocalSusceptibilityBanner,
     renalWithBand,
     renderAllergyBanner,
+    renderSeverityBadge,
     syndromeDetail,
     medDetail,
     syndromeCard,
