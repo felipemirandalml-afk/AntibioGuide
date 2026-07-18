@@ -1,16 +1,16 @@
 # Graph Report - AntibioGuide  (2026-07-18)
 
 ## Corpus Check
-- 59 files · ~178,241 words
+- 61 files · ~179,183 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 514 nodes · 655 edges · 58 communities (42 shown, 16 thin omitted)
+- 523 nodes · 672 edges · 59 communities (42 shown, 17 thin omitted)
 - Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 60 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c2139a59`
+- Built from commit: `95dcaee1`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -62,18 +62,19 @@
 - patientContext.js
 - renal.js
 - allergy.js
+- severity.js
 
 ## God Nodes (most connected - your core abstractions)
-1. `scripts` - 13 edges
+1. `scripts` - 14 edges
 2. `addError()` - 12 edges
 3. `main()` - 11 edges
 4. `Arquitectura Oficial` - 11 edges
 5. `Estado del roadmap de síndromes al 2026-07-15` - 9 edges
 6. `draw()` - 9 edges
-7. `validatePathogens()` - 8 edges
-8. `Motor de búsqueda inteligente unificado` - 8 edges
-9. `init()` - 7 edges
-10. `validateSyndromes()` - 7 edges
+7. `init()` - 8 edges
+8. `validatePathogens()` - 8 edges
+9. `Motor de búsqueda inteligente unificado` - 8 edges
+10. `makeBrowserGlobals()` - 7 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `La franja de severidad solo sirve si es escasa` --semantically_similar_to--> `Criterio de validación clínica — warning real vs backlog planificado`  [INFERRED] [semantically similar]
@@ -95,11 +96,11 @@
 - **Las cinco fuentes documentales que respaldan los síndromes del roadmap** — research_roadmap_sindromes_tei_416, research_roadmap_sindromes_uc_2024, research_roadmap_sindromes_proa_04, research_roadmap_sindromes_ot_amb, research_roadmap_sindromes_nac_2024, research_roadmap_sindromes_mapa_cobertura, research_roadmap_sindromes_regla_de_oro [EXTRACTED 1.00]
 - **Cadena de auditoría del grafo clínico: generador → visualización → hallazgos → worklist médico** — readme_audit_syndromes, readme_build_graph, tools_graph_template_g, tools_graph_template_rels, tools_graph_template_findings_asymmetric, research_graph_asymmetry_worklist_asimetrias, research_graph_asymmetry_worklist_regla_de_oro [INFERRED 0.95]
 
-## Communities (58 total, 16 thin omitted)
+## Communities (59 total, 17 thin omitted)
 
 ### Community 0 - "Arquitectura y decisiones de diseño"
 Cohesion: 0.05
-Nodes (56): Alcance declarado: adultos, sin pediatría/embarazo/lactancia, Buscador global (#search-input), Navegación por pestañas (Síndromes / Patógenos / Vademécum / Antibiograma), AntibioGuide — soporte clínico de antibióticos, audit_syndromes.js — consistencia clínica y salud del grafo, tools/build_graph.js — explorador del grafo clínico, Criterio de validación clínica — warning real vs backlog planificado, tools/csv_to_pathogens.js — ingesta con --force (+48 more)
+Nodes (55): Alcance declarado: adultos, sin pediatría/embarazo/lactancia, Buscador global (#search-input), Navegación por pestañas (Síndromes / Patógenos / Vademécum / Antibiograma), AntibioGuide — soporte clínico de antibióticos, audit_syndromes.js — consistencia clínica y salud del grafo, tools/build_graph.js — explorador del grafo clínico, Criterio de validación clínica — warning real vs backlog planificado, tools/csv_to_pathogens.js — ingesta con --force (+47 more)
 
 ### Community 1 - "build_graph.js — explorador del grafo clínico"
 Cohesion: 0.06
@@ -110,12 +111,12 @@ Cohesion: 0.18
 Nodes (26): addError(), addWarn(), assertArray(), assertObject(), assertString(), CANONICAL_GRAM, checkDenseArrays(), checkFamilyVocabulary() (+18 more)
 
 ### Community 3 - "Contexto local y fuentes documentales"
-Cohesion: 0.11
-Nodes (25): Selector de contexto local (#profile-select), Contexto local — data/resistanceProfiles.js, B. ADD — vacío real del síndrome (15 adiciones), Asimetrías del grafo síndrome ↔ patógeno (120 enlaces unidireccionales), Asimetrías 'hacia adelante' (78) — no son bugs, Asimetrías 'hacia atrás' (42) — requieren decisión clínica, D. LEAVE — asimetría legítima (~16, no tocar), pathogenIds — lista curada del síndrome (síndrome → patógeno) (+17 more)
+Cohesion: 0.10
+Nodes (26): Selector de contexto local (#profile-select), Contexto local — data/resistanceProfiles.js, El grafo clínico ya existe en los datos, B. ADD — vacío real del síndrome (15 adiciones), Asimetrías del grafo síndrome ↔ patógeno (120 enlaces unidireccionales), Asimetrías 'hacia adelante' (78) — no son bugs, Asimetrías 'hacia atrás' (42) — requieren decisión clínica, D. LEAVE — asimetría legítima (~16, no tocar) (+18 more)
 
 ### Community 4 - "Arnés de tests"
-Cohesion: 0.11
-Nodes (26): data, { makeBrowserGlobals, loadBrowserModule, assert, eq, makeRunner }, path, { test, run }, data, { makeBrowserGlobals, loadBrowserModule, assert, eq, makeRunner }, path, { test, run } (+18 more)
+Cohesion: 0.10
+Nodes (28): data, { makeBrowserGlobals, loadBrowserModule, assert, eq, makeRunner }, path, { test, run }, data, { makeBrowserGlobals, loadBrowserModule, assert, eq, makeRunner }, path, { test, run } (+20 more)
 
 ### Community 5 - "README — documentación del repo"
 Cohesion: 0.14
@@ -126,16 +127,16 @@ Cohesion: 0.11
 Nodes (14): antibioticIds, clinicalData, cover, graphBackward, graphForward, orphanPathogens, path, pathogenById (+6 more)
 
 ### Community 7 - "package.json — scripts y gate"
-Cohesion: 0.10
-Nodes (20): author, description, keywords, license, main, name, scripts, audit:syndromes (+12 more)
+Cohesion: 0.09
+Nodes (21): author, description, keywords, license, main, name, scripts, audit:syndromes (+13 more)
 
 ### Community 8 - "csv_to_pathogens.js — ingesta (con guardas)"
 Cohesion: 0.11
 Nodes (15): badRows, clinicalData, csvPath, finalPathogensList, FORCE, fs, headers, lines (+7 more)
 
 ### Community 9 - "Shell de la app: búsqueda, pestañas y explorador visual"
-Cohesion: 0.16
-Nodes (17): draw(), Hallazgo: fármacos sin régimen, Hallazgo: nodos aislados, fitToView(), Leyenda y filtros son el mismo control, loop(), neighborhood(), pick() (+9 more)
+Cohesion: 0.15
+Nodes (17): H7 — Sin enlace cruzado en resultados, draw(), esc(), Hallazgo: fármacos sin régimen, Hallazgo: nodos aislados, fitToView(), Leyenda y filtros son el mismo control, neighborhood() (+9 more)
 
 ### Community 10 - "ingest_atb.js — ingesta de antibióticos"
 Cohesion: 0.14
@@ -174,8 +175,8 @@ Cohesion: 0.42
 Nodes (7): closeDurationPopover(), closeModal(), ensureDurationPopover(), initListeners(), isDurationPopoverOpen(), isSmallViewport(), openDurationPopover()
 
 ### Community 19 - "templates.js — plantillas HTML"
-Cohesion: 0.28
-Nodes (4): medDetail(), renalWithBand(), renderAllergyBanner(), syndromeDetail()
+Cohesion: 0.27
+Nodes (5): medDetail(), renalWithBand(), renderAllergyBanner(), renderSeverityBadge(), syndromeDetail()
 
 ### Community 20 - "build_pathogens.js — compilador de patógenos"
 Cohesion: 0.33
@@ -206,8 +207,8 @@ Cohesion: 0.33
 Nodes (5): Estado del repo, Grafo de conocimiento (graphify) — TERMINADO, Higiene menor (del audit de julio, aún abierta), Pendientes y estado — sesión 2026-07-16/17, Qué se hizo esta sesión
 
 ### Community 54 - "patientPanel.js"
-Cohesion: 0.32
-Nodes (12): els(), fillInputs(), init(), numOrNull(), onInput(), openPanel(), readAllergies(), readInputs() (+4 more)
+Cohesion: 0.31
+Nodes (13): els(), fillInputs(), init(), numOrNull(), onInput(), openPanel(), paintSeverity(), readAllergies() (+5 more)
 
 ### Community 55 - "patientContext.js"
 Cohesion: 0.31
@@ -226,9 +227,9 @@ Nodes (4): checkDrug(), checkRegimen(), drugClass(), drug()
   research/ROADMAP_SINDROMES.md · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **199 isolated node(s):** `antibiotics`, `clinicalData`, `interpretation`, `meta`, `pathogens` (+194 more)
+- **202 isolated node(s):** `antibiotics`, `clinicalData`, `interpretation`, `meta`, `pathogens` (+197 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **16 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -237,13 +238,13 @@ _Questions this graph is uniquely positioned to answer:_
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
 - **Why does `Arquitectura Oficial` connect `README — documentación del repo` to `Arquitectura y decisiones de diseño`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
-- **Why does `Motor de búsqueda inteligente unificado` connect `Arquitectura y decisiones de diseño` to `Contexto local y fuentes documentales`?**
+- **Why does `Motor de búsqueda inteligente unificado` connect `Arquitectura y decisiones de diseño` to `Shell de la app: búsqueda, pestañas y explorador visual`, `Contexto local y fuentes documentales`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Why does `ARCHITECTURE GUARDRAIL — engine devuelve datos, no HTML` connect `Arquitectura y decisiones de diseño` to `README — documentación del repo`?**
-  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+  _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `Arquitectura Oficial` (e.g. with `Orden de carga de scripts (datos → adaptadores → app)` and `ARCHITECTURE GUARDRAIL — engine devuelve datos, no HTML`) actually correct?**
   _`Arquitectura Oficial` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `Estado del roadmap de síndromes al 2026-07-15` (e.g. with `Criterio de validación clínica — warning real vs backlog planificado` and `Catálogo de síndromes y esquemas (34 síndromes · 116 esquemas)`) actually correct?**
   _`Estado del roadmap de síndromes al 2026-07-15` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `antibiotics`, `clinicalData`, `interpretation` to the rest of the system?**
-  _199 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _202 weakly-connected nodes found - possible documentation gaps or missing edges._
