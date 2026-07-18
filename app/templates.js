@@ -102,6 +102,107 @@ window.ABG.templates = (function () {
     return `<span class="inline-flex items-center gap-1 text-xs font-medium rounded-full bg-green-100 text-green-800 px-2 py-0.5 dark:bg-green-900/50 dark:text-green-300 whitespace-nowrap"><i class="fas fa-check"></i> ${label}</span>`;
   }
 
+  /**
+   * Tarjeta de recomendación por paciente (modo enfocado). Solo se muestra si
+   * hay un paciente cargado. Revelación progresiva con <details> anidados:
+   *   Capa 0  el vistazo: esquema recomendado + banderas (resistencia/alergia/renal)
+   *   Capa 1  un tap: posología + alternativas
+   *   Capa 2  otro tap: el porqué + patógenos + fuentes
+   * La lógica de selección vive en window.ABG.recommend (pura y testeada).
+   */
+  function recommendationCard(s) {
+    const pc = window.ABG.patientContext;
+    const rec = window.ABG.recommend;
+    if (!pc || !rec || pc.isEmpty()) return "";
+    const patient = pc.get();
+    const out = rec.forSyndrome(s, patient);
+    if (!out.recommended) return "";
+
+    const R = out.recommended;
+    const r = R.regimen;
+    const est = pc.canEstimateRenal() ? pc.getRenalEstimate() : null;
+
+    // --- Banderas de Capa 0 (compactas) ---
+    const flags = [];
+    // Resistencia: si demotamos una alternativa por resistencia local, decirlo.
+    const demotedRes = out.alternatives.find((a) => a.warnings && a.warnings.length);
+    if (demotedRes) {
+      const w = demotedRes.warnings[0];
+      flags.push(`<div class="abg-flag abg-flag-res">⚠️ <strong>${escapeHTML(demotedRes.regimen.drug)}</strong> (1ª línea) evitado — resistencia local ${escapeHTML(w.r_pct)}%</div>`);
+    }
+    // Reactividad cruzada del recomendado (alergia caution).
+    const cross = (R.allergy.conflicts || []).find((c) => c.level === "caution");
+    if (cross) {
+      flags.push(`<div class="abg-flag abg-flag-warn">⚠️ ${escapeHTML(cross.drug)}: reactividad cruzada con la alergia — evaluar</div>`);
+    }
+    // Renal reducido.
+    if (est && est.ok && est.reducedFunction) {
+      flags.push(`<div class="abg-flag abg-flag-warn">⚠️ Verificar dosis por función renal (CrCl ${escapeHTML(est.crclRounded)})</div>`);
+    }
+    if (out.severityFallback && patient.severity) {
+      flags.push(`<div class="abg-flag abg-flag-warn">Sin esquema específico para el ámbito seleccionado; mostrando el más adecuado.</div>`);
+    }
+
+    // --- Línea de contexto del paciente ---
+    const ctx = [];
+    const sev = window.ABG.severity;
+    if (patient.severity && sev) ctx.push(escapeHTML(sev.LABELS[patient.severity] || patient.severity));
+    if (est && est.ok) ctx.push(`CrCl ${escapeHTML(est.crclRounded)}`);
+    if (patient.allergies && patient.allergies.length) ctx.push(`Alergia: ${escapeHTML(patient.allergies.join(", "))}`);
+    const ctxLine = ctx.length ? `<div class="abg-rec-ctx">${ctx.join(" · ")}</div>` : "";
+
+    // --- Capa 1: posología ---
+    const posol = `
+      <table class="abg-posol">
+        <tr><td>Dosis</td><td>${escapeHTML(r.dose || "—")}</td></tr>
+        <tr><td>Vía</td><td>${escapeHTML(r.route || "—")}</td></tr>
+        <tr><td>Intervalo</td><td>${escapeHTML(r.interval || "—")}</td></tr>
+        <tr><td>Duración</td><td>${escapeHTML(r.duration || "—")}</td></tr>
+      </table>
+      ${est && est.ok ? `<div class="abg-rec-renal">Ajuste renal: ${renalWithBand((R.drugs[0] && R.drugs[0].renal) || "")}</div>` : ""}`;
+
+    // --- Capa 1: alternativas ---
+    const altItems = out.alternatives.map((a) => {
+      const bad = a.warnings && a.warnings.length;
+      const note = bad
+        ? `<div class="abg-alt-warn">⚠️ ${escapeHTML(a.warnings[0].message)} (R ${escapeHTML(a.warnings[0].r_pct)}%)</div>`
+        : "";
+      return `<div class="abg-alt${bad ? " abg-alt-bad" : ""}"><span class="abg-alt-name">${escapeHTML(a.regimen.drug)}</span> <span class="abg-alt-type">${a.regimen.type === "empiric" ? "1ª línea" : "alternativa"}</span>${note}</div>`;
+    }).join("");
+    const excludedItems = out.excluded.map((e) => {
+      const c = (e.allergy.conflicts || []).find((c) => c.level === "avoid");
+      return `<div class="abg-alt abg-alt-excl"><span class="abg-alt-name">${escapeHTML(e.regimen.drug)}</span> — excluido: alergia${c ? " a " + escapeHTML(c.allergy) : ""}</div>`;
+    }).join("");
+
+    // --- Capa 2: el porqué ---
+    const pats = Array.isArray(s.pathogens) ? s.pathogens.slice(0, 5).join(", ") : "";
+    const why = `
+      ${demotedRes ? `<p class="abg-why-p">El esquema empírico de guía incluye <strong>${escapeHTML(demotedRes.regimen.drug)}</strong>, pero el contexto local muestra resistencia sobre el umbral empírico. El recomendado mantiene cobertura sin ese riesgo local.</p>` : ""}
+      ${pats ? `<div class="abg-why-h">Patógenos que cubre</div><p class="abg-why-p">${escapeHTML(pats)}</p>` : ""}
+      <div class="abg-why-h">Fuente</div><p class="abg-why-src">${escapeHTML(r.reference || "—")}</p>`;
+
+    return `
+      <div class="abg-rec">
+        <div class="abg-rec-head">
+          <span class="abg-rec-tag">Recomendado para este paciente</span>
+          ${ctxLine}
+        </div>
+        <div class="abg-rec-drug">${escapeHTML(r.drug || "")}</div>
+        ${flags.join("")}
+        <details class="abg-rec-more">
+          <summary>Ver esquema y alternativas</summary>
+          <div class="abg-rec-body">
+            ${posol}
+            ${altItems || excludedItems ? `<div class="abg-alts-h">Alternativas</div>${altItems}${excludedItems}` : ""}
+            <details class="abg-rec-why">
+              <summary>Ver el porqué y las fuentes</summary>
+              <div class="abg-rec-body">${why}</div>
+            </details>
+          </div>
+        </details>
+      </div>`;
+  }
+
   function renderLocalSusceptibilityBanner(viewModel) {
     if (!viewModel || !viewModel.items) return "";
 
@@ -475,6 +576,7 @@ window.ABG.templates = (function () {
     renalWithBand,
     renderAllergyBanner,
     renderSeverityBadge,
+    recommendationCard,
     syndromeDetail,
     medDetail,
     syndromeCard,

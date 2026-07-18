@@ -26,7 +26,18 @@ window.ABG.render = (function () {
     function showSyndromeDetail(s) {
         const { modalContent } = window.ABG.state.dom;
         if (!modalContent) return;
-        modalContent.innerHTML = window.ABG.templates.syndromeDetail(s);
+        const T = window.ABG.templates;
+        const pc = window.ABG.patientContext;
+        const hasPatient = pc && !pc.isEmpty();
+
+        // Modo enfocado: con paciente, la recomendación arriba y el detalle
+        // completo colapsado (reduce, no suma). Sin paciente, modo explorar.
+        const card = hasPatient && typeof T.recommendationCard === "function" ? T.recommendationCard(s) : "";
+        const full = T.syndromeDetail(s);
+        modalContent.innerHTML = card
+            ? `${card}<details class="abg-full"><summary>Ver todos los esquemas y detalle del síndrome</summary>${full}</details>`
+            : full;
+
         if (typeof window.ABG.modal.openModal === "function") {
             window.ABG.modal.openModal();
         }

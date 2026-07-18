@@ -36,6 +36,67 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    /* Tarjeta de recomendación por paciente (modo enfocado) */
+    .abg-rec {
+      background: #eff6ff;
+      border: 2px solid #93c5fd;
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .dark .abg-rec { background: rgba(30, 58, 138, .25); border-color: #1e40af; }
+    .abg-rec-head { display: flex; flex-direction: column; gap: 2px; margin-bottom: 6px; }
+    .abg-rec-tag { font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #2563eb; }
+    .dark .abg-rec-tag { color: #93c5fd; }
+    .abg-rec-ctx { font-size: 12.5px; color: #475569; }
+    .dark .abg-rec-ctx { color: #cbd5e1; }
+    .abg-rec-drug { font-size: 22px; font-weight: 800; color: #0f172a; line-height: 1.15; }
+    .dark .abg-rec-drug { color: #f1f5f9; }
+    .abg-flag { margin-top: 10px; border-radius: 10px; padding: 8px 11px; font-size: 13px; line-height: 1.35; }
+    .abg-flag-res { background: #fffbeb; border: 1px solid #fcd34d; color: #92400e; }
+    .abg-flag-warn { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; }
+    .dark .abg-flag-res, .dark .abg-flag-warn { background: rgba(120, 53, 15, .3); border-color: rgba(180, 83, 9, .5); color: #fcd34d; }
+    .abg-rec-more, .abg-rec-why { margin-top: 12px; }
+    .abg-rec-more > summary, .abg-rec-why > summary {
+      cursor: pointer; list-style: none; font-size: 14px; font-weight: 600;
+      color: #1d4ed8; padding: 9px 0; border-top: 1px solid #dbeafe;
+    }
+    .dark .abg-rec-more > summary, .dark .abg-rec-why > summary { color: #93c5fd; border-color: #1e40af; }
+    .abg-rec-more > summary::after { content: " ▾"; }
+    .abg-rec-more[open] > summary::after, .abg-rec-why[open] > summary::after { content: " ▴"; }
+    .abg-rec-more > summary::-webkit-details-marker, .abg-rec-why > summary::-webkit-details-marker { display: none; }
+    .abg-rec-body { padding-top: 4px; }
+    .abg-posol { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .abg-posol td { padding: 5px 0; border-bottom: 1px solid #e2e8f0; color: #334155; vertical-align: top; }
+    .dark .abg-posol td { border-color: #334155; color: #cbd5e1; }
+    .abg-posol td:first-child { color: #94a3b8; width: 74px; }
+    .abg-rec-renal { margin-top: 10px; font-size: 12.5px; color: #b45309; }
+    .dark .abg-rec-renal { color: #fbbf24; }
+    .abg-alts-h { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #94a3b8; margin: 14px 0 6px; }
+    .abg-alt { background: #fff; border: 1px solid #e2e8f0; border-radius: 9px; padding: 8px 11px; margin-bottom: 6px; font-size: 13.5px; }
+    .dark .abg-alt { background: #1e293b; border-color: #334155; color: #e2e8f0; }
+    .abg-alt-bad { background: #fef2f2; border-color: #fecaca; }
+    .dark .abg-alt-bad { background: rgba(127, 29, 29, .3); border-color: rgba(153, 27, 27, .5); }
+    .abg-alt-excl { opacity: .7; }
+    .abg-alt-name { font-weight: 600; }
+    .abg-alt-type { font-size: 11px; color: #94a3b8; }
+    .abg-alt-warn { font-size: 12px; color: #b91c1c; margin-top: 3px; }
+    .dark .abg-alt-warn { color: #fca5a5; }
+    .abg-why-h { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: #2563eb; margin: 12px 0 4px; }
+    .dark .abg-why-h { color: #93c5fd; }
+    .abg-why-p { font-size: 13.5px; color: #334155; line-height: 1.5; }
+    .dark .abg-why-p { color: #cbd5e1; }
+    .abg-why-src { font-size: 12px; color: #64748b; }
+    /* Detalle completo colapsado bajo la recomendación */
+    .abg-full > summary {
+      cursor: pointer; list-style: none; font-size: 14px; font-weight: 600;
+      color: #475569; padding: 10px 0; text-align: center;
+    }
+    .dark .abg-full > summary { color: #94a3b8; }
+    .abg-full > summary::after { content: " ▾"; }
+    .abg-full[open] > summary::after { content: " ▴"; }
+    .abg-full > summary::-webkit-details-marker { display: none; }
   </style>
 </head>
 
