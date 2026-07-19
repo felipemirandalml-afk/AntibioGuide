@@ -1,16 +1,16 @@
 # Graph Report - AntibioGuide  (2026-07-18)
 
 ## Corpus Check
-- 61 files · ~179,183 words
+- 63 files · ~181,372 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 523 nodes · 672 edges · 59 communities (42 shown, 17 thin omitted)
-- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 60 edges (avg confidence: 0.83)
+- 535 nodes · 692 edges · 67 communities (50 shown, 17 thin omitted)
+- Extraction: 91% EXTRACTED · 9% INFERRED · 0% AMBIGUOUS · INFERRED: 61 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `95dcaee1`
+- Built from commit: `c6a18a44`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -63,29 +63,37 @@
 - renal.js
 - allergy.js
 - severity.js
+- HCAP (neumonia_asociada_cuidados_salud) — eliminado por evidencia
+- audit_syndromes.js — consistencia clínica y salud del grafo
+- Estado del roadmap de síndromes al 2026-07-15
+- Depuración del backlog: de 47 a 25 síndromes
+- Alcance declarado: adultos, sin pediatría/embarazo/lactancia
+- Source of Truth Data (/data)
+- validate_data.js — integridad estructural
+- recommend.js
 
 ## God Nodes (most connected - your core abstractions)
-1. `scripts` - 14 edges
+1. `scripts` - 15 edges
 2. `addError()` - 12 edges
 3. `main()` - 11 edges
 4. `Arquitectura Oficial` - 11 edges
 5. `Estado del roadmap de síndromes al 2026-07-15` - 9 edges
 6. `draw()` - 9 edges
 7. `init()` - 8 edges
-8. `validatePathogens()` - 8 edges
-9. `Motor de búsqueda inteligente unificado` - 8 edges
-10. `makeBrowserGlobals()` - 7 edges
+8. `makeBrowserGlobals()` - 8 edges
+9. `loadBrowserModule()` - 8 edges
+10. `assert()` - 8 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `La franja de severidad solo sirve si es escasa` --semantically_similar_to--> `Criterio de validación clínica — warning real vs backlog planificado`  [INFERRED] [semantically similar]
   tools/graph_template.html → README.md
-- `Las guías GES prevalecen sobre la recomendación de la app` --semantically_similar_to--> `Alcance declarado: adultos, sin pediatría/embarazo/lactancia`  [INFERRED] [semantically similar]
-  research/SINDROMES_Y_ESQUEMAS.md → index.html
+- `Alias normalizados (pathogens.js ↔ syndromes.js)` --conceptually_related_to--> `tools/csv_to_pathogens.js — ingesta con --force`  [AMBIGUOUS]
+  research/ROADMAP_SINDROMES.md → README.md
 - `Alias normalizados (pathogens.js ↔ syndromes.js)` --semantically_similar_to--> `Vocabularios canónicos (el validador los exige)`  [INFERRED] [semantically similar]
   research/ROADMAP_SINDROMES.md → README.md
+- `Las guías GES prevalecen sobre la recomendación de la app` --semantically_similar_to--> `Alcance declarado: adultos, sin pediatría/embarazo/lactancia`  [INFERRED] [semantically similar]
+  research/SINDROMES_Y_ESQUEMAS.md → index.html
 - `matches() — búsqueda por nombre o id sobre todos los tipos` --semantically_similar_to--> `H1 — La búsqueda está aislada por pestaña`  [INFERRED] [semantically similar]
-  tools/graph_template.html → research/AUDIT_2026-07.md
-- `select() — panel de detalle con enlace cruzado` --semantically_similar_to--> `H7 — Sin enlace cruzado en resultados`  [INFERRED] [semantically similar]
   tools/graph_template.html → research/AUDIT_2026-07.md
 
 ## Import Cycles
@@ -96,27 +104,27 @@
 - **Las cinco fuentes documentales que respaldan los síndromes del roadmap** — research_roadmap_sindromes_tei_416, research_roadmap_sindromes_uc_2024, research_roadmap_sindromes_proa_04, research_roadmap_sindromes_ot_amb, research_roadmap_sindromes_nac_2024, research_roadmap_sindromes_mapa_cobertura, research_roadmap_sindromes_regla_de_oro [EXTRACTED 1.00]
 - **Cadena de auditoría del grafo clínico: generador → visualización → hallazgos → worklist médico** — readme_audit_syndromes, readme_build_graph, tools_graph_template_g, tools_graph_template_rels, tools_graph_template_findings_asymmetric, research_graph_asymmetry_worklist_asimetrias, research_graph_asymmetry_worklist_regla_de_oro [INFERRED 0.95]
 
-## Communities (59 total, 17 thin omitted)
+## Communities (67 total, 17 thin omitted)
 
 ### Community 0 - "Arquitectura y decisiones de diseño"
-Cohesion: 0.05
-Nodes (55): Alcance declarado: adultos, sin pediatría/embarazo/lactancia, Buscador global (#search-input), Navegación por pestañas (Síndromes / Patógenos / Vademécum / Antibiograma), AntibioGuide — soporte clínico de antibióticos, audit_syndromes.js — consistencia clínica y salud del grafo, tools/build_graph.js — explorador del grafo clínico, Criterio de validación clínica — warning real vs backlog planificado, tools/csv_to_pathogens.js — ingesta con --force (+47 more)
+Cohesion: 0.12
+Nodes (23): Buscador global (#search-input), Navegación por pestañas (Síndromes / Patógenos / Vademécum / Antibiograma), ARCHITECTURE GUARDRAIL — engine devuelve datos, no HTML, El grafo clínico ya existe en los datos, H1 — La búsqueda está aislada por pestaña, H2 — La búsqueda indexa pocos campos, H7 — Sin enlace cruzado en resultados, Motor de búsqueda inteligente unificado (+15 more)
 
 ### Community 1 - "build_graph.js — explorador del grafo clínico"
 Cohesion: 0.06
 Nodes (30): aById, antibiotics, asymmetric, backlogRefs, causedBy, deg, drugsNoRegimen, edges (+22 more)
 
 ### Community 2 - "validate_data.js — validador de integridad"
-Cohesion: 0.18
-Nodes (26): addError(), addWarn(), assertArray(), assertObject(), assertString(), CANONICAL_GRAM, checkDenseArrays(), checkFamilyVocabulary() (+18 more)
+Cohesion: 0.17
+Nodes (27): syndrome(), addError(), addWarn(), assertArray(), assertObject(), assertString(), CANONICAL_GRAM, checkDenseArrays() (+19 more)
 
 ### Community 3 - "Contexto local y fuentes documentales"
-Cohesion: 0.10
-Nodes (26): Selector de contexto local (#profile-select), Contexto local — data/resistanceProfiles.js, El grafo clínico ya existe en los datos, B. ADD — vacío real del síndrome (15 adiciones), Asimetrías del grafo síndrome ↔ patógeno (120 enlaces unidireccionales), Asimetrías 'hacia adelante' (78) — no son bugs, Asimetrías 'hacia atrás' (42) — requieren decisión clínica, D. LEAVE — asimetría legítima (~16, no tocar) (+18 more)
+Cohesion: 0.25
+Nodes (8): Mapa de cobertura documental — 100% de los 25 con fuente y página, NAC-2024 — Uso de antimicrobianos para neumonía en adultos (2024), PROA-04 — Guía de Tratamiento Antimicrobiano V1 (73 págs), TEI-416 — Tratamiento de las Enfermedades Infecciosas (416 págs), UC-2024 — Manual de Antibioterapia y Control de Infecciones, UC CHRISTUS 2024, Candidemia / Candidiasis Invasora, Diarrea Aguda Disentérica Febril, Manual de Antibioterapia UC CHRISTUS 2024 (citado con página)
 
 ### Community 4 - "Arnés de tests"
-Cohesion: 0.10
-Nodes (28): data, { makeBrowserGlobals, loadBrowserModule, assert, eq, makeRunner }, path, { test, run }, data, { makeBrowserGlobals, loadBrowserModule, assert, eq, makeRunner }, path, { test, run } (+20 more)
+Cohesion: 0.09
+Nodes (32): data, { makeBrowserGlobals, loadBrowserModule, assert, eq, makeRunner }, path, { test, run }, data, { makeBrowserGlobals, loadBrowserModule, assert, eq, makeRunner }, path, { test, run } (+24 more)
 
 ### Community 5 - "README — documentación del repo"
 Cohesion: 0.14
@@ -128,15 +136,15 @@ Nodes (14): antibioticIds, clinicalData, cover, graphBackward, graphForward, orp
 
 ### Community 7 - "package.json — scripts y gate"
 Cohesion: 0.09
-Nodes (21): author, description, keywords, license, main, name, scripts, audit:syndromes (+13 more)
+Nodes (22): author, description, keywords, license, main, name, scripts, audit:syndromes (+14 more)
 
 ### Community 8 - "csv_to_pathogens.js — ingesta (con guardas)"
 Cohesion: 0.11
 Nodes (15): badRows, clinicalData, csvPath, finalPathogensList, FORCE, fs, headers, lines (+7 more)
 
 ### Community 9 - "Shell de la app: búsqueda, pestañas y explorador visual"
-Cohesion: 0.15
-Nodes (17): H7 — Sin enlace cruzado en resultados, draw(), esc(), Hallazgo: fármacos sin régimen, Hallazgo: nodos aislados, fitToView(), Leyenda y filtros son el mismo control, neighborhood() (+9 more)
+Cohesion: 0.20
+Nodes (14): draw(), Hallazgo: fármacos sin régimen, Hallazgo: nodos aislados, fitToView(), Leyenda y filtros son el mismo control, neighborhood(), pick(), radius() (+6 more)
 
 ### Community 10 - "ingest_atb.js — ingesta de antibióticos"
 Cohesion: 0.14
@@ -175,8 +183,8 @@ Cohesion: 0.42
 Nodes (7): closeDurationPopover(), closeModal(), ensureDurationPopover(), initListeners(), isDurationPopoverOpen(), isSmallViewport(), openDurationPopover()
 
 ### Community 19 - "templates.js — plantillas HTML"
-Cohesion: 0.27
-Nodes (5): medDetail(), renalWithBand(), renderAllergyBanner(), renderSeverityBadge(), syndromeDetail()
+Cohesion: 0.25
+Nodes (6): medDetail(), recommendationCard(), renalWithBand(), renderAllergyBanner(), renderSeverityBadge(), syndromeDetail()
 
 ### Community 20 - "build_pathogens.js — compilador de patógenos"
 Cohesion: 0.33
@@ -222,12 +230,44 @@ Nodes (7): buildNotes(), cockcroftGault(), inRange(), kdigoStage(), matchRenalBa
 Cohesion: 0.60
 Nodes (4): checkDrug(), checkRegimen(), drugClass(), drug()
 
+### Community 59 - "HCAP (neumonia_asociada_cuidados_salud) — eliminado por evidencia"
+Cohesion: 0.20
+Nodes (10): AntibioGuide — soporte clínico de antibióticos, tools/build_graph.js — explorador del grafo clínico, Ewig S, Kolditz M, Pletz MW, Chalmers J. Healthcare-associated pneumonia: is there any reason to continue to utilize this label in 2019? Clin Microbiol Infect. 2019;25(10):1173-9, HCAP (neumonia_asociada_cuidados_salud) — eliminado por evidencia, Kalil AC, et al. Guía IDSA/ATS 2016 de HAP/VAP. Clin Infect Dis. 2016;63(5):e61-e111, G — __GRAPH_DATA__ (payload inyectado del grafo), loop(), Herramienta de auditoría · no es runtime (+2 more)
+
+### Community 60 - "audit_syndromes.js — consistencia clínica y salud del grafo"
+Cohesion: 0.28
+Nodes (9): audit_syndromes.js — consistencia clínica y salud del grafo, Gate completo — npm test, tools/test_lib.js — arnés de carga de módulos de navegador en Node, Patrón IIFE bajo window.ABG, H4 — Red de tests delgada, Regla de oro respetada — 116/116 regímenes con reference, Regla de oro del worklist — ninguna edición sin visto bueno del médico, Herramienta de QA planificada — auditoría de consistencia de síndromes (+1 more)
+
+### Community 61 - "Estado del roadmap de síndromes al 2026-07-15"
+Cohesion: 0.28
+Nodes (9): Criterio de validación clínica — warning real vs backlog planificado, Veredicto general de la auditoría 2026-07, Estado del roadmap de síndromes al 2026-07-15, Posibles variantes (5) — ¿síndrome propio o scenario?, Endocarditis infecciosa (adultos) — 11 esquemas, ESC 2023 — guía europea de endocarditis infecciosa, POET 2019 NEJM — transición parcial a VO en endocarditis, Hallazgo: referencias al backlog (+1 more)
+
+### Community 62 - "Depuración del backlog: de 47 a 25 síndromes"
+Cohesion: 0.29
+Nodes (7): Selector de contexto local (#profile-select), Contexto local — data/resistanceProfiles.js, D. LEAVE — asimetría legítima (~16, no tocar), Clúster sepsis_urinaria — el over-claim más claro del dataset, Depuración del backlog: de 47 a 25 síndromes, No son blancos de terapia empírica (4), Bacteriemia / Infección del Torrente Sanguíneo
+
+### Community 63 - "Alcance declarado: adultos, sin pediatría/embarazo/lactancia"
+Cohesion: 0.40
+Nodes (6): Alcance declarado: adultos, sin pediatría/embarazo/lactancia, infeccion_asociada_embarazo — conflicto de alcance sin resolver, Fuera de alcance (4) — neonatal, colonización, términos inespecíficos, OT-AMB — Orientación Técnica MINSAL, antibióticos en infecciones comunitarias ambulatorias 2021, Las guías GES prevalecen sobre la recomendación de la app, MINSAL — OT antibióticos ambulatorios 2021 (citado con página)
+
+### Community 64 - "Source of Truth Data (/data)"
+Cohesion: 0.33
+Nodes (6): tools/csv_to_pathogens.js — ingesta con --force, Ingesta CSV deprecada (/data-files), Source of Truth Data (/data), Catálogo de síndromes y esquemas (34 síndromes · 116 esquemas), Estructura de régimen (tipo · escenario · targets · dosis · vía · intervalo · duración · reference), Tipos de régimen: empiric / alternative / directed
+
+### Community 65 - "validate_data.js — integridad estructural"
+Cohesion: 0.47
+Nodes (6): validate_data.js — integridad estructural, Vocabularios canónicos (el validador los exige), Alias normalizados (pathogens.js ↔ syndromes.js), Hallazgo: vocabulario de taxonomía (taxonomy.gram), Hallazgo: vocabulario divergente (resistencia escrita como id inexistente), Hallazgo: resistencia en prosa (techo del grafo)
+
+### Community 66 - "recommend.js"
+Cohesion: 0.83
+Nodes (3): drugsOf(), evaluate(), forSyndrome()
+
 ## Ambiguous Edges - Review These
 - `tools/csv_to_pathogens.js — ingesta con --force` → `Alias normalizados (pathogens.js ↔ syndromes.js)`  [AMBIGUOUS]
   research/ROADMAP_SINDROMES.md · relation: conceptually_related_to
 
 ## Knowledge Gaps
-- **202 isolated node(s):** `antibiotics`, `clinicalData`, `interpretation`, `meta`, `pathogens` (+197 more)
+- **207 isolated node(s):** `antibiotics`, `clinicalData`, `interpretation`, `meta`, `pathogens` (+202 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -236,15 +276,15 @@ _Questions this graph is uniquely positioned to answer:_
 
 - **What is the exact relationship between `tools/csv_to_pathogens.js — ingesta con --force` and `Alias normalizados (pathogens.js ↔ syndromes.js)`?**
   _Edge tagged AMBIGUOUS (relation: conceptually_related_to) - confidence is low._
-- **Why does `Arquitectura Oficial` connect `README — documentación del repo` to `Arquitectura y decisiones de diseño`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
-- **Why does `Motor de búsqueda inteligente unificado` connect `Arquitectura y decisiones de diseño` to `Shell de la app: búsqueda, pestañas y explorador visual`, `Contexto local y fuentes documentales`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
-- **Why does `ARCHITECTURE GUARDRAIL — engine devuelve datos, no HTML` connect `Arquitectura y decisiones de diseño` to `README — documentación del repo`?**
+- **Why does `Arquitectura Oficial` connect `README — documentación del repo` to `Source of Truth Data (/data)`, `Arquitectura y decisiones de diseño`?**
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+- **Why does `Motor de búsqueda inteligente unificado` connect `Arquitectura y decisiones de diseño` to `audit_syndromes.js — consistencia clínica y salud del grafo`?**
+  _High betweenness centrality (0.011) - this node is a cross-community bridge._
+- **Why does `ARCHITECTURE GUARDRAIL — engine devuelve datos, no HTML` connect `Arquitectura y decisiones de diseño` to `Estado del roadmap de síndromes al 2026-07-15`, `README — documentación del repo`?**
   _High betweenness centrality (0.010) - this node is a cross-community bridge._
 - **Are the 2 inferred relationships involving `Arquitectura Oficial` (e.g. with `Orden de carga de scripts (datos → adaptadores → app)` and `ARCHITECTURE GUARDRAIL — engine devuelve datos, no HTML`) actually correct?**
   _`Arquitectura Oficial` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `Estado del roadmap de síndromes al 2026-07-15` (e.g. with `Criterio de validación clínica — warning real vs backlog planificado` and `Catálogo de síndromes y esquemas (34 síndromes · 116 esquemas)`) actually correct?**
   _`Estado del roadmap de síndromes al 2026-07-15` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `antibiotics`, `clinicalData`, `interpretation` to the rest of the system?**
-  _202 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _207 weakly-connected nodes found - possible documentation gaps or missing edges._
